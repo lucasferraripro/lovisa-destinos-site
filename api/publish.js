@@ -14,7 +14,20 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { content, secret } = req.body;
+    // Parse body (Vercel pode não parsear automaticamente)
+    let body;
+    try {
+        body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+        if (!body) {
+            const chunks = [];
+            for await (const chunk of req) chunks.push(chunk);
+            body = JSON.parse(Buffer.concat(chunks).toString());
+        }
+    } catch {
+        return res.status(400).json({ error: 'Body inválido' });
+    }
+
+    const { content, secret } = body;
 
     // Verifica senha admin
     if (secret !== process.env.ADMIN_SECRET) {
