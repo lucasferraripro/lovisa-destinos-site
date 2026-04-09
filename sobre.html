@@ -28,7 +28,7 @@
         .header { height: var(--header-h); background: white; border-bottom: 1px solid #eee; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { text-decoration: none; display: flex; align-items: center; }
-        .logo img { height: 48px; width: auto; object-fit: contain; }
+        .logo img { height: 48px; width: 48px; object-fit: cover; border-radius: 50%; }
         .header-cta { background: var(--accent); color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 8px; }
         .header-cta:hover { background: #EA6C0A; }
 
@@ -51,6 +51,20 @@
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; text-align: center; }
         .stat-item h3 { font-size: 2.5rem; color: var(--accent); margin-bottom: 10px; font-weight: 800; }
         .stat-item p { color: rgba(255,255,255,0.8); font-size: .95rem; }
+
+        /* Agente section */
+        .agente { padding: 80px 0; background: var(--off-white); }
+        .agente-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .agente-img { border-radius: var(--radius); width: 100%; max-height: 480px; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+        .agente-text h2 { font-size: 2rem; color: var(--primary); margin-bottom: 16px; }
+        .agente-text p { font-size: 1.05rem; color: var(--text-medium); margin-bottom: 16px; }
+        .agente-text .tag { display: inline-block; background: var(--accent); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 50px; margin-bottom: 16px; letter-spacing: .06em; text-transform: uppercase; }
+
+        /* Clientes section */
+        .clientes { padding: 80px 0; }
+        .clientes h2 { font-size: 2rem; color: var(--primary); margin-bottom: 12px; text-align: center; }
+        .clientes .sub { text-align: center; color: var(--text-medium); margin-bottom: 48px; font-size: 1rem; }
+        .clientes-img { border-radius: var(--radius); width: 100%; max-height: 420px; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 
         .cvc-banner { background: var(--off-white); padding: 60px 0; text-align: center; }
         .cvc-banner h2 { font-size: 1.8rem; color: var(--primary); margin-bottom: 12px; }
@@ -75,6 +89,7 @@
             .stats-grid { grid-template-columns: repeat(2,1fr); }
             .diff-grid { grid-template-columns: 1fr; }
             .hero-sobre h1 { font-size: 2rem; }
+            .agente-inner { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -138,6 +153,32 @@
                 <div class="stat-item"><h3>50+</h3><p>Destinos Atendidos</p></div>
                 <div class="stat-item"><h3>100%</h3><p>Satisfação Garantida</p></div>
             </div>
+        </div>
+    </div>
+
+    <!-- ════ AGENTE VÂNIA ════ -->
+    <div class="agente">
+        <div class="container">
+            <div class="agente-inner">
+                <img src="imagens/empresaria.webp" alt="Vânia — Agente de Viagens Lovisa Destinos" class="agente-img">
+                <div class="agente-text">
+                    <span class="tag">Quem cuida de você</span>
+                    <h2>Conheça a Vânia</h2>
+                    <p>Sou a Vânia, agente de viagens e fundadora da Lovisa Destinos. Há mais de 5 anos transformo sonhos em roteiros reais — com atenção, carinho e muita dedicação.</p>
+                    <p>Parceira oficial da CVC, ofereço o melhor dos grandes pacotes com o atendimento personalizado que só uma agência independente consegue entregar. Aqui você fala diretamente comigo, sem robôs e sem filas.</p>
+                    <p>Seja para uma viagem de lazer em família, uma lua de mel inesquecível ou uma viagem corporativa, estou aqui para cuidar de cada detalhe — do planejamento até o seu retorno.</p>
+                    <a href="https://wa.me/5519995396281" class="btn-wa" style="margin-top:8px;"><i class="fab fa-whatsapp"></i> Falar com a Vânia</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ NOSSOS CLIENTES ════ -->
+    <div class="clientes">
+        <div class="container">
+            <h2>Nossos Viajantes</h2>
+            <p class="sub">Cada viagem é uma história. Veja quem já viajou com a Lovisa Destinos.</p>
+            <img src="imagens/clientes.webp" alt="Clientes Lovisa Destinos" class="clientes-img">
         </div>
     </div>
 
