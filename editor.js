@@ -19,11 +19,12 @@
     const editMode = isAdmin && (params.get('editor') === '1' || sessionStorage.getItem('editor_active') === '1');
 
     /* ─── CARREGAR CONTEÚDO (TODOS OS VISITANTES) ───────────── */
-    // Busca content.json do servidor e aplica na página
+    // Busca content.json direto do GitHub raw (sempre a versão mais recente, sem cache)
+    const CONTENT_URL = 'https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/content.json';
     async function loadAndApply() {
         let serverContent = {};
         try {
-            const r = await fetch('/content.json?_=' + Date.now());
+            const r = await fetch(CONTENT_URL + '?_=' + Date.now());
             if (r.ok) serverContent = await r.json();
         } catch (_) {}
 
