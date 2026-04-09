@@ -30,7 +30,8 @@ export default async function handler(req, res) {
     const { content, secret } = body;
 
     // Verifica senha admin
-    if (secret !== process.env.ADMIN_SECRET) {
+    const adminSecret = process.env.ADMIN_SECRET || 'Lovisa@2025';
+    if (secret !== adminSecret) {
         return res.status(401).json({ error: 'Não autorizado' });
     }
 
