@@ -216,6 +216,7 @@
             const origHTML  = el.innerHTML;
             const origStyle = el.getAttribute('style') || '';
             const cs = getComputedStyle(el);
+            let colorChanged = false, sizeChanged = false;
             const p = this.panel_('✏️ Editar Texto — ' + (el.dataset.elabel || ''));
             p.innerHTML += `<div class="ld-pb">
                 <div class="ld-f"><label>Conteúdo</label>
@@ -239,13 +240,15 @@
             const tc   = p.querySelector('#ldtc');
             const fs   = p.querySelector('#ldfs');
             rich.oninput = () => el.innerHTML = rich.innerHTML;
-            tc.oninput   = () => el.style.color = tc.value;
-            fs.oninput   = () => el.style.fontSize = fs.value + 'px';
+            tc.oninput   = () => { colorChanged = true; el.style.color = tc.value; };
+            fs.oninput   = () => { sizeChanged  = true; el.style.fontSize = fs.value + 'px'; };
             p.querySelector('#lda').onclick = () => {
-                this.store(el.dataset.eid, {
-                    html: el.innerHTML,
-                    style: { color: tc.value, fontSize: fs.value + 'px' }
-                });
+                const styleOverride = {};
+                if (colorChanged) styleOverride.color = tc.value;
+                if (sizeChanged)  styleOverride.fontSize = fs.value + 'px';
+                const entry = { html: el.innerHTML };
+                if (Object.keys(styleOverride).length) entry.style = styleOverride;
+                this.store(el.dataset.eid, entry);
                 this.closePanel();
                 this.toast('✓ Texto salvo no rascunho', 'ok');
             };
@@ -392,7 +395,8 @@
                 this.toast('✓ Cores salvas no rascunho', 'ok');
             };
             p.querySelector('#ldc').onclick = () => {
-                vars.forEach(v => root.style.removeProperty(v));
+                // Remove também aliases usados em index.html / pacote.html
+                [...vars, '--navy', '--navy-dark', '--text'].forEach(v => root.style.removeProperty(v));
                 applyContent(this.cms);
                 this.closePanel();
             };
