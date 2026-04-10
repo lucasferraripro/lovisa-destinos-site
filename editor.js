@@ -266,9 +266,11 @@
         /* ── IMAGEM ── */
         pImage(el) {
             const origSrc = el.src;
+            // Usa o atributo src original (não o absoluto do browser) se disponível
+            const origAttr = el.getAttribute('src') || el.src;
             const p = this.panel_('🖼️ Trocar Imagem — ' + (el.dataset.elabel || ''));
             p.innerHTML += `<div class="ld-pb">
-                <img class="ld-prev" id="ldprev" src="${el.src}">
+                <img class="ld-prev" id="ldprev" src="${origSrc}" style="background:#F3F4F6;">
                 <div class="ld-f">
                     <label>Enviar do computador</label>
                     <button id="ldbtn" style="width:100%;padding:10px;border:2px dashed #E5E7EB;border-radius:8px;background:#F9FAFB;cursor:pointer;font-size:13px;color:#374151;transition:border .15s;">
@@ -278,8 +280,9 @@
                     <div id="ldupstatus" class="ld-hint" style="margin-top:6px;"></div>
                 </div>
                 <div class="ld-f">
-                    <label>Ou cole uma URL</label>
-                    <input type="url" id="ldiu" value="${el.src}" placeholder="https://...">
+                    <label>Ou cole uma URL de imagem</label>
+                    <input type="url" id="ldiu" value="${origAttr}" placeholder="https://site.com/foto.jpg">
+                    <p class="ld-hint">Cole qualquer URL de imagem da internet (JPG, PNG, WEBP)</p>
                 </div>
                 <div class="ld-acts">
                     <button class="ld-ok" id="lda">✓ Aplicar</button>
@@ -352,11 +355,16 @@
             ui.oninput = () => {
                 clearTimeout(debounce);
                 debounce = setTimeout(() => {
-                    if (ui.value) { el.src = ui.value; pv.src = ui.value; }
-                }, 600);
+                    const v = ui.value.trim();
+                    if (v) { el.src = v; pv.src = v; }
+                }, 500);
             };
             p.querySelector('#lda').onclick = () => {
-                this.store(el.dataset.eid, { src: el.src });
+                clearTimeout(debounce); // cancela debounce pendente
+                const src = ui.value.trim() || origSrc; // sempre usa o campo, não el.src
+                el.src = src;
+                pv.src = src;
+                this.store(el.dataset.eid, { src });
                 this.closePanel();
                 this.toast('✓ Imagem salva no rascunho', 'ok');
             };
