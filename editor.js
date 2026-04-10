@@ -499,11 +499,15 @@
             if (hasCols) items += `<li>Cores globais do site</li>`;
             if (hasWA)   items += `<li>Número do WhatsApp: ${this.cms.whatsapp}</li>`;
 
+            const hasSavedSecret = !!sessionStorage.getItem('lovisa_secret');
             const p = this.panel_('🚀 Publicar no Site');
             p.innerHTML += `<div class="ld-pb">
                 <div class="ld-info" style="background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF;border-radius:10px;padding:14px;margin-bottom:14px;line-height:1.8;">
                     <strong>O que será publicado:</strong><ul style="margin:8px 0 0 16px;">${items}</ul>
                 </div>
+                ${!hasSavedSecret ? `<div class="ld-f"><label>🔑 Senha de acesso</label>
+                    <input type="password" id="ldpwd" placeholder="Digite sua senha" style="width:100%;padding:8px 11px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;">
+                </div>` : ''}
                 <p class="ld-hint">Estas mudanças ficarão visíveis para todos os visitantes imediatamente.</p>
                 <div class="ld-acts" style="margin-top:14px;">
                     <button class="ld-ok" id="lda">✓ Confirmar e publicar</button>
@@ -513,9 +517,15 @@
 
             p.querySelector('#ldc').onclick = () => this.closePanel();
             p.querySelector('#lda').onclick = async () => {
+                const pwdEl = p.querySelector('#ldpwd');
+                let secret = sessionStorage.getItem('lovisa_secret') || '';
+                if (pwdEl) {
+                    if (!pwdEl.value) { pwdEl.focus(); pwdEl.style.borderColor='#DC2626'; return; }
+                    secret = pwdEl.value;
+                    sessionStorage.setItem('lovisa_secret', secret);
+                }
                 p.querySelector('.ld-pb').innerHTML = `<div class="ld-loading"><span class="ld-spin">⏳</span>Publicando alterações…</div>`;
                 try {
-                    const secret = sessionStorage.getItem('lovisa_secret') || '';
                     const res = await fetch('/api/publish', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
