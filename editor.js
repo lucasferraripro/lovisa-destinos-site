@@ -44,20 +44,21 @@
         });
     }
 
-    async function loadAndApply() {
-        let srv = {};
+    async function fetchContent() {
         try {
             const r = await fetch(CONTENT_URL + '?_=' + Date.now());
-            if (r.ok) srv = await r.json();
-        } catch (_) {}
+            return r.ok ? await r.json() : {};
+        } catch (_) { return {}; }
+    }
 
+    async function loadAndApply(srv) {
+        let merged = srv || {};
         if (editMode) {
-            // Rascunho do admin sobrescreve apenas as chaves que ele editou
             const draft = JSON.parse(localStorage.getItem(CMS_KEY) || '{}');
-            srv = { ...srv, ...draft };
+            merged = { ...merged, ...draft };
         }
-        applyContent(srv);
-        return srv;
+        applyContent(merged);
+        return merged;
     }
 
     /* ─── CSS ───────────────────────────────────────────────── */
@@ -156,17 +157,11 @@
         cms: {},
         panel: null,
 
-        async start() {
+        async start(srv) {
             injectCSS();
-            // Carrega: servidor + rascunho local (rascunho sobrescreve só o que foi editado)
-            try {
-                const r = await fetch(CONTENT_URL + '?_=' + Date.now());
-                const srv = r.ok ? await r.json() : {};
-                const draft = JSON.parse(localStorage.getItem(CMS_KEY) || '{}');
-                this.cms = { ...srv, ...draft };
-            } catch (_) {
-                this.cms = JSON.parse(localStorage.getItem(CMS_KEY) || '{}');
-            }
+            // Reutiliza conteúdo já carregado pelo loadAndApply (sem fetch extra)
+            const draft = JSON.parse(localStorage.getItem(CMS_KEY) || '{}');
+            this.cms = { ...(srv || {}), ...draft };
 
             document.body.classList.add('ld-on');
             sessionStorage.setItem('editor_active', '1');
@@ -646,10 +641,10 @@
 
     /* ─── BOOT ──────────────────────────────────────────────── */
     document.addEventListener('DOMContentLoaded', async () => {
-        await loadAndApply();
+        const srv = await fetchContent();   // 1 único fetch para toda a sessão
+        await loadAndApply(srv);
         if (editMode) {
-            await ED.start();
-            // Re-bind após renders dinâmicos (ex: pacote.html carrega DB async)
+            await ED.start(srv);            // reutiliza dados já carregados
             setTimeout(() => ED.bindAll(), 500);
         }
     });

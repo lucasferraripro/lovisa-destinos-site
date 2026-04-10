@@ -7,8 +7,10 @@
     <meta name="description" content="Roteiros exclusivos e personalizados para viajantes que não aceitam o comum. Parceira CVC com atendimento humanizado e personalizado.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="icon" href="logo.png" type="image/png">
     <style>
         /* ── RESET ── */
@@ -41,8 +43,7 @@
             line-height: 1.5;
             color: var(--text);
             background: var(--white);
-            overflow: hidden; /* Prevent horizontal scroll */
-            overflow-y: auto;
+            overflow-x: hidden;
             max-width: 100vw;
             -webkit-font-smoothing: antialiased;
         }
@@ -260,7 +261,7 @@
         .card-link:hover { transform: translateY(-9px); box-shadow: 0 18px 44px rgba(0,0,0,.13); }
 
         .card-img { position: relative; height: 236px; overflow: hidden; }
-        .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; aspect-ratio: 4/3; }
         .card-link:hover .card-img img { transform: scale(1.07); }
 
         .card-flag {
@@ -334,7 +335,7 @@
         .dep-text  { font-size: 14px; color: rgba(255,255,255,.78); line-height: 1.75; margin-bottom: 24px; font-style: italic; }
         .dep-author { display: flex; align-items: center; gap: 12px; }
         .dep-av { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 2px solid var(--accent); flex-shrink: 0; }
-        .dep-av img { width: 100%; height: 100%; object-fit: cover; }
+        .dep-av img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 1; }
         .dep-name { font-size: 13px; font-weight: 700; color: #fff; }
         .dep-dest { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 2px; }
 
@@ -606,7 +607,7 @@
 
             <a href="pacote.html?id=lencois" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=700&q=80" alt="Lençóis Maranhenses" loading="lazy" data-eid="card1-img" data-elabel="Foto Lençóis">
+                    <img src="https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=700&q=80" alt="Lençóis Maranhenses" loading="lazy" decoding="async" data-eid="card1-img" data-elabel="Foto Lençóis">
                     <div class="card-flag" data-eid="card1-flag" data-elabel="País Lençóis">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -622,7 +623,7 @@
 
             <a href="pacote.html?id=disney" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1568092816214-02404ef89f59?auto=format&fit=crop&w=700&q=80" alt="Disney Orlando" loading="lazy" data-eid="card2-img" data-elabel="Foto Disney">
+                    <img src="https://images.unsplash.com/photo-1568092816214-02404ef89f59?auto=format&fit=crop&w=700&q=80" alt="Disney Orlando" loading="lazy" decoding="async" data-eid="card2-img" data-elabel="Foto Disney">
                     <div class="card-flag" data-eid="card2-flag" data-elabel="País Disney">EUA</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -638,7 +639,7 @@
 
             <a href="pacote.html?id=maceio" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1564939558297-fc396f18e5c7?auto=format&fit=crop&w=700&q=80" alt="Maceió" loading="lazy" data-eid="card3-img" data-elabel="Foto Maceió">
+                    <img src="https://images.unsplash.com/photo-1564939558297-fc396f18e5c7?auto=format&fit=crop&w=700&q=80" alt="Maceió" loading="lazy" decoding="async" data-eid="card3-img" data-elabel="Foto Maceió">
                     <div class="card-flag" data-eid="card3-flag" data-elabel="País Maceió">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -654,7 +655,7 @@
 
             <a href="pacote.html?id=portogalinhas" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=700&q=80" alt="Porto de Galinhas" loading="lazy" data-eid="card4-img" data-elabel="Foto Porto de Galinhas">
+                    <img src="https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=700&q=80" alt="Porto de Galinhas" loading="lazy" decoding="async" data-eid="card4-img" data-elabel="Foto Porto de Galinhas">
                     <div class="card-flag" data-eid="card4-flag" data-elabel="País Porto de Galinhas">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -670,7 +671,7 @@
 
             <a href="pacote.html?id=riodejaneiro" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=700&q=80" alt="Rio de Janeiro" loading="lazy" data-eid="card5-img" data-elabel="Foto Rio de Janeiro">
+                    <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=700&q=80" alt="Rio de Janeiro" loading="lazy" decoding="async" data-eid="card5-img" data-elabel="Foto Rio de Janeiro">
                     <div class="card-flag" data-eid="card5-flag" data-elabel="País Rio de Janeiro">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -686,7 +687,7 @@
 
             <a href="pacote.html?id=joaopessoa" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80" alt="João Pessoa" loading="lazy" data-eid="card6-img" data-elabel="Foto João Pessoa">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80" alt="João Pessoa" loading="lazy" decoding="async" data-eid="card6-img" data-elabel="Foto João Pessoa">
                     <div class="card-flag" data-eid="card6-flag" data-elabel="País João Pessoa">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
