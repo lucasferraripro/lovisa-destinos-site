@@ -1,40 +1,30 @@
 # GUIA COMPLETO — REPLICAR SITE PARA NOVA AGÊNCIA DE VIAGENS
+*Atualizado: Abril 2026 — v2*
 
 > **Para a IA que for executar:** Leia este documento do início ao fim antes de começar.
-> Tudo que você precisa está aqui. Siga a ordem exata das etapas.
+> Siga a ordem exata. Não pule etapas.
 
 ---
 
-## O QUE É ESTE PROJETO
-
-Site completo para agência de viagens com:
-- **Site público** (home, página de pacotes, sobre nós, 404)
-- **Editor visual** — a dona da agência clica em qualquer texto/imagem e edita sem saber programar
-- **CMS sem banco de dados** — conteúdo salvo em `content.json` no GitHub
-- **Upload de imagens** — direto do computador, sem Dropbox ou Google Drive
-- **Deploy automático** — Vercel + GitHub, tudo no ar em segundos
-
-**Stack:** HTML puro + CSS + JS vanilla · Vercel (serverless) · GitHub API · Sem frameworks
-
----
-
-## ARQUIVOS DO PROJETO E O QUE CADA UM FAZ
+## ESTRUTURA DO PROJETO (ARQUIVOS ATUAIS)
 
 ```
 /
-├── index.html          → Página principal (home)
-├── sobre.html          → Página Sobre Nós
-├── pacote.html         → Template de página de pacote (dinâmico via JS)
-├── 404.html            → Página de erro 404
-├── editor.js           → Editor visual completo (NÃO MODIFICAR — funciona em todas as páginas)
-├── content.json        → CMS — todo conteúdo editado pela dona fica aqui
-├── logo.png            → Logo da empresa
-├── vercel.json         → Roteamento Vercel + 404
+├── index.html          → Home (hero, destinos, clientes/instagram, diferenciais, depoimentos, contato, footer)
+├── sobre.html          → Sobre a empresa (bio da agente, diferenciais, estatísticas)
+├── pacote.html         → Template dinâmico de pacote (lê ?id= da URL, usa objeto DB em JS)
+├── clientes.html       → Galeria de clientes / posts do Instagram
+├── 404.html            → Página de erro 404 customizada
+├── editor.js           → Editor visual CMS — NÃO MODIFICAR
+├── content.json        → CMS: chave=data-eid, valor={html, src, href, style} — INICIAR COMO {}
+├── logo.png            → Logo da empresa (substituir)
+├── vercel.json         → Roteamento Vercel (não modificar)
 ├── admin/
 │   └── login.html      → Tela de login do editor
 ├── api/
+│   ├── auth.js         → POST /api/auth — valida senha do admin (server-side)
 │   ├── content.js      → GET /api/content — retorna content.json sem cache CDN
-│   ├── publish.js      → POST /api/publish — salva content.json no GitHub
+│   ├── publish.js      → POST /api/publish — commita content.json no GitHub
 │   └── upload.js       → POST /api/upload — faz upload de imagem no GitHub
 └── imagens/
     ├── uploads/        → Imagens enviadas pelo editor ficam aqui
@@ -43,208 +33,205 @@ Site completo para agência de viagens com:
 
 ---
 
-## PASSO 1 — COLETAR INFORMAÇÕES DA NOVA EMPRESA
+## COMO O SISTEMA FUNCIONA
 
-Antes de tocar em código, colete TUDO abaixo. Use o arquivo `DADOS-NOVA-EMPRESA.md` como formulário.
+### Site público
+- Carrega normalmente sem autenticação
+- `editor.js` sempre incluso — detecta se há sessão admin ativa
+- `content.json` do GitHub é lido via `/api/content` a cada carregamento (sem cache CDN)
+- Conteúdo do `content.json` é aplicado sobre os elementos com `data-eid`
 
-### Dados obrigatórios:
-| Campo | Exemplo Lovisa |
-|-------|---------------|
-| Nome da empresa | Lovisa Destinos |
-| Slogan / tagline | Viagens que transformam para sempre |
-| WhatsApp (só números) | 5519995396281 |
-| Email | contato@lovisadestinos.com.br |
-| Instagram (só o @) | lovisadestinos |
-| Grupo VIP WhatsApp (link) | https://chat.whatsapp.com/... |
-| Horário de atendimento | Seg–Sáb 8h–20h |
-| Cidade/Estado | Brasil |
-| Cor principal (hex) | #1565C0 (azul) |
-| Cor destaque (hex) | #F97316 (laranja) |
-| Email do admin | admin@lovisadestinos.com.br |
-| Senha do admin | Lovisa@2025 |
+### Editor visual
+1. Dona acessa `/admin/login.html`, entra com email + senha
+2. Login.html chama `/api/auth` com a senha → valida contra `ADMIN_SECRET` do Vercel
+3. Se ok: salva `lovisa_auth` e `lovisa_secret` no sessionStorage, redireciona para home com `?editor=1`
+4. `editor.js` ativa barra escura no topo
+5. Elementos com `data-eid` ficam com borda laranja (editáveis)
+6. Ao clicar: painel lateral abre (detecta tipo automaticamente: imagem/link/texto)
+7. Ao publicar: `editor.js` envia `{content, secret}` para `/api/publish`
+8. `/api/publish` commita `content.json` atualizado no GitHub
+9. Na próxima visita, `/api/content` retorna o novo conteúdo
 
-### Sobre a agente/dona:
-| Campo | Exemplo |
-|-------|---------|
-| Nome | Vânia |
-| Tag / função | Quem cuida de você |
-| Mini-bio (3 parágrafos) | Sou a Vânia... |
-| Foto (arquivo ou URL) | imagens/empresaria.webp |
-
-### Pacotes de viagem (repetir para cada um):
-| Campo | Exemplo |
-|-------|---------|
-| ID único (sem espaço) | noronha |
-| Nome | Fernando de Noronha |
-| Subtítulo | Paraíso ecológico no Atlântico |
-| Localização | Pernambuco, Brasil |
-| Duração | 5 noites / 6 dias |
-| Descrição longa | ... |
-| Preço | R$ 4.890 |
-| Parcelamento | 10x de R$ 489 |
-| Foto principal (URL) | https://... |
-| Fotos carrossel (URLs) | [...] |
-| Inclusos (lista) | Passagem, Hotel, ... |
-| Não inclusos (lista) | Seguro viagem, ... |
-| Roteiro dia a dia | Dia 1: Chegada... |
-
-### Depoimentos (mínimo 3):
-| Campo | Exemplo |
-|-------|---------|
-| Nome | Ana Paula |
-| Destino visitado | Maldivas |
-| Texto do depoimento | Melhor viagem da minha vida... |
-| Foto (URL ou arquivo) | https://... |
-
-### Estatísticas (4 números):
-| Campo | Exemplo |
-|-------|---------|
-| Stat 1 | 5+ Anos de Experiência |
-| Stat 2 | 3k+ Viajantes Felizes |
-| Stat 3 | 50+ Destinos Atendidos |
-| Stat 4 | 100% Satisfação Garantida |
-
-### Diferenciais (4 itens):
-| Campo | Exemplo |
-|-------|---------|
-| Diferencial 1 | ✈ Parceira Oficial CVC |
-| Diferencial 2 | ❤ Atendimento Humanizado |
-| Diferencial 3 | 💳 Parcelamento em 10x |
-| Diferencial 4 | 🎧 Suporte do Início ao Fim |
+### Imagens
+- Upload pelo editor → `/api/upload` → commit no GitHub em `imagens/uploads/`
+- URL retornada: `https://raw.githubusercontent.com/OWNER/REPO/master/imagens/uploads/...`
+- OU: colar URL externa diretamente no campo de URL do painel de imagem
 
 ---
 
-## PASSO 2 — PREPARAR O GITHUB
+## PASSO 1 — COLETAR DADOS DA NOVA EMPRESA
 
-1. Acesse github.com e faça login na conta do cliente (ou crie uma)
-2. Crie um repositório novo: **Settings → Repositories → New**
-   - Nome sugerido: `nome-agencia-site` (ex: `solar-viagens-site`)
-   - Visibilidade: **Public** (obrigatório para imagens via raw.githubusercontent.com)
-3. Faça upload de todos os arquivos deste projeto para o novo repositório
-4. Gere um Personal Access Token com permissão de escrita:
-   - Settings → Developer Settings → Personal Access Tokens → Tokens (classic)
-   - Escopos: marcar `repo` (completo)
-   - Copie o token — você vai precisar dele no Passo 4
+Use o arquivo `DADOS-NOVA-EMPRESA.md` como formulário. Campos obrigatórios:
+
+| Campo | Exemplo (Lovisa) |
+|-------|-----------------|
+| Nome da empresa | Lovisa Destinos |
+| Slogan | Viagens que transformam para sempre |
+| WhatsApp (só números) | 5519995396281 |
+| Email | contato@lovisadestinos.com.br |
+| Instagram (@) | lovisadestinos |
+| Grupo VIP WhatsApp | https://chat.whatsapp.com/H2DpRM8... |
+| Horário | Seg–Sáb 8h–20h |
+| Cidade/Estado | Campinas, SP |
+| Cor principal (hex) | #1565C0 |
+| Cor destaque (hex) | #F97316 |
+| Email do admin | admin@lovisadestinos.com.br |
+| Senha do admin | MinhaAgencia@2025 (criar uma senha forte) |
+| Usuário GitHub | lucasferraripro |
+| Nome do repositório | lovisa-destinos-site |
+
+---
+
+## PASSO 2 — PREPARAR GITHUB
+
+1. Criar repositório **público** (obrigatório — imagens servidas via raw.githubusercontent.com)
+2. Fazer upload de todos os arquivos
+3. Gerar Personal Access Token: Settings → Developer Settings → Personal Access Tokens → Tokens (classic)
+   - Escopo: `repo` (completo)
+   - Copiar o token (começa com `ghp_`)
 
 ---
 
 ## PASSO 3 — PERSONALIZAR OS ARQUIVOS
 
-### 3a. Atualizar `api/publish.js` e `api/content.js` e `api/upload.js`
+### 3a. Arquivos da pasta `/api` — 4 arquivos
 
-Em TODOS os três arquivos da pasta `/api`, encontre e substitua:
+Em `api/auth.js`, `api/publish.js`, `api/content.js`, `api/upload.js`:
+
 ```javascript
+// BUSCAR:
 const owner = 'lucasferraripro';
 const repo  = 'lovisa-destinos-site';
-```
-Pelo usuário GitHub e nome do repositório da nova empresa:
-```javascript
+
+// SUBSTITUIR POR:
 const owner = 'USUARIO_GITHUB_NOVO';
 const repo  = 'NOME_REPO_NOVO';
 ```
 
-### 3b. Atualizar `admin/login.html`
+> ⚠️ `api/auth.js` NÃO tem owner/repo mas tem a mesma lógica de `ADMIN_SECRET` — não precisa mexer nele além disso.
 
-Encontre e substitua as credenciais:
+### 3b. `admin/login.html`
+
+Encontrar e substituir o email:
 ```javascript
-const CREDENTIALS = {
-    email: 'admin@lovisadestinos.com.br',
-    ...
-};
+// BUSCAR:
+if (email !== 'admin@lovisadestinos.com.br')
+
+// SUBSTITUIR POR:
+if (email !== 'admin@NOVAEMPRESA.com.br')
 ```
-```javascript
-// Linha que valida email:
-const emailCorreto = email === 'admin@lovisadestinos.com.br';
-// Linha que valida senha:
-const senhaCorreta = senha === 'Lovisa@2025';
-```
-Pelos dados da nova empresa.
 
-### 3c. Atualizar `index.html`
+> A senha NÃO está em login.html — ela é validada pelo `ADMIN_SECRET` do Vercel via `/api/auth`.
+> Não há mais hardcode de senha no código front-end.
 
-Substituir com `Ctrl+H` (buscar e substituir):
+### 3c. `index.html`
 
-| Buscar | Substituir |
-|--------|------------|
+Buscar e substituir globalmente (Ctrl+H):
+
+| Buscar | Substituir por |
+|--------|----------------|
 | `Lovisa Destinos` | Nome da nova empresa |
-| `5519995396281` | WhatsApp da nova empresa (só números) |
+| `5519995396281` | WhatsApp (só números) |
 | `lovisadestinos` | @ do Instagram novo |
-| `contato@lovisadestinos.com.br` | Email novo |
-| `admin@lovisadestinos.com.br` | Email admin novo |
-| `H2DpRM8lAtnGrNjwWWcFVj` | ID do grupo VIP novo |
+| `contato@lovisadestinos.com.br` | Email de contato |
+| `admin@lovisadestinos.com.br` | Email do admin |
+| `H2DpRM8lAtnGrNjwWWcFVj` | ID do grupo VIP WhatsApp |
 | `Seg–Sáb 8h–20h` | Horário novo |
 | `#1565C0` | Cor principal nova |
 | `#F97316` | Cor destaque nova |
+| `#0D47A1` | Cor principal escura nova |
 
-Depois substituir todos os textos de conteúdo (hero title, diferenciais, depoimentos, etc.) pelos dados da nova empresa. Os elementos com `data-eid` podem ser editados depois pelo editor visual — mas o conteúdo inicial deve já refletir a empresa.
+Depois substituir manualmente os textos de conteúdo:
+- Hero: título, subtítulo, badge, texto dos botões
+- Diferenciais: 4 títulos e descrições
+- Depoimentos: nomes, destinos, textos, fotos
+- Seção "Como Funciona": 3 passos
+- Seção "Clientes": textos do Instagram (ou deixar vazio para preencher depois)
+- Stats (4 números): anos de experiência, clientes, destinos, satisfação
+- Footer: endereço, texto da empresa
 
-### 3d. Atualizar `sobre.html`
+### 3d. `sobre.html`
 
-Mesmas substituições de WhatsApp, nome, email, cores.
-Substituir textos de: hero, quem somos (3 parágrafos), diferenciais, agente (nome, bio), CTA.
+Mesmas substituições de contato + cores do passo 3c.
+Substituir textos de: hero, 3 parágrafos sobre a agente, nome da agente, foto da agente, diferenciais, CTA.
 
-### 3e. Atualizar `pacote.html` — banco de dados de pacotes
+### 3e. `pacote.html`
 
-No início do `pacote.html`, encontre o bloco JavaScript com o objeto `DB`:
+**Substituições de contato + cores** (mesmas do 3c).
 
-```javascript
-const DB = {
-    noronha: {
-        title: 'Fernando de Noronha',
-        ...
-    },
-    maldivas: { ... },
-    ...
-};
-```
-
-Substitua completamente com os pacotes da nova empresa. Estrutura de cada pacote:
+**Banco de dados de pacotes** — encontrar o bloco `const DB = {` e substituir completamente:
 
 ```javascript
 const DB = {
     ID_PACOTE: {
-        title: 'Nome do Destino',
+        title:    'Nome do Destino',
         subtitle: 'Subtítulo descritivo',
-        loc: 'País/Região',
-        dur: 'X noites / Y dias',
-        desc: 'Descrição longa do pacote...',
-        price: 'R$ X.XXX',
-        parcelas: 'Xox de R$ XXX',
-        imgs: [
-            'https://URL_FOTO_1',
+        location: 'País/Região',
+        duration: 'X noites / Y dias',
+        price:    '4.890',       // só números e ponto
+        parcelas: '10x de R$ 489',
+        flag:     '🌊',          // emoji do destino
+        images: [
+            'https://URL_FOTO_PRINCIPAL',
             'https://URL_FOTO_2',
             'https://URL_FOTO_3',
         ],
+        desc: 'Descrição longa do pacote...',
         incluso: ['Item 1', 'Item 2', 'Item 3'],
         nao_incluso: ['Item A', 'Item B'],
         roteiro: [
-            { dia: '1º Dia', title: 'Título do dia', desc: 'Descrição...' },
-            { dia: '2º Dia', title: 'Título do dia', desc: 'Descrição...' },
+            { dia: '1º Dia', title: 'Título', desc: 'Descrição do dia...' },
+            { dia: '2º Dia', title: 'Título', desc: 'Descrição do dia...' },
         ]
     },
     // repetir para cada pacote
 };
 ```
 
-Também atualizar o `INDEX` (lista de cards na home):
+**INDEX** (cards da seção de destinos na home e em pacote.html):
+
 ```javascript
 const INDEX = [
-    { id: 'ID_PACOTE', flag: '🌊', loc: 'País', title: 'Nome', price: 'R$ X.XXX', img: 'https://...' },
+    { id: 'ID_PACOTE', flag: '🌊', loc: 'País', title: 'Nome', price: '4.890', img: 'https://...' },
     // ...
 ];
 ```
 
-### 3f. Atualizar `404.html`
+**destImgs e destEid** (mapeamento para "Outros Destinos" na página de pacote):
 
-Substituir apenas o texto de marca (nome da empresa). O resto funciona igual.
+```javascript
+const destImgs = {
+    id1: 'https://URL_IMAGEM_1',
+    id2: 'https://URL_IMAGEM_2',
+    // ...
+};
+const destEid = {
+    id1: 'card1-img',
+    id2: 'card2-img',
+    id3: 'card3-img',
+    id4: 'card4-img',
+    id5: 'card5-img',
+    id6: 'card6-img',
+};
+```
 
-### 3g. Substituir `logo.png`
+> Os IDs dos cards (`card1-img` a `card6-img`) devem bater com os `data-eid` das imagens dos cards em `index.html`.
 
-Colocar o logo da nova empresa no arquivo `logo.png` (ou ajustar o `<img src="">` nas páginas).
+### 3f. `clientes.html`
 
-### 3h. Zerar `content.json`
+Substituir nome da empresa e textos. Atualizar fotos dos clientes (posts do Instagram ou fotos de viagem).
 
-O content.json deve começar vazio para a nova empresa:
+### 3g. `404.html`
+
+Substituir apenas o nome da empresa. O resto funciona igual.
+
+### 3h. `logo.png`
+
+Substituir pelo logo da nova empresa (PNG com fundo transparente, mínimo 200x200px).
+
+### 3i. `content.json`
+
+Deve começar vazio:
 ```json
 {}
 ```
@@ -253,123 +240,126 @@ O content.json deve começar vazio para a nova empresa:
 
 ## PASSO 4 — CONFIGURAR VERCEL
 
-1. Acesse vercel.com e faça login (crie conta se necessário)
-2. Clique em **Add New Project** → **Import Git Repository**
-3. Selecione o repositório criado no Passo 2
-4. Configure as **Environment Variables** (obrigatórias):
+1. Acessar vercel.com → Add New Project → Import Git Repository
+2. Selecionar o repositório criado
+3. Configurar **Environment Variables** (obrigatórias):
 
 | Variável | Valor |
 |----------|-------|
-| `GITHUB_TOKEN` | Token gerado no Passo 2 (começa com `ghp_`) |
-| `ADMIN_SECRET` | Senha do admin (ex: `MinhaEmpresa@2025`) |
+| `GITHUB_TOKEN` | Token gerado no Passo 2 (`ghp_...`) |
+| `ADMIN_SECRET` | Senha do admin (ex: `MinhaAgencia@2025`) |
 
-5. Clique em **Deploy**
-6. Após o deploy, o site estará no ar em `nome-projeto.vercel.app`
+4. Clicar em Deploy
+5. Site no ar em `nome-projeto.vercel.app`
 
-> **Domínio personalizado:** Settings → Domains → adicionar domínio próprio (ex: `solarviagens.com.br`)
+> **IMPORTANTE:** `ADMIN_SECRET` é a senha que a dona usa para logar no editor.
+> O email de acesso é o que você colocou em `admin/login.html`.
+> Os dois DEVEM ser configurados no Vercel — sem eles o editor não funciona.
 
 ---
 
-## PASSO 5 — TESTAR TUDO
+## PASSO 5 — TESTAR
 
-Acesse o site e verifique:
-
+### Site público:
 - [ ] Home carrega com dados da nova empresa
-- [ ] Cores corretas aplicadas
-- [ ] WhatsApp abre o número certo
-- [ ] Página de pacotes funciona (`/pacote.html?id=ID_PACOTE`)
-- [ ] Sobre nós carrega corretamente
-- [ ] 404 mostra página de erro ao acessar URL inexistente
+- [ ] Cores corretas
+- [ ] WhatsApp abre o número correto
+- [ ] Página de pacotes funciona (`/pacote.html?id=ID_DO_PACOTE`)
+- [ ] Sobre carrega corretamente
+- [ ] Clientes/galeria carrega
+- [ ] 404 aparece ao acessar URL inexistente
 
-Depois testar o editor:
-- [ ] Acessar `/admin/login.html`
-- [ ] Login com email/senha da nova empresa
-- [ ] Redireciona para home com editor ativo (barra escura no topo)
-- [ ] Clicar em elemento laranja abre painel de edição
-- [ ] Editar texto → Publicar → confirmar → site atualiza
-- [ ] Upload de imagem por arquivo funciona
-- [ ] Painel de cores altera o visual global
-- [ ] Número de WhatsApp global atualiza todos os botões
-- [ ] Botão ⚙ no rodapé leva para login
-
----
-
-## PASSO 6 — ENTREGAR PARA A CLIENTE
-
-Enviar para a dona da agência:
-
-1. **URL do site:** `https://nome.vercel.app` (ou domínio próprio)
-2. **URL do editor:** `https://nome.vercel.app/admin/login.html`
-3. **Email de acesso:** (o que foi configurado)
-4. **Senha de acesso:** (a que foi configurada)
-5. **O arquivo `COMO-EDITAR.md`** — manual de uso simplificado
+### Editor (Painel):
+- [ ] Login em `/admin/login.html` com email + senha configurados
+- [ ] Redireciona para home com barra escura no topo
+- [ ] Clicar em elemento laranja abre painel lateral
+- [ ] Editar texto → rascunho salvo (ponto amarelo no botão Publicar)
+- [ ] Publicar → confirmar → site atualiza em ~30 segundos
+- [ ] Upload de imagem por arquivo funciona (máx 3MB)
+- [ ] Colar URL de imagem externa funciona
+- [ ] Painel de cores altera visual do site
+- [ ] Campo WhatsApp atualiza todos os botões
+- [ ] Editor funciona no **celular** (mobile-first)
+- [ ] Carrossel de imagens nas páginas de pacote: miniatura atualiza junto com slide
 
 ---
 
-## VARIÁVEIS QUE MUDAM ENTRE EMPRESAS (checklist rápido)
+## PASSO 6 — ENTREGAR PARA O CLIENTE
+
+Enviar:
+1. URL do site
+2. URL do editor: `https://SEU-SITE.vercel.app/admin/login.html`
+3. Email de acesso (configurado em login.html)
+4. Senha de acesso (ADMIN_SECRET do Vercel)
+5. O arquivo `COMO-EDITAR.md` — manual simplificado
+
+---
+
+## VARIÁVEIS QUE MUDAM ENTRE EMPRESAS — CHECKLIST RÁPIDO
 
 ```
-GitHub:
-  owner (usuário GitHub)
-  repo  (nome do repositório)
+api/auth.js, api/publish.js, api/content.js, api/upload.js:
+  ✏ owner (usuário GitHub)
+  ✏ repo  (nome do repositório)
 
 admin/login.html:
-  email do admin
-  senha do admin
-
-index.html / sobre.html / pacote.html / 404.html:
-  Nome da empresa
-  WhatsApp (5519995396281)
-  Instagram (@)
-  Email
-  Grupo VIP WhatsApp (link)
-  Cores (#1565C0 e #F97316)
-  Todos os textos de conteúdo
-  URLs das imagens
-
-pacote.html (DB):
-  Objeto DB completo com os pacotes
-  Objeto INDEX com os cards
+  ✏ email do admin (if (email !== 'admin@...')
 
 Vercel Environment Variables:
-  GITHUB_TOKEN
-  ADMIN_SECRET
+  ✏ GITHUB_TOKEN (novo token do GitHub do cliente)
+  ✏ ADMIN_SECRET (senha que o cliente vai usar no editor)
+
+index.html / sobre.html / pacote.html / clientes.html / 404.html:
+  ✏ Nome da empresa
+  ✏ WhatsApp (5519995396281)
+  ✏ Instagram (@lovisadestinos)
+  ✏ Email (contato@lovisadestinos.com.br)
+  ✏ Grupo VIP WhatsApp (H2DpRM8lAtnGrNjwWWcFVj)
+  ✏ Cores (#1565C0, #F97316, #0D47A1)
+  ✏ Todos os textos de conteúdo
+  ✏ URLs das imagens
+
+pacote.html — objetos JS:
+  ✏ DB (banco de dados dos pacotes)
+  ✏ INDEX (cards da home)
+  ✏ destImgs (mapeamento de imagens para "outros destinos")
+  ✏ destEid (mapeamento de data-eid para "outros destinos")
 
 logo.png:
-  Arquivo do logo
+  ✏ Substituir pelo logo do cliente
 
 content.json:
-  Resetar para {}
+  ✏ Resetar para {}
 ```
 
 ---
 
-## COMO O EDITOR FUNCIONA (para entender ao personalizar)
+## CSS VARIABLES — ATENÇÃO
 
-1. A dona acessa `/admin/login.html`, faz login
-2. É redirecionada para a home com `?editor=1`
-3. `editor.js` detecta o modo editor e ativa a barra escura no topo
-4. Todos os elementos com `data-eid="nome-unico"` ficam com borda laranja ao passar o mouse
-5. Ao clicar: abre painel lateral automático (texto, imagem ou link — detectado automaticamente)
-6. Ao publicar: o `editor.js` envia o conteúdo para `/api/publish`
-7. `/api/publish` commita o `content.json` atualizado no GitHub
-8. Na próxima visita, `/api/content` busca o `content.json` do GitHub (sem cache) e aplica no site
+O projeto usa dois conjuntos de variáveis CSS (por razões históricas):
 
-**O editor funciona em QUALQUER página** que inclua `<script src="editor.js"></script>`.
-Para tornar um elemento editável, basta adicionar `data-eid="id-unico" data-elabel="Nome Legível"` na tag HTML.
+| Arquivo | Variáveis de cor |
+|---------|-----------------|
+| `index.html`, `pacote.html`, `clientes.html` | `--navy`, `--navy-dark`, `--accent`, `--text`, `--wa` |
+| `sobre.html` | `--primary`, `--primary-dark`, `--accent`, `--text-dark`, `--wa` |
+
+O `editor.js` trata isso automaticamente — ao salvar cores via painel, aplica aliases em ambos os conjuntos.
 
 ---
 
-## TEMPO ESTIMADO DE IMPLEMENTAÇÃO
+## FONTES E ÍCONES — PADRÃO DE CARREGAMENTO
 
-| Etapa | Tempo |
-|-------|-------|
-| Coletar dados da empresa | 30–60 min (depende do cliente) |
-| Configurar GitHub + Vercel | 15 min |
-| Personalizar HTML (buscar/substituir) | 30–45 min |
-| Personalizar pacotes (DB) | 30–60 min (depende do número de pacotes) |
-| Testes | 15 min |
-| **Total** | **2–3 horas** |
+**Não bloqueante (padrão atual):**
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"></noscript>
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+```
+
+> Usar SEMPRE este padrão em todos os arquivos HTML. Nunca usar `<link rel="stylesheet">` diretamente para fontes externas — causa lentidão.
 
 ---
 
@@ -377,15 +367,30 @@ Para tornar um elemento editável, basta adicionar `data-eid="id-unico" data-ela
 
 | Problema | Causa | Solução |
 |----------|-------|---------|
-| "Não autorizado" ao publicar | ADMIN_SECRET diferente do login.html | Verificar se a variável no Vercel é igual à senha em login.html |
+| "Não autorizado" ao publicar | `ADMIN_SECRET` do Vercel não configurado ou diferente | Verificar/configurar `ADMIN_SECRET` no painel Vercel |
+| Login não funciona | Email em `login.html` diferente do digitado | Verificar email no `if (email !== '...')` em login.html |
 | Site não atualiza após publicar | Cache do browser | Aguardar 30s ou abrir aba anônima |
 | Upload de imagem falha | GITHUB_TOKEN sem permissão `repo` | Regerar token com escopo `repo` completo |
-| Imagens não aparecem | Repositório privado | Repositório precisa ser **Public** |
-| Editor não ativa ao navegar | sessionStorage expirou | Fazer login novamente em /admin/login.html |
-| Pacote não encontrado (404) | `id` na URL diferente do `DB` | Verificar se o ID na URL bate com a chave no objeto `DB` |
-| Cores não aplicam no site | CSS var diferente | index.html/pacote.html usam `--navy`; editor seta `--primary` E `--navy` automaticamente |
+| Imagens não aparecem | Repositório privado | Repositório PRECISA ser público |
+| Editor não ativa | sessionStorage expirou (8h) | Fazer login novamente em /admin/login.html |
+| Pacote não encontrado | `id` na URL diferente do objeto `DB` | Verificar se ID na URL bate com chave no `DB` |
+| Miniatura do carrossel não atualiza | Versão antiga do pacote.html | Verificar se thumbnails têm `data-eid` igual ao slide |
+| Cores não aplicam em index/pacote | CSS var errada | Usar `--navy` (não `--primary`) em index.html e pacote.html |
 
 ---
 
-*Criado para o projeto Lovisa Destinos — Abril 2026*
-*Replicável para qualquer agência de viagens em 2–3 horas*
+## TEMPO ESTIMADO
+
+| Etapa | Tempo |
+|-------|-------|
+| Coletar dados + fotos do cliente | 1–2h |
+| Configurar GitHub + Vercel | 15min |
+| Personalizar HTML (buscar/substituir) | 30–45min |
+| Personalizar pacotes (DB) | 30–60min |
+| Personalizar clientes/galeria | 15–30min |
+| Testes | 15min |
+| **Total** | **2–4 horas** |
+
+---
+
+*Criado a partir do projeto Lovisa Destinos — Atualizado Abril 2026 v2*

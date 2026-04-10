@@ -1,7 +1,5 @@
 # FORMULÁRIO — DADOS DA NOVA EMPRESA
-
-> Preencha este arquivo com as informações da nova agência antes de começar a implementação.
-> Depois entregue para a IA junto com o arquivo `REPLICAR-PARA-NOVA-EMPRESA.md`.
+*Preencha antes de começar. Entregue para a IA junto com REPLICAR-PARA-NOVA-EMPRESA.md*
 
 ---
 
@@ -16,29 +14,38 @@ Instagram (@):
 Link grupo VIP WhatsApp:  https://chat.whatsapp.com/...
 Horário de atendimento:   ex: Seg–Sáb 8h–20h
 Cidade / Estado:
+Parceria principal:       ex: Parceira Oficial CVC
 ```
+
+---
 
 ## CORES E IDENTIDADE
 
 ```
 Cor principal (hex):      ex: #1565C0
-Cor destaque (hex):       ex: #F97316
-Logo (arquivo ou URL):
+Cor principal escura:     ex: #0D47A1   (hover, backgrounds)
+Cor destaque (hex):       ex: #F97316   (botões CTA, destaques)
+Logo (arquivo ou URL):    logo.png
 ```
 
-## ACESSO DO ADMIN
+---
+
+## ACESSO DO ADMIN (EDITOR)
 
 ```
 Email do admin:           ex: admin@minhaagencia.com.br
 Senha do admin:           ex: MinhaAgencia@2025
+                          (esta senha vai como ADMIN_SECRET no Vercel)
 ```
+
+---
 
 ## GITHUB E VERCEL
 
 ```
-Usuário GitHub:
+Usuário GitHub:           ex: meuusuario
 Nome do repositório:      ex: solar-viagens-site
-GitHub Token:             ghp_...
+GitHub Token:             ghp_...  (gerado em github.com/settings/tokens)
 ```
 
 ---
@@ -57,7 +64,7 @@ Parágrafo 3:
 
 ---
 
-## ESTATÍSTICAS (4 números para mostrar na home e no sobre)
+## ESTATÍSTICAS (4 números — home e sobre)
 
 ```
 Stat 1 número:   ex: 5+        Stat 1 texto: ex: Anos de Experiência
@@ -68,18 +75,18 @@ Stat 4 número:   ex: 100%      Stat 4 texto: ex: Satisfação Garantida
 
 ---
 
-## DIFERENCIAIS (4 itens destacados)
+## DIFERENCIAIS (4 itens)
 
 ```
-Diferencial 1 — Título:       Diferencial 1 — Texto:
-Diferencial 2 — Título:       Diferencial 2 — Texto:
-Diferencial 3 — Título:       Diferencial 3 — Texto:
-Diferencial 4 — Título:       Diferencial 4 — Texto:
+Diferencial 1 — Ícone/Emoji:   Título:   Texto:
+Diferencial 2 — Ícone/Emoji:   Título:   Texto:
+Diferencial 3 — Ícone/Emoji:   Título:   Texto:
+Diferencial 4 — Ícone/Emoji:   Título:   Texto:
 ```
 
 ---
 
-## HERO (banner principal)
+## HERO (banner principal — index.html)
 
 ```
 Título (pode ter <em>destaque</em>):
@@ -92,7 +99,7 @@ Botão secundário:        ex: Ver Destinos
 
 ---
 
-## COMO FUNCIONA (3 passos)
+## COMO FUNCIONA (3 passos — index.html)
 
 ```
 Passo 1 — Ícone:   Título:   Descrição:
@@ -104,6 +111,9 @@ Passo 3 — Ícone:   Título:   Descrição:
 
 ## PACOTES DE VIAGEM
 
+> Repetir este bloco para cada destino. Mínimo recomendado: 4 pacotes.
+> IDs sem espaços, sem acentos, só letras minúsculas (ex: noronha, disney, maceio).
+
 ### Pacote 1
 
 ```
@@ -112,15 +122,15 @@ Nome:
 Subtítulo:
 Localização:
 Duração:                         ex: 5 noites / 6 dias
+Emoji do destino:                ex: 🌊 🏖️ 🎠 🏙️
 Descrição longa:
 
-Preço:                           ex: R$ 4.890
+Preço (só números):              ex: 4890
 Parcelamento:                    ex: 10x de R$ 489
 
 Foto principal (URL):
-Foto carrossel 1 (URL):
-Foto carrossel 2 (URL):
-Foto carrossel 3 (URL):
+Foto 2 (URL):
+Foto 3 (URL):
 
 Inclusos (um por linha):
 -
@@ -132,60 +142,72 @@ Não inclusos (um por linha):
 -
 
 Roteiro:
-Dia 1 — Título:    Descrição:
-Dia 2 — Título:    Descrição:
-Dia 3 — Título:    Descrição:
-Dia 4 — Título:    Descrição:
-Dia 5 — Título:    Descrição:
+Dia 1 — Título:   Descrição:
+Dia 2 — Título:   Descrição:
+Dia 3 — Título:   Descrição:
+Dia 4 — Título:   Descrição:
+Dia 5 — Título:   Descrição:
 ```
 
 ### Pacote 2
-
 ```
 ID:
-Nome:
-(repetir campos acima)
+(repetir todos os campos acima)
 ```
 
 ### Pacote 3
-
 ```
 ID:
-Nome:
-(repetir campos acima)
+(repetir todos os campos acima)
 ```
 
-*(adicionar mais pacotes se necessário)*
+### Pacote 4
+```
+ID:
+(repetir todos os campos acima)
+```
+
+*(adicionar mais pacotes conforme necessário)*
 
 ---
 
 ## DEPOIMENTOS (mínimo 3)
 
 ### Depoimento 1
-
 ```
 Nome:
-Destino:          ex: Maldivas com a família
+Destino visitado:   ex: Maldivas com a família
 Texto:
-Foto (URL):
+Foto (URL):         ex: https://images.unsplash.com/photo-...?w=100&q=80
 ```
 
 ### Depoimento 2
-
 ```
 Nome:
-Destino:
+Destino visitado:
 Texto:
 Foto (URL):
 ```
 
 ### Depoimento 3
-
 ```
 Nome:
-Destino:
+Destino visitado:
 Texto:
 Foto (URL):
+```
+
+---
+
+## CLIENTES / INSTAGRAM (seção em index.html e página clientes.html)
+
+> Fotos de clientes em viagem ou posts do Instagram da agência.
+> Podem ser URLs diretas do Instagram ou imagens do Unsplash como placeholder.
+
+```
+Post 1 — Foto (URL):   @usuario:   Legenda:   Link do post:
+Post 2 — Foto (URL):   @usuario:   Legenda:   Link do post:
+Post 3 — Foto (URL):   @usuario:   Legenda:   Link do post:
 ```
 
 ---
@@ -194,23 +216,23 @@ Foto (URL):
 
 ```
 Endereço completo (opcional):
-Imagem clientes (URL):          foto de grupo de viajantes felizes
+Texto do footer sobre a empresa (1–2 frases):
+Imagem de fundo do footer (URL, opcional):
 ```
 
 ---
 
 ## CHECKLIST — O QUE RECEBER DO CLIENTE
 
-- [ ] Logo em PNG ou SVG (fundo transparente)
-- [ ] Foto da agente/dona (boa resolução)
-- [ ] Foto de grupo de clientes (opcional)
-- [ ] Fotos dos destinos/pacotes (ou aprovação para usar stock gratuito)
+- [ ] Logo em PNG ou SVG (fundo transparente, mínimo 200x200px)
+- [ ] Foto da agente/dona (boa resolução, retrato)
 - [ ] Textos confirmados (ou autorização para criar)
 - [ ] Cores da marca (ou autorização para escolher)
 - [ ] Dados de contato (WhatsApp, email, Instagram)
-- [ ] Credenciais GitHub (ou criar conta nova)
+- [ ] Fotos dos destinos/pacotes (ou aprovação para usar stock gratuito)
+- [ ] Fotos de clientes em viagem (ou posts do Instagram)
+- [ ] Credenciais GitHub (conta existente ou criar nova)
 
 ---
 
-*Após preencher este arquivo, entregue para a IA junto com `REPLICAR-PARA-NOVA-EMPRESA.md`*
-*A IA irá replicar o projeto completo em 2–3 horas*
+*Após preencher, entregue este arquivo para a IA junto com REPLICAR-PARA-NOVA-EMPRESA.md*
