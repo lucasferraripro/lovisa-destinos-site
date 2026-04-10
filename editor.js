@@ -23,6 +23,12 @@
             Object.entries(cms.colors).forEach(([k, v]) =>
                 document.documentElement.style.setProperty(k, v));
         }
+        // Atualiza todos os links de WhatsApp se número foi editado
+        if (cms.whatsapp) {
+            document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
+                a.href = a.href.replace(/wa\.me\/\d+/, 'wa.me/' + cms.whatsapp);
+            });
+        }
         document.querySelectorAll('[data-eid]').forEach(el => {
             const d = cms[el.dataset.eid];
             if (!d) return;
@@ -121,6 +127,8 @@
         .ld-spin{font-size:26px;animation:ldspin 1s linear infinite;display:block;margin-bottom:8px;}
         @keyframes ldspin{to{transform:rotate(360deg)}}
         .ld-loading{text-align:center;padding:24px 16px;color:#6B7280;font-size:13px;}
+        .ld-dirty-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#FCD34D;margin-right:4px;flex-shrink:0;}
+        .ld-last-pub{color:rgba(255,255,255,.35);font-size:11px;white-space:nowrap;}
 
         @media(max-width:600px){
             .ld-panel{left:8px;right:8px;width:auto;}
@@ -151,15 +159,21 @@
             sessionStorage.setItem('editor_active', '1');
             this.buildBar();
             this.bindAll();
+            // Se há rascunho não publicado, mostrar indicador
+            if (Object.keys(JSON.parse(localStorage.getItem(CMS_KEY) || '{}')).length > 0) {
+                this.markDirty();
+            }
         },
 
         buildBar() {
             const bar = document.createElement('div');
             bar.id = 'ld-bar';
+            const lastPub = localStorage.getItem('lovisa_last_pub') || '';
             bar.innerHTML = `
             <div class="ld-brand"><span class="ld-dot"></span>Editor</div>
             <span class="ld-hint-text">👆 Clique em qualquer elemento laranja para editar</span>
             <div class="ld-spacer"></div>
+            ${lastPub ? `<span class="ld-last-pub">Publicado: ${lastPub}</span><div class="ld-sep"></div>` : ''}
             <button class="ld-btn orange" id="ld-colors">🎨 Cores</button>
             <div class="ld-sep"></div>
             <button class="ld-btn blue" id="ld-save">💾 Salvar</button>
@@ -340,6 +354,11 @@
                 <div class="ld-cr"><label>🟠 Laranja destaque</label><input type="color" id="ldg3" value="${this.hex(g('--accent'))||'#F97316'}"></div>
                 <div class="ld-cr"><label>⬛ Texto principal</label><input type="color" id="ldg4" value="${this.hex(g('--text-dark'))||'#1A1F2E'}"></div>
                 <div class="ld-cr"><label>🟩 WhatsApp verde</label><input type="color" id="ldg5" value="${this.hex(g('--wa'))||'#25D366'}"></div>
+                <hr class="ld-hr">
+                <div class="ld-f"><label>📱 Número do WhatsApp</label>
+                    <input type="text" id="ldgwa" value="${this.cms.whatsapp||''}" placeholder="5511999999999">
+                    <p class="ld-hint">Somente números com código do país (ex: 5511999999999). Atualiza todos os botões do site.</p>
+                </div>
                 <div class="ld-acts">
                     <button class="ld-ok" id="lda">✓ Aplicar cores</button>
                     <button class="ld-ko" id="ldc">Cancelar</button>
@@ -347,14 +366,24 @@
             </div>`;
             const vars = ['--primary','--primary-dark','--accent','--text-dark','--wa'];
             const inputs = ['ldg1','ldg2','ldg3','ldg4','ldg5'].map(id => p.querySelector('#'+id));
+            const waInp = p.querySelector('#ldgwa');
             inputs.forEach((inp, i) => {
                 inp.oninput = () => root.style.setProperty(vars[i], inp.value);
             });
+            waInp.oninput = () => {
+                const num = waInp.value.replace(/\D/g, '');
+                if (num) document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
+                    a.href = a.href.replace(/wa\.me\/\d+/, 'wa.me/' + num);
+                });
+            };
             p.querySelector('#lda').onclick = () => {
                 const colors = {};
                 vars.forEach((v, i) => colors[v] = inputs[i].value);
                 this.cms.colors = { ...(this.cms.colors || {}), ...colors };
+                const num = waInp.value.replace(/\D/g, '');
+                if (num) this.cms.whatsapp = num;
                 localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                this.markDirty();
                 this.closePanel();
                 this.toast('✓ Cores salvas no rascunho', 'ok');
             };
@@ -384,6 +413,17 @@
                 const data = await res.json();
                 if (res.ok && data.success) {
                     localStorage.removeItem(CMS_KEY); // rascunho limpo — servidor é a fonte de verdade
+                    const now = new Date().toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+                    localStorage.setItem('lovisa_last_pub', now);
+                    document.querySelectorAll('.ld-dirty-dot').forEach(d => d.remove());
+                    const lp = document.querySelector('.ld-last-pub');
+                    if (lp) { lp.textContent = 'Publicado: ' + now; }
+                    else {
+                        const sep = document.createElement('div'); sep.className = 'ld-sep';
+                        const span = document.createElement('span'); span.className = 'ld-last-pub'; span.textContent = 'Publicado: ' + now;
+                        const btn = document.getElementById('ld-colors');
+                        if (btn) { btn.before(span); btn.before(sep); }
+                    }
                     applyContent(this.cms);
                     p.querySelector('.ld-pb').innerHTML = `
                         <div class="ld-pub-box">✅ <strong>Publicado com sucesso!</strong><br>
@@ -441,6 +481,16 @@
         store(key, val) {
             this.cms[key] = val;
             localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+            this.markDirty();
+        },
+
+        markDirty() {
+            const btn = document.getElementById('ld-pub');
+            if (btn && !btn.querySelector('.ld-dirty-dot')) {
+                const dot = document.createElement('span');
+                dot.className = 'ld-dirty-dot';
+                btn.prepend(dot);
+            }
         },
 
         toast(msg, type='') {

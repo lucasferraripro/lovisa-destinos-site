@@ -616,6 +616,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('price-num').textContent        = 'R$ ' + pkg.price;
     document.getElementById('price-parc').textContent       = 'ou ' + pkg.parcelas;
 
+    // Prefixar data-eid com o ID do pacote para cada pacote ter seus próprios campos
+    const staticEids = ['pkg-title','pkg-subtitle','pkg-loc','pkg-dur','pkg-desc',
+                        'pkg-price','pkg-parcelas','pkg-sb-loc','pkg-sb-dur'];
+    staticEids.forEach(eid => {
+        const el = document.querySelector(`[data-eid="${eid}"]`);
+        if (el) el.dataset.eid = id + '-' + eid;
+    });
+
     // ── WhatsApp ──
     const waMsg = encodeURIComponent(
         `Olá, Lovisa Destinos! Tenho interesse no pacote *${pkg.title}*\n\n` +
@@ -640,8 +648,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const img = document.createElement('img');
         img.src = src; img.alt = pkg.title + ' ' + (i+1);
         img.loading = i === 0 ? 'eager' : 'lazy';
-        img.dataset.eid = 'pkg-img-' + i;
-        img.dataset.elabel = 'Foto ' + (i+1) + ' do Carrossel';
+        img.dataset.eid = id + '-pkg-img-' + i;
+        img.dataset.elabel = 'Foto ' + (i+1) + ' — ' + pkg.title;
         slide.appendChild(img); track.appendChild(slide);
 
         // dot
@@ -680,8 +688,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const inclEl = document.getElementById('incluso-list');
     pkg.incluso.forEach((item, i) => {
         const li = document.createElement('li');
-        li.dataset.eid = `pkg-incluso-${i}`;
-        li.dataset.elabel = `Incluso ${i+1}`;
+        li.dataset.eid = `${id}-pkg-incluso-${i}`;
+        li.dataset.elabel = `Incluso ${i+1} — ${pkg.title}`;
         li.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${item}`;
         inclEl.appendChild(li);
     });
@@ -690,8 +698,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const nEl = document.getElementById('nao-incluso-list');
         pkg.nao_incluso.forEach((item, i) => {
             const li = document.createElement('li');
-            li.dataset.eid = `pkg-nao-incluso-${i}`;
-            li.dataset.elabel = `Não Incluso ${i+1}`;
+            li.dataset.eid = `${id}-pkg-nao-incluso-${i}`;
+            li.dataset.elabel = `Não Incluso ${i+1} — ${pkg.title}`;
             li.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${item}`;
             nEl.appendChild(li);
         });
@@ -703,12 +711,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'roteiro-item';
         const h4 = document.createElement('h4');
-        h4.dataset.eid = `pkg-rot-${i}-title`;
-        h4.dataset.elabel = `Roteiro Dia ${i+1} Título`;
+        h4.dataset.eid = `${id}-pkg-rot-${i}-title`;
+        h4.dataset.elabel = `Dia ${i+1} Título — ${pkg.title}`;
         h4.textContent = r.title;
         const p = document.createElement('p');
-        p.dataset.eid = `pkg-rot-${i}-desc`;
-        p.dataset.elabel = `Roteiro Dia ${i+1} Texto`;
+        p.dataset.eid = `${id}-pkg-rot-${i}-desc`;
+        p.dataset.elabel = `Dia ${i+1} Texto — ${pkg.title}`;
         p.textContent = r.desc;
         const dayDiv = document.createElement('div');
         dayDiv.className = 'roteiro-day';
