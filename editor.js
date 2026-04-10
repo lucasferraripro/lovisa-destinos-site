@@ -164,10 +164,10 @@
             sessionStorage.setItem('editor_active', '1');
             this.buildBar();
             this.bindAll();
-            // Bloqueia navegação de todos os links de card (capture phase)
+            // Bloqueia navegação SOMENTE quando um modo de edição está ativo
             document.querySelectorAll('a[href]').forEach(a => {
                 a.addEventListener('click', e => {
-                    if (document.body.classList.contains('ld-on')) e.preventDefault();
+                    if (document.body.classList.contains('ld-on') && ED.mode) e.preventDefault();
                 }, true);
             });
         },
