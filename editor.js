@@ -20,8 +20,12 @@
     function applyContent(cms) {
         if (!cms || !Object.keys(cms).length) return;
         if (cms.colors) {
-            Object.entries(cms.colors).forEach(([k, v]) =>
-                document.documentElement.style.setProperty(k, v));
+            // Aliases: index.html/pacote.html usam --navy/--navy-dark/--text
+            const aliases = { '--primary': '--navy', '--primary-dark': '--navy-dark', '--text-dark': '--text' };
+            Object.entries(cms.colors).forEach(([k, v]) => {
+                document.documentElement.style.setProperty(k, v);
+                if (aliases[k]) document.documentElement.style.setProperty(aliases[k], v);
+            });
         }
         // Atualiza todos os links de WhatsApp se número foi editado
         if (cms.whatsapp) {
