@@ -92,9 +92,6 @@
         /* Impede overlays/flags de bloquearem cliques nas imagens dos cards */
         body.ld-on .card-overlay,
         body.ld-on .card-flag{pointer-events:none!important;}
-        /* Impede links dos cards de navegar ao clicar em elementos editáveis */
-        body.ld-on a.card-link{pointer-events:none!important;}
-        body.ld-on a.card-link [data-eid]{pointer-events:all!important;}
 
         .ld-panel{position:fixed;top:64px;right:18px;width:310px;background:#fff;border-radius:16px;z-index:99998;box-shadow:0 20px 60px rgba(0,0,0,.22);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;}
         .ld-ph{background:#111827;color:#fff;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;cursor:move;user-select:none;}
