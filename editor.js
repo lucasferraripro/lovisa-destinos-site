@@ -180,14 +180,14 @@
             ${lastPub ? `<span class="ld-last-pub">Publicado: ${lastPub}</span><div class="ld-sep"></div>` : ''}
             <button class="ld-btn orange" id="ld-colors">🎨 Cores</button>
             <div class="ld-sep"></div>
-            <button class="ld-btn blue" id="ld-save">💾 Salvar</button>
             <button class="ld-btn green" id="ld-pub">🚀 Publicar</button>
             <div class="ld-sep"></div>
+            <button class="ld-btn" id="ld-revert" title="Descartar rascunho não publicado">↩ Reverter</button>
             <button class="ld-btn red" id="ld-exit">✕ Sair</button>`;
             document.body.prepend(bar);
             document.getElementById('ld-colors').onclick = () => this.pColors();
-            document.getElementById('ld-save').onclick   = () => this.saveDraft();
             document.getElementById('ld-pub').onclick    = () => this.publish();
+            document.getElementById('ld-revert').onclick = () => this.revert();
             document.getElementById('ld-exit').onclick   = () => this.exit();
         },
 
@@ -266,18 +266,85 @@
             p.innerHTML += `<div class="ld-pb">
                 <img class="ld-prev" id="ldprev" src="${el.src}">
                 <div class="ld-f">
-                    <label>URL da imagem</label>
+                    <label>Enviar do computador</label>
+                    <button id="ldbtn" style="width:100%;padding:10px;border:2px dashed #E5E7EB;border-radius:8px;background:#F9FAFB;cursor:pointer;font-size:13px;color:#374151;transition:border .15s;">
+                        📂 Escolher arquivo (JPG, PNG, WEBP)
+                    </button>
+                    <input type="file" id="ldfile" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none">
+                    <div id="ldupstatus" class="ld-hint" style="margin-top:6px;"></div>
+                </div>
+                <div class="ld-f">
+                    <label>Ou cole uma URL</label>
                     <input type="url" id="ldiu" value="${el.src}" placeholder="https://...">
-                    <p class="ld-hint">Cole o link de qualquer imagem pública (Unsplash, Google Fotos, etc.)</p>
                 </div>
                 <div class="ld-acts">
                     <button class="ld-ok" id="lda">✓ Aplicar</button>
                     <button class="ld-ko" id="ldc">Cancelar</button>
                 </div>
             </div>`;
-            const ui = p.querySelector('#ldiu');
-            const pv = p.querySelector('#ldprev');
+            const ui     = p.querySelector('#ldiu');
+            const pv     = p.querySelector('#ldprev');
+            const btn    = p.querySelector('#ldbtn');
+            const file   = p.querySelector('#ldfile');
+            const status = p.querySelector('#ldupstatus');
             let debounce;
+
+            // Botão abre seletor de arquivo
+            btn.onclick = () => file.click();
+            btn.onmouseenter = () => btn.style.borderColor = '#1565C0';
+            btn.onmouseleave = () => btn.style.borderColor = '#E5E7EB';
+
+            // Upload quando arquivo selecionado
+            file.onchange = async () => {
+                const f = file.files[0];
+                if (!f) return;
+                if (f.size > 3 * 1024 * 1024) {
+                    status.textContent = '❌ Arquivo muito grande (máx 3MB). Comprima a imagem antes.';
+                    status.style.color = '#DC2626';
+                    return;
+                }
+                // Preview imediato com data URL
+                const reader = new FileReader();
+                reader.onload = async ev => {
+                    const dataUrl = ev.target.result;
+                    el.src = dataUrl;
+                    pv.src = dataUrl;
+                    btn.textContent = '⏳ Enviando…';
+                    btn.disabled = true;
+                    status.textContent = 'Enviando para o servidor…';
+                    status.style.color = '#6B7280';
+                    try {
+                        const b64 = dataUrl.split(',')[1];
+                        const secret = sessionStorage.getItem('lovisa_secret') || '';
+                        const res = await fetch('/api/upload', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ filename: f.name, base64: b64, secret })
+                        });
+                        const data = await res.json();
+                        if (res.ok && data.url) {
+                            el.src = data.url;
+                            pv.src = data.url;
+                            ui.value = data.url;
+                            btn.textContent = '✅ Imagem enviada!';
+                            status.textContent = 'Clique em ✓ Aplicar para salvar.';
+                            status.style.color = '#16A34A';
+                        } else {
+                            throw new Error(data.error || 'Erro no upload');
+                        }
+                    } catch (err) {
+                        el.src = origSrc;
+                        pv.src = origSrc;
+                        btn.textContent = '📂 Escolher arquivo';
+                        btn.disabled = false;
+                        status.textContent = '❌ ' + err.message;
+                        status.style.color = '#DC2626';
+                    }
+                };
+                reader.readAsDataURL(f);
+            };
+
+            // Preview por URL digitada
             ui.oninput = () => {
                 clearTimeout(debounce);
                 debounce = setTimeout(() => {
@@ -326,18 +393,19 @@
             const tgt = p.querySelector('#ldtgt');
             const bbg = p.querySelector('#ldbbg');
             const bfg = p.querySelector('#ldbfg');
+            let bgChanged = false, fgChanged = false;
             bt.oninput  = () => { const ic = el.querySelector('i'); el.textContent = bt.value; if(ic) el.prepend(ic.cloneNode(true)); };
-            bbg.oninput = () => el.style.backgroundColor = bbg.value;
-            bfg.oninput = () => el.style.color = bfg.value;
+            bbg.oninput = () => { bgChanged = true; el.style.backgroundColor = bbg.value; };
+            bfg.oninput = () => { fgChanged = true; el.style.color = bfg.value; };
             p.querySelector('#lda').onclick = () => {
                 el.setAttribute('href', bh.value);
                 el.setAttribute('target', tgt.value);
-                this.store(el.dataset.eid, {
-                    html: el.innerHTML,
-                    href: bh.value,
-                    target: tgt.value,
-                    style: { backgroundColor: bbg.value, color: bfg.value }
-                });
+                const styleOverride = {};
+                if (bgChanged) styleOverride.backgroundColor = bbg.value;
+                if (fgChanged) styleOverride.color = bfg.value;
+                const entry = { html: el.innerHTML, href: bh.value, target: tgt.value };
+                if (Object.keys(styleOverride).length) entry.style = styleOverride;
+                this.store(el.dataset.eid, entry);
                 this.closePanel();
                 this.toast('✓ Botão salvo no rascunho', 'ok');
             };
@@ -402,61 +470,97 @@
             };
         },
 
-        /* ── SALVAR RASCUNHO ── */
-        saveDraft() {
-            localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
-            this.toast('✓ Rascunho salvo localmente', 'ok');
+        /* ── REVERTER ── */
+        revert() {
+            const hasDraft = Object.keys(JSON.parse(localStorage.getItem(CMS_KEY) || '{}')).length > 0;
+            if (!hasDraft) { this.toast('Não há rascunho para descartar', ''); return; }
+            if (!confirm('Descartar todas as alterações não publicadas? O site voltará ao conteúdo que está publicado.')) return;
+            localStorage.removeItem(CMS_KEY);
+            document.querySelectorAll('.ld-dirty-dot').forEach(d => d.remove());
+            this.toast('Rascunho descartado. Recarregando…', '');
+            setTimeout(() => location.reload(), 900);
         },
 
         /* ── PUBLICAR ── */
         async publish() {
-            const p = this.panel_('🚀 Publicar no Site');
-            p.innerHTML += `<div class="ld-pb"><div class="ld-loading"><span class="ld-spin">⏳</span>Publicando alterações…</div></div>`;
-            try {
-                const res = await fetch('/api/publish', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: this.cms, secret: 'Lovisa@2025' })
-                });
-                const data = await res.json();
-                if (res.ok && data.success) {
-                    localStorage.removeItem(CMS_KEY); // rascunho limpo — servidor é a fonte de verdade
-                    const now = new Date().toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-                    localStorage.setItem('lovisa_last_pub', now);
-                    document.querySelectorAll('.ld-dirty-dot').forEach(d => d.remove());
-                    const lp = document.querySelector('.ld-last-pub');
-                    if (lp) { lp.textContent = 'Publicado: ' + now; }
-                    else {
-                        const sep = document.createElement('div'); sep.className = 'ld-sep';
-                        const span = document.createElement('span'); span.className = 'ld-last-pub'; span.textContent = 'Publicado: ' + now;
-                        const btn = document.getElementById('ld-colors');
-                        if (btn) { btn.before(span); btn.before(sep); }
-                    }
-                    applyContent(this.cms);
-                    p.querySelector('.ld-pb').innerHTML = `
-                        <div class="ld-pub-box">✅ <strong>Publicado com sucesso!</strong><br>
-                        Visitantes verão as mudanças em ~30 segundos.</div>
-                        <button class="ld-ok" style="width:100%;margin-top:12px" onclick="this.closest('.ld-panel').remove()">✓ OK</button>`;
-                    this.toast('✅ Publicado!', 'ok');
-                } else {
-                    throw new Error(data.error || 'Erro desconhecido');
-                }
-            } catch (err) {
-                p.querySelector('.ld-pb').innerHTML = `
-                    <div class="ld-pub-err">❌ <strong>Erro:</strong> ${err.message}</div>
-                    <button class="ld-ko" style="width:100%;margin-top:12px" onclick="this.closest('.ld-panel').remove()">Fechar</button>`;
-                this.toast('❌ Erro ao publicar', 'err');
+            // Resumo do que será publicado
+            const elems   = Object.keys(this.cms).filter(k => k !== 'colors' && k !== 'whatsapp');
+            const hasCols = this.cms.colors && Object.keys(this.cms.colors).length > 0;
+            const hasWA   = !!this.cms.whatsapp;
+            const total   = elems.length + (hasCols ? 1 : 0) + (hasWA ? 1 : 0);
+
+            if (total === 0) {
+                this.toast('Nenhuma alteração para publicar', '');
+                return;
             }
+
+            let items = '';
+            if (elems.length) items += `<li>${elems.length} elemento(s) de texto/imagem editados</li>`;
+            if (hasCols) items += `<li>Cores globais do site</li>`;
+            if (hasWA)   items += `<li>Número do WhatsApp: ${this.cms.whatsapp}</li>`;
+
+            const p = this.panel_('🚀 Publicar no Site');
+            p.innerHTML += `<div class="ld-pb">
+                <div class="ld-info" style="background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF;border-radius:10px;padding:14px;margin-bottom:14px;line-height:1.8;">
+                    <strong>O que será publicado:</strong><ul style="margin:8px 0 0 16px;">${items}</ul>
+                </div>
+                <p class="ld-hint">Estas mudanças ficarão visíveis para todos os visitantes imediatamente.</p>
+                <div class="ld-acts" style="margin-top:14px;">
+                    <button class="ld-ok" id="lda">✓ Confirmar e publicar</button>
+                    <button class="ld-ko" id="ldc">Cancelar</button>
+                </div>
+            </div>`;
+
+            p.querySelector('#ldc').onclick = () => this.closePanel();
+            p.querySelector('#lda').onclick = async () => {
+                p.querySelector('.ld-pb').innerHTML = `<div class="ld-loading"><span class="ld-spin">⏳</span>Publicando alterações…</div>`;
+                try {
+                    const secret = sessionStorage.getItem('lovisa_secret') || '';
+                    const res = await fetch('/api/publish', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: this.cms, secret })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        localStorage.removeItem(CMS_KEY);
+                        const now = new Date().toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+                        localStorage.setItem('lovisa_last_pub', now);
+                        document.querySelectorAll('.ld-dirty-dot').forEach(d => d.remove());
+                        const lp = document.querySelector('.ld-last-pub');
+                        if (lp) { lp.textContent = 'Publicado: ' + now; }
+                        else {
+                            const sep = document.createElement('div'); sep.className = 'ld-sep';
+                            const span = document.createElement('span'); span.className = 'ld-last-pub'; span.textContent = 'Publicado: ' + now;
+                            const btn2 = document.getElementById('ld-colors');
+                            if (btn2) { btn2.before(span); btn2.before(sep); }
+                        }
+                        applyContent(this.cms);
+                        p.querySelector('.ld-pb').innerHTML = `
+                            <div class="ld-pub-box">✅ <strong>Publicado com sucesso!</strong><br>
+                            Visitantes verão as mudanças em alguns segundos.</div>
+                            <button class="ld-ok" style="width:100%;margin-top:12px" onclick="this.closest('.ld-panel').remove()">✓ OK</button>`;
+                        this.toast('✅ Publicado!', 'ok');
+                    } else {
+                        throw new Error(data.error || 'Erro desconhecido');
+                    }
+                } catch (err) {
+                    p.querySelector('.ld-pb').innerHTML = `
+                        <div class="ld-pub-err">❌ <strong>Erro:</strong> ${err.message}</div>
+                        <button class="ld-ko" style="width:100%;margin-top:12px" onclick="this.closest('.ld-panel').remove()">Fechar</button>`;
+                    this.toast('❌ Erro ao publicar', 'err');
+                }
+            };
         },
 
         /* ── SAIR ── */
         exit() {
-            if (confirm('Sair do editor? Alterações não publicadas ficam salvas como rascunho.')) {
-                sessionStorage.removeItem('editor_active');
-                const u = new URL(location.href);
-                u.searchParams.delete('editor');
-                location.replace(u.toString());
-            }
+            const hasDraft = Object.keys(JSON.parse(localStorage.getItem(CMS_KEY) || '{}')).length > 0;
+            if (hasDraft && !confirm('Sair do editor? Você tem alterações não publicadas (rascunho salvo).')) return;
+            sessionStorage.removeItem('editor_active');
+            const u = new URL(location.href);
+            u.searchParams.delete('editor');
+            location.replace(u.toString());
         },
 
         /* ── HELPERS ── */

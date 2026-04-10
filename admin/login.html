@@ -145,6 +145,7 @@
                 ts: Date.now(),
                 expires: Date.now() + (8 * 60 * 60 * 1000) // 8 horas
             }));
+            sessionStorage.setItem('lovisa_secret', senha);
             window.location.href = '../index.html?editor=1';
         } else {
             document.getElementById('error-msg').style.display = 'block';
