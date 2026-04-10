@@ -731,6 +731,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ── Outros Destinos (exclui o atual) ──
+    // Mapeamento destino → data-eid da home (para herdar imagens editadas)
     const destImgs = {
         noronha:  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/111_Mirante_da_Ponta_do_Air_France.jpg/700px-111_Mirante_da_Ponta_do_Air_France.jpg',
         maldivas: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=600&q=70',
@@ -739,16 +740,22 @@ document.addEventListener('DOMContentLoaded', () => {
         santorini:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=600&q=70',
         dubai:    'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=70'
     };
+    // data-eid dos cards na home — para o CMS aplicar a mesma imagem aqui
+    const destEid = {
+        noronha: 'card1-img', maldivas: 'card2-img', paris: 'card3-img',
+        italia: 'card4-img', santorini: 'card5-img', dubai: 'card6-img'
+    };
     const outros = Object.keys(DB).filter(k => k !== id).slice(0, 4);
     const cardsEl = document.getElementById('outros-cards');
     outros.forEach(k => {
         const p = DB[k];
+        const eid = destEid[k] || '';
         const card = document.createElement('a');
         card.href = `pacote.html?id=${k}`;
         card.className = 'card-link';
         card.innerHTML = `
             <div class="card-img">
-                <img src="${destImgs[k]}" alt="${p.title}" loading="lazy">
+                <img src="${destImgs[k]}" alt="${p.title}" loading="lazy"${eid ? ` data-eid="${eid}" data-elabel="Foto ${p.title}"` : ''}>
                 <div class="card-flag">${p.flag}</div>
             </div>
             <div class="card-body">
