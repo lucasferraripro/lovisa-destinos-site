@@ -330,7 +330,10 @@
                         });
                         const data = await res.json();
                         if (res.ok && data.url) {
-                            el.src = data.url;
+                            // Atualiza slide + miniaturas com mesmo data-eid
+                            document.querySelectorAll(`[data-eid="${el.dataset.eid}"]`).forEach(e => {
+                                if (e.tagName === 'IMG') e.src = data.url;
+                            });
                             pv.src = data.url;
                             ui.value = data.url;
                             btn.textContent = '✅ Imagem enviada!';
@@ -360,10 +363,13 @@
                 }, 500);
             };
             p.querySelector('#lda').onclick = () => {
-                clearTimeout(debounce); // cancela debounce pendente
-                const src = ui.value.trim() || origSrc; // sempre usa o campo, não el.src
-                el.src = src;
+                clearTimeout(debounce);
+                const src = ui.value.trim() || origSrc;
                 pv.src = src;
+                // Atualiza TODOS os elementos com o mesmo data-eid (ex: slide + miniatura)
+                document.querySelectorAll(`[data-eid="${el.dataset.eid}"]`).forEach(e => {
+                    if (e.tagName === 'IMG') e.src = src;
+                });
                 this.store(el.dataset.eid, { src });
                 this.closePanel();
                 this.toast('✓ Imagem salva no rascunho', 'ok');

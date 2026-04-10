@@ -659,12 +659,13 @@ document.addEventListener('DOMContentLoaded', () => {
         dot.onclick = () => goTo(i);
         dotsEl.appendChild(dot);
 
-        // thumb
+        // thumb — mesma data-eid do slide para applyContent() atualizar ambos
         const th = document.createElement('div');
         th.className = 'thumb' + (i===0?' on':'');
         th.onclick = () => goTo(i);
         const ti = document.createElement('img');
         ti.src = src; ti.alt = ''; ti.loading = 'lazy';
+        ti.dataset.eid = id + '-pkg-img-' + i;
         th.appendChild(ti); thumbsEl.appendChild(th);
     });
 
