@@ -21,156 +21,155 @@
     };
 
     const DB = {
-        noronha: {
-            title:    'Fernando de Noronha',
-            subtitle: 'O paraíso brasileiro',
-            location: 'Pernambuco, Brasil',
-            duration: '7 dias / 6 noites',
-            price:    '5.490,00',
-            parcelas: '10x de R$ 549',
-            flag:     'Brasil',
+        lencois: {
+            title:    'Lençóis Maranhenses',
+            subtitle: 'O deserto de dunas e lagoas cristalinas',
+            location: 'Maranhão, Brasil',
+            duration: '6 dias / 5 noites',
+            price:    '3.890,00',
+            parcelas: '10x de R$ 389',
+            flag:     'Brasil 🏖️',
             images: [
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/111_Mirante_da_Ponta_do_Air_France.jpg/1200px-111_Mirante_da_Ponta_do_Air_France.jpg',
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/115fernando_de_noronha_12015.jpg/1200px-115fernando_de_noronha_12015.jpg',
-                'https://upload.wikimedia.org/wikipedia/commons/d/d8/Arquip%C3%A9lago_de_Fernando_de_Noronha_06.jpg'
+                'https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1586001695680-4e8c0ed5c7e6?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80'
             ],
-            desc: 'Fernando de Noronha é um arquipélago de rara beleza no Atlântico Sul, a 354 km do litoral nordestino. Suas praias de águas cristalinas e rica vida marinha fazem dela um dos destinos mais exclusivos do Brasil — e do mundo. Mergulhe com tartarugas, nade ao lado de golfinhos no Baía dos Golfinhos e assista ao pôr do sol mais famoso do país no Mirante dos Golfinhos.',
-            incluso: ['Passagens Aéreas (ida e volta)', 'Traslado Aeroporto / Pousada', 'Hospedagem com Café da Manhã', 'Caminhada Histórica Guiada', 'Passeio 4x4 pela Ilha', 'Ingresso Parque Nacional', 'Seguro Viagem Completo'],
-            nao_incluso: ['Taxa de Preservação Ambiental (TPA)', 'Refeições almoço/jantar', 'Passeios opcionais'],
+            desc: 'Os Lençóis Maranhenses são uma das maravilhas naturais mais únicas do planeta. Dunas brancas e sinuosas se estendem por centenas de quilômetros, e entre elas se formam lagoas de água doce cristalina — um fenômeno só possível neste canto do Maranhão. Um cenário que parece saído de um sonho, onde o deserto encontra a vida em perfeita harmonia.',
+            incluso: ['Passagem aérea ida e volta', 'Transfer aeroporto-hotel em São Luís', 'Transfer São Luís–Barreirinhas (van privativa)', 'Hospedagem 5 noites com café da manhã', 'Passeio 4x4 pelas dunas', 'Passeio às lagoas Azul e Bonita', 'Passeio ao Rio Preguiças e Vassouras', 'Guia local especializado'],
+            nao_incluso: ['Seguro viagem', 'Almoços e jantares', 'Passeios opcionais', 'Gorjetas'],
             roteiro: [
-                { dia: '1º Dia', title: 'Chegada ao Paraíso', desc: 'Recepção no aeroporto por nosso guia local e transfer privativo para a pousada selecionada. Tarde livre para se acomodar e contemplar o mar.' },
-                { dia: '2º Dia', title: 'Caminhada Histórica', desc: 'Tour a pé pela Vila dos Remédios, Brasil de Nossa Senhora dos Remédios e pôr do sol imperdível no Forte do Boldró.' },
-                { dia: '3º Dia', title: 'Ilha Tour de 4x4', desc: 'Passeio completo em 4x4 pelos principais pontos da ilha: Baía do Sancho, Atalaia, Praia do Leão e Mirante dos Golfinhos.' },
-                { dia: '4º Dia', title: 'Dia das Águas', desc: 'Snorkel na Baía dos Golfinhos pela manhã. À tarde, mergulho guiado (opcional) nas águas transparentes do arquipélago.' },
-                { dia: '5º Dia', title: 'Praias Desertas', desc: 'Dia livre para explorar praias menos visitadas como Praia da Conceição e Baía do Sueste. Tarde para compras na Vila.' },
-                { dia: '6º Dia', title: 'Último Pôr do Sol', desc: 'Manhã de atividades livres. Jantar de despedida em restaurante local com vista para o mar.' },
-                { dia: '7º Dia', title: 'Partida', desc: 'Café da manhã na pousada, transfer ao aeroporto e retorno com a memória de uma experiência única.' }
+                { dia: '1º Dia', title: 'Chegada ao Maranhão', desc: 'Desembarque em São Luís e transfer para Barreirinhas, porta de entrada dos Lençóis. Check-in na pousada e descanso.' },
+                { dia: '2º Dia', title: 'Lagoa Azul e Lagoa Bonita', desc: 'Passeio de 4x4 pelas dunas até as lagoas mais famosas do parque. Banho de água cristalina e paisagens de tirar o fôlego.' },
+                { dia: '3º Dia', title: 'Lagoas do Meio e Circuito Completo', desc: 'Tour pelas lagoas menos visitadas e mais preservadas, com paradas nas melhores vistas panorâmicas.' },
+                { dia: '4º Dia', title: 'Rio Preguiças e Vassouras', desc: 'Passeio de barco pelo Rio Preguiças até a vila de Vassouras, com parada na restinga e no farol de Mandacaru.' },
+                { dia: '5º Dia', title: 'São Luís — Centro Histórico', desc: 'Transfer de volta a São Luís. Visita ao centro histórico com arquitetura portuguesa tombado pela UNESCO.' },
+                { dia: '6º Dia', title: 'Retorno', desc: 'Café da manhã, transfer ao aeroporto e voo de retorno com memórias únicas deste paraíso natural.' }
             ]
         },
-        maldivas: {
-            title:    'Maldivas Luxury',
-            subtitle: 'O romance sobre as águas',
-            location: 'Oceano Índico, Maldivas',
-            duration: '10 dias / 9 noites',
-            price:    '18.900,00',
-            parcelas: '12x de R$ 1.575',
-            flag:     'Maldivas',
-            images: [
-                'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1506929199175-fe09cd1898ff?auto=format&fit=crop&w=1200&q=80'
-            ],
-            desc: 'As Maldivas são o destino mais romanticamente isolado do planeta. Bangalôs suspensos sobre o mar azul-turquesa, recifes de corais intocados e pores do sol que parecem pintados. Um destino para casais que buscam privacidade, luxo e conexão com a natureza em seu estado mais puro.',
-            incluso: ['Voo Internacional (São Paulo → Malé)', 'Transfer de Hidroavião ao Resort', 'Hospedagem All Inclusive', 'Jantar Romântico à Beira-Mar', 'Snorkel Guiado em Recifes', 'Passeio de Barco ao Pôr do Sol', 'Seguro Viagem Internacional'],
-            nao_incluso: ['Mergulho Scuba (opcional)', 'Tratamentos de spa', 'Compras pessoais'],
-            roteiro: [
-                { dia: '1º Dia', title: 'Chegada a Malé', desc: 'Desembarque em Malé e transfer de hidroavião panorâmico até o resort. Check-in e jantar de boas-vindas.' },
-                { dia: '2º Dia', title: 'Relax Total', desc: 'Dia livre para aproveitar o bangalô, a piscina privativa e o mar cristalino ao redor. Massagem opcional no spa.' },
-                { dia: '3º Dia', title: 'Mundo Subaquático', desc: 'Snorkel guiado para observar raias manta, tubarões-limão e centenas de espécies de corais coloridos.' },
-                { dia: '4-7º Dia', title: 'Dias em Paraíso', desc: 'Dias livres para explorar o resort, fazer passeios opcionais, surf, stand-up paddle e experiências gastronômicas.' },
-                { dia: '8º Dia', title: 'Jantar Romântico', desc: 'Jantar especial de despedida na areia branca, com mesa privativa e decoração exclusiva ao luar.' },
-                { dia: '9-10º Dia', title: 'Últimas Memórias', desc: 'Manhã livre, transfer de volta a Malé e voo de retorno com as memórias de uma vida.' }
-            ]
-        },
-        paris: {
-            title:    'Paris Inesquecível',
-            subtitle: 'A Cidade Luz espera por você',
-            location: 'Paris, França',
+        disney: {
+            title:    'Disney & Orlando',
+            subtitle: 'A magia que toda família merece viver',
+            location: 'Orlando, Florida, EUA',
             duration: '8 dias / 7 noites',
-            price:    '12.500,00',
-            parcelas: '10x de R$ 1.250',
-            flag:     'França',
+            price:    '9.900,00',
+            parcelas: '10x de R$ 990',
+            flag:     'EUA 🏰',
             images: [
-                'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1431274172761-fca41d930114?auto=format&fit=crop&w=1200&q=80'
+                'https://images.unsplash.com/photo-1568092816214-02404ef89f59?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1576502200916-3808e07386a5?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1622468696594-fc5d43b9b2c5?auto=format&fit=crop&w=1200&q=80'
             ],
-            desc: 'Paris é a cidade mais visitada do mundo por uma razão: nenhuma outra combina tanta arte, gastronomia, história e elegância em um só lugar. Da Torre Eiffel aos bistrôs de Montmartre, cada esquina conta uma história. Nosso roteiro leva você além dos pontos turísticos — para a Paris que os parisenses amam.',
-            incluso: ['Aéreo Internacional (ida e volta)', 'Hospedagem em Bairro Central', 'Seguro Viagem Europa', 'Paris Museum Pass (4 dias)', 'Cruzeiro no Rio Sena', 'Transfer Aeroporto/Hotel', 'Guia Bilíngue em Português'],
-            nao_incluso: ['Refeições (exceto café da manhã)', 'Trem para outras cidades', 'Compras pessoais'],
+            desc: 'Realize o sonho da família inteira no maior complexo de parques temáticos do mundo! Magic Kingdom, EPCOT, Hollywood Studios e Animal Kingdom — quatro mundos de magia e diversão que encantam crianças e adultos. Universal Studios e Sea World completam uma semana inesquecível em Orlando, a capital mundial do entretenimento.',
+            incluso: ['Passagem aérea internacional ida e volta', 'Transfer aeroporto–hotel', 'Hospedagem 7 noites', 'Ingressos para 4 parques Disney (Park Hopper)', 'Orientação completa pré-viagem', 'Suporte da Lovisa durante toda a viagem'],
+            nao_incluso: ['Seguro viagem (fortemente recomendado)', 'Refeições nos parques', 'Universal Studios e Sea World', 'Passaporte e visto americano', 'Gorjetas'],
             roteiro: [
-                { dia: '1º Dia', title: 'Bonjour Paris', desc: 'Chegada a Paris, transfer e check-in. Caminhada à tarde pelo Marais e jantar de boas-vindas.' },
-                { dia: '2º Dia', title: 'Torre Eiffel & Sena', desc: 'Visita à Torre Eiffel com subida ao topo. À tarde, cruzeiro panorâmico pelo Rio Sena.' },
-                { dia: '3º Dia', title: 'Arte no Louvre', desc: 'Tour guiado pelo Museu do Louvre (4h). Tarde livre em Les Tuileries e Champs-Élysées.' },
-                { dia: '4º Dia', title: 'Montmartre & Sacré-Cœur', desc: 'Manhã em Montmartre com visita à Basílica Sacré-Cœur. Tarde na Place du Tertre e ateliês de artistas.' },
-                { dia: '5º Dia', title: 'Versalhes', desc: 'Excursão de dia inteiro ao Palácio de Versalhes, incluindo os jardins históricos.' },
-                { dia: '6-7º Dia', title: 'Paris Livre', desc: 'Dias livres para explorar o Marais, Saint-Germain, fazer compras ou viajar para Nice/Lyon.' },
-                { dia: '8º Dia', title: 'Au Revoir', desc: 'Manhã livre. Transfer ao aeroporto e retorno ao Brasil.' }
+                { dia: '1º Dia', title: 'Chegada em Orlando', desc: 'Desembarque no aeroporto internacional de Orlando, transfer para o hotel e check-in. Tarde livre para descanso.' },
+                { dia: '2º Dia', title: 'Magic Kingdom', desc: 'O parque mais famoso do mundo! Cinderella Castle, Space Mountain, Haunted Mansion e o desfile das 3h. Um dia de pura magia.' },
+                { dia: '3º Dia', title: 'EPCOT', desc: 'Future World com atrações tecnológicas e World Showcase com gastronomia e cultura de 11 países em um só lugar.' },
+                { dia: '4º Dia', title: 'Hollywood Studios', desc: 'Galaxy\'s Edge (Star Wars), Toy Story Land, Tower of Terror e o incrível show da noite Fantasy in the Sky.' },
+                { dia: '5º Dia', title: 'Animal Kingdom', desc: 'O parque da natureza e dos animais. Pandora — The World of Avatar, safari ao vivo e shows imperdíveis.' },
+                { dia: '6º Dia', title: 'Dia Livre / Universal', desc: 'Dia livre para repetir o parque favorito, visitar Universal Studios (opcional) ou relaxar na piscina do hotel.' },
+                { dia: '7º Dia', title: 'Disney Springs & Compras', desc: 'Manhã no Disney Springs para últimas compras e souvenirs. Tarde livre antes da viagem de volta.' },
+                { dia: '8º Dia', title: 'Retorno ao Brasil', desc: 'Transfer ao aeroporto e voo de retorno carregado de memórias, fotos e histórias para contar.' }
             ]
         },
-        italia: {
-            title:    'Costa Amalfitana',
-            subtitle: 'A costa mais bela da Europa',
-            location: 'Capri, Sorrento & Positano, Itália',
-            duration: '9 dias / 8 noites',
-            price:    '14.200,00',
-            parcelas: '10x de R$ 1.420',
-            flag:     'Itália',
+        maceio: {
+            title:    'Maceió & Maragogi',
+            subtitle: 'O Caribe Brasileiro espera por você',
+            location: 'Alagoas, Brasil',
+            duration: '6 dias / 5 noites',
+            price:    '2.890,00',
+            parcelas: '10x de R$ 289',
+            flag:     'Brasil 🐠',
             images: [
-                'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=1200&q=80'
+                'https://images.unsplash.com/photo-1564939558297-fc396f18e5c7?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80'
             ],
-            desc: 'A Costa Amalfitana é Património Mundial da UNESCO e um dos cenários mais deslumbrantes da Europa. Vilas coloridas debruçadas sobre o Mediterrâneo, limoneiros perfumando o ar, barcos de madeira balançando nas águas azuis. Uma experiência para os sentidos que só a Itália sabe oferecer.',
-            incluso: ['Voo Internacional (ida e volta)', 'Trem de Alta Velocidade Roma → Nápoles', 'Hospedagem Boutique à Beira-Mar', 'Passeio de Barco em Capri', 'Degustação de Limoncello Artesanal', 'Transfer privativo', 'Seguro Viagem Europa'],
-            nao_incluso: ['Refeições almoço/jantar (exceto café)', 'Entradas em museus individuais', 'Compras'],
+            desc: 'Maceió é o paraíso das piscinas naturais! Águas quentinhas, cristalinas e esverdeadas formam piscinas ao longo de toda a orla, com peixes coloridos nadando entre os corais. E Maragogi, o Caribe Brasileiro, eleva ainda mais a experiência com águas tão azuis e transparentes que parecem impossíveis. Um destino que conquista para sempre.',
+            incluso: ['Passagem aérea ida e volta', 'Transfer aeroporto-hotel', 'Hospedagem 5 noites com café da manhã', 'Passeio às piscinas naturais de Pajuçara (jangada)', 'Passeio a Maragogi e piscinas dos Galés', 'Passeio à Praia do Francês e Barra de São Miguel', 'Guia local'],
+            nao_incluso: ['Seguro viagem', 'Almoços e jantares', 'Snorkel e equipamentos (cobrados nos pontos)', 'Gorjetas'],
             roteiro: [
-                { dia: '1-2º Dia', title: 'Roma & Trem', desc: 'Chegada a Roma, transfer e check-in. No dia seguinte, trem rápido para Nápoles e transfer para Sorrento.' },
-                { dia: '3º Dia', title: 'Capri Day', desc: 'Travessia de lancha privativa até a Ilha de Capri. Tour pelos pontos principais, Gruta Azul e almoço com vista.' },
-                { dia: '4º Dia', title: 'Positano', desc: 'Passeio pela vila mais fotogénica da Amalfi. Escadarias floridas, shops e gelato no beiral do Mediterrâneo.' },
-                { dia: '5º Dia', title: 'Amalfi & Ravello', desc: 'Visita à Catedral de Amalfi e subida de tuk-tuk até Ravello, com vista panorâmica da costa.' },
-                { dia: '6º Dia', title: 'Dia Livre em Sorrento', desc: 'Manhã para explorar o mercado local, loja de artesanato em madeira e degustação de limoncello.' },
-                { dia: '7-9º Dia', title: 'Roma & Retorno', desc: 'Regresso de trem a Roma, visita opcional ao Vaticano e Coliseu. Voo de retorno ao Brasil.' }
+                { dia: '1º Dia', title: 'Chegada a Maceió', desc: 'Desembarque, transfer para o hotel na Praia de Pajuçara ou Ponta Verde. Check-in e primeiro contato com as águas esverdeadas.' },
+                { dia: '2º Dia', title: 'Piscinas de Pajuçara', desc: 'Passeio de jangada até as piscinas naturais a 1km da praia. Nadar entre os peixes com a água cristalina pelos joelhos.' },
+                { dia: '3º Dia', title: 'Maragogi — Caribe Brasileiro', desc: 'Excursão para Maragogi, a 130km de Maceió. Piscinas dos Galés com águas azul-turquesa de tirar o fôlego.' },
+                { dia: '4º Dia', title: 'Praia do Francês & Barra', desc: 'Passeio pelas praias do sul: Praia do Francês, Barra de São Miguel e Praia de Guaxuma.' },
+                { dia: '5º Dia', title: 'Dia Livre em Maceió', desc: 'Dia livre para revisitar as praias favoritas, fazer compras no Mercado do Artesanato ou descansar.' },
+                { dia: '6º Dia', title: 'Retorno', desc: 'Café da manhã, transfer ao aeroporto e voo de retorno com saudades das águas mais cristalinas do Brasil.' }
             ]
         },
-        santorini: {
-            title:    'Santorini Blue',
-            subtitle: 'O pôr do sol mais icônico do mundo',
-            location: 'Santorini, Grécia',
-            duration: '7 dias / 6 noites',
-            price:    '15.600,00',
-            parcelas: '10x de R$ 1.560',
-            flag:     'Grécia',
+        portogalinhas: {
+            title:    'Porto de Galinhas',
+            subtitle: 'A melhor praia do Brasil eleita por viajantes',
+            location: 'Pernambuco, Brasil',
+            duration: '6 dias / 5 noites',
+            price:    '3.290,00',
+            parcelas: '10x de R$ 329',
+            flag:     'Brasil 🐟',
             images: [
-                'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1549488344-1f958f28403d?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1467269174094-c1891af00011?auto=format&fit=crop&w=1200&q=80'
+                'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1437482078695-73f5ca6c96e2?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'
             ],
-            desc: 'Santorini é a joia do Mar Egeu. As icônicas cúpulas azuis, casas brancas caiadas e a caldeira vulcânica ao fundo criam um dos cenários mais fotografados e romanticos do planeta. Oia ao pôr do sol é uma experiência que muda para sempre a forma de ver o mundo.',
-            incluso: ['Aéreo Internacional (ida e volta)', 'Ferry entre Atenas e Santorini', 'Hospedagem com Vista para a Caldeira', 'Wine Tour em Vinícola Local', 'Catamarã Privado com Jantar', 'Transfer Aeroporto/Hotel', 'Seguro Viagem'],
-            nao_incluso: ['Refeições livres', 'Passeios opcionais em Atenas', 'Compras'],
+            desc: 'Eleita diversas vezes a melhor praia do Brasil, Porto de Galinhas encanta com suas famosas piscinas naturais formadas nos recifes de coral — onde é possível nadar entre peixinhos coloridos em águas rasas e mornas. Romântica para casais, divertida para famílias, inesquecível para todos. Um destino que fica no coração.',
+            incluso: ['Passagem aérea ida e volta', 'Transfer Recife–Porto de Galinhas', 'Hospedagem 5 noites com café da manhã', 'Passeio de jangada nas piscinas naturais', 'Snorkel incluso no passeio', 'Passeio a Muro Alto', 'Passeio a Carneiros (opcional)'],
+            nao_incluso: ['Seguro viagem', 'Almoços e jantares', 'Mergulho com cilindro (opcional)', 'Gorjetas'],
             roteiro: [
-                { dia: '1º Dia', title: 'Atenas → Santorini', desc: 'Chegada a Atenas, conexão de ferry ou voo doméstico para Santorini. Check-in em vila tradicional de Oia.' },
-                { dia: '2º Dia', title: 'Oia & Caldeira', desc: 'Manhã explorando as vielas de Oia. Tarde com wine tour em vinícola com vista panorâmica. Pôr do sol na muralha de Oia.' },
-                { dia: '3º Dia', title: 'Catamarã Privado', desc: 'Dia inteiro em catamarã privado navegando pela caldeira, Ilha Vulcânica, Fontes Termais e Praia Vermelha.' },
-                { dia: '4º Dia', title: 'Fira & Imerovigli', desc: 'Tour pela capital Fira, museu pré-histórico e caminhada na trilha Fira–Oia com vistas espetaculares.' },
-                { dia: '5º Dia', title: 'Praias Vulcânicas', desc: 'Visita à Praia Vermelha e Praia Preta (Perissa), formadas por lava vulcânica. Tarde livre para relaxar.' },
-                { dia: '6-7º Dia', title: 'Último Pôr & Partida', desc: 'Último pôr do sol em Oia, jantar especial. Retorno a Atenas e voo para o Brasil.' }
+                { dia: '1º Dia', title: 'Chegada ao Recife', desc: 'Desembarque no Recife e transfer privativo para Porto de Galinhas (70km). Check-in e primeira caminhada pela orla.' },
+                { dia: '2º Dia', title: 'Piscinas Naturais de Jangada', desc: 'Passeio de jangada até as piscinas naturais nos recifes. Nadar com peixinhos coloridos em águas rasas e cristalinas.' },
+                { dia: '3º Dia', title: 'Muro Alto e Maracaípe', desc: 'Passeio às praias de Muro Alto (lagoa de águas calmas) e Maracaípe, famosa pelo surf e caranguejos.' },
+                { dia: '4º Dia', title: 'Carneiros e Passeio de Barco', desc: 'Excursão para Praia de Carneiros com passeio de barco e parada na igreja histórica à beira-mar.' },
+                { dia: '5º Dia', title: 'Dia Livre', desc: 'Dia livre para aproveitar a praia principal, buggys pela areia ou compras nas lojas da vila.' },
+                { dia: '6º Dia', title: 'Retorno ao Recife', desc: 'Transfer para o Recife e embarque de volta ao Brasil com muitas memórias e saudades das piscinas.' }
             ]
         },
-        dubai: {
-            title:    'Dubai Experience',
-            subtitle: 'O futuro no presente',
-            location: 'Dubai, Emirados Árabes Unidos',
-            duration: '7 dias / 6 noites',
-            price:    '12.800,00',
-            parcelas: '10x de R$ 1.280',
-            flag:     'Emirados',
+        riodejaneiro: {
+            title:    'Rio de Janeiro',
+            subtitle: 'A Cidade Maravilhosa em todo o seu esplendor',
+            location: 'Rio de Janeiro, Brasil',
+            duration: '6 dias / 5 noites',
+            price:    '3.490,00',
+            parcelas: '10x de R$ 349',
+            flag:     'Brasil 🏖️',
             images: [
-                'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=1200&q=80'
+                'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1544989164-31e55e5e7e8d?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=1200&q=80'
             ],
-            desc: 'Dubai é a cidade que desafia todos os limites da imaginação. O edifício mais alto do mundo, ilhas artificiais, desertos de areia dourada, shopping centers com pistas de esqui e uma hospitalidade única do Oriente Médio. Uma mistura de tradição beduína e modernidade absoluta que não existe em lugar nenhum.',
-            incluso: ['Voo Internacional (ida e volta)', 'Hospedagem 5 Estrelas', 'Subida ao Burj Khalifa (observatório)', 'Safari no Deserto com Jantar Beduíno', 'City Tour Completo com Guia', 'Transfer Aeroporto/Hotel', 'Seguro Viagem'],
-            nao_incluso: ['Refeições (exceto café e jantar beduíno)', 'Compras e entretenimento opcional', 'Vistos (gratuito para brasileiros)'],
+            desc: 'A Cidade Maravilhosa é um convite permanente à beleza. Cristo Redentor abraçando a cidade do alto do Corcovado, Pão de Açúcar refletido nas águas da Baía de Guanabara, a areia dourada de Copacabana e Ipanema — o Rio é uma experiência única que combina natureza exuberante, cultura vibrante e alegria contagiante em cada esquina.',
+            incluso: ['Passagem aérea ida e volta', 'Transfer aeroporto–hotel em Copacabana ou Ipanema', 'Hospedagem 5 noites com café da manhã', 'Visita ao Cristo Redentor (trem do Corcovado)', 'Teleférico do Pão de Açúcar', 'City Tour guiado pela cidade', 'Passeio à Santa Teresa'],
+            nao_incluso: ['Seguro viagem', 'Almoços e jantares', 'Passeios noturnos opcionais', 'Gorjetas'],
             roteiro: [
-                { dia: '1º Dia', title: 'Chegada a Dubai', desc: 'Chegada ao aeroporto internacional, transfer para o hotel 5 estrelas. Jantar de boas-vindas no hotel.' },
-                { dia: '2º Dia', title: 'Downtown & Burj Khalifa', desc: 'City tour com guia incluindo Burj Khalifa, Dubai Mall, Dubai Fountain e Museum of the Future.' },
-                { dia: '3º Dia', title: 'Safari no Deserto', desc: 'Tarde e noite de safári com dune bashing, passeio de camelo, show de dança e jantar beduíno sob as estrelas.' },
-                { dia: '4º Dia', title: 'Dubai Antigo', desc: 'Passeio pelo Dubai Creek, bairro Al Fahidi, souks de ouro e especiarias. Cruzeiro no abra (barco típico).' },
-                { dia: '5º Dia', title: 'Palm Jumeirah', desc: 'Visita à Atlantis Aquaventure, Palm Jumeirah e Ain Dubai (maior roda-gigante do mundo).' },
-                { dia: '6-7º Dia', title: 'Compras & Retorno', desc: 'Dia livre para compras no Dubai Mall ou Global Village. Transfer ao aeroporto e voo de retorno.' }
+                { dia: '1º Dia', title: 'Chegada ao Rio', desc: 'Desembarque no Galeão ou Santos Dumont, transfer para o hotel em Copacabana. Primeira caminhada pela orla.' },
+                { dia: '2º Dia', title: 'Cristo Redentor', desc: 'Subida de trem ao Corcovado para visitar o Cristo Redentor, com vista panorâmica de 360° da cidade.' },
+                { dia: '3º Dia', title: 'Pão de Açúcar', desc: 'Teleférico até o Pão de Açúcar com vista deslumbrante da Baía de Guanabara. Tarde em Urca e Santa Teresa.' },
+                { dia: '4º Dia', title: 'Ipanema & Leblon', desc: 'Manhã em Ipanema, Leblon e Jardim Botânico. À tarde, Lagoa Rodrigo de Freitas e arredores.' },
+                { dia: '5º Dia', title: 'Centro Histórico', desc: 'Lapa, Arcos, Escadaria Selarón, Museu do Amanhã e Porto Maravilha. A cultura do Rio em um dia.' },
+                { dia: '6º Dia', title: 'Retorno', desc: 'Último café da manhã carioca, transfer ao aeroporto e voo de retorno com o coração cheio de Rio.' }
+            ]
+        },
+        joaopessoa: {
+            title:    'João Pessoa',
+            subtitle: 'Onde o sol nasce primeiro no Brasil',
+            location: 'Paraíba, Brasil',
+            duration: '5 dias / 4 noites',
+            price:    '2.490,00',
+            parcelas: '10x de R$ 249',
+            flag:     'Brasil 🌊',
+            images: [
+                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1437482078695-73f5ca6c96e2?auto=format&fit=crop&w=1200&q=80'
+            ],
+            desc: 'João Pessoa é uma das cidades mais charmosas e acolhedoras do Nordeste. Conhecida como a cidade onde o sol nasce primeiro no Brasil, ela encanta com praias paradisíacas de águas mornas e cristalinas, piscinas naturais, mata atlântica e um povo hospitaleiro como poucos. Tambaba, Coqueirinho, Praia de Cabo Branco — cada praia é uma surpresa.',
+            incluso: ['Passagem aérea ida e volta', 'Transfer aeroporto–hotel', 'Hospedagem 4 noites com café da manhã', 'Passeio às piscinas naturais de Picãozinho', 'Passeio ao Cabo Branco (ponto mais oriental das Américas)', 'Passeio às praias de Tambaba e Coqueirinho', 'Guia local'],
+            nao_incluso: ['Seguro viagem', 'Almoços e jantares', 'Passeios adicionais', 'Gorjetas'],
+            roteiro: [
+                { dia: '1º Dia', title: 'Chegada a João Pessoa', desc: 'Desembarque e transfer para o hotel na Praia de Tambaú. Primeira caminhada pela orla ao pôr do sol.' },
+                { dia: '2º Dia', title: 'Piscinas de Picãozinho', desc: 'Passeio de barco até as piscinas naturais de Picãozinho — um aquário natural a céu aberto com peixes coloridos.' },
+                { dia: '3º Dia', title: 'Tambaba e Coqueirinho', desc: 'Excursão pelas praias do litoral sul: Coqueirinho com suas falésias e piscinas, e Tambaba com natureza preservada.' },
+                { dia: '4º Dia', title: 'Cabo Branco e Centro Histórico', desc: 'Visita ao Farol do Cabo Branco, ponto mais oriental das Américas. Tarde no centro histórico com igrejas coloniais.' },
+                { dia: '5º Dia', title: 'Retorno', desc: 'Último amanhecer na cidade onde o sol nasce primeiro. Transfer ao aeroporto e voo de retorno.' }
             ]
         }
     };
@@ -733,17 +732,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Outros Destinos (exclui o atual) ──
     // Mapeamento destino → data-eid da home (para herdar imagens editadas)
     const destImgs = {
-        noronha:  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/111_Mirante_da_Ponta_do_Air_France.jpg/700px-111_Mirante_da_Ponta_do_Air_France.jpg',
-        maldivas: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=600&q=70',
-        paris:    'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=70',
-        italia:   'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=600&q=70',
-        santorini:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=600&q=70',
-        dubai:    'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=70'
+        lencois:       'https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=600&q=70',
+        disney:        'https://images.unsplash.com/photo-1568092816214-02404ef89f59?auto=format&fit=crop&w=600&q=70',
+        maceio:        'https://images.unsplash.com/photo-1564939558297-fc396f18e5c7?auto=format&fit=crop&w=600&q=70',
+        portogalinhas: 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=600&q=70',
+        riodejaneiro:  'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=600&q=70',
+        joaopessoa:    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=70'
     };
-    // data-eid dos cards na home — para o CMS aplicar a mesma imagem aqui
+    // Mapeamento destino → data-eid da home (para herdar imagens editadas)
     const destEid = {
-        noronha: 'card1-img', maldivas: 'card2-img', paris: 'card3-img',
-        italia: 'card4-img', santorini: 'card5-img', dubai: 'card6-img'
+        lencois: 'card1-img', disney: 'card2-img', maceio: 'card3-img',
+        portogalinhas: 'card4-img', riodejaneiro: 'card5-img', joaopessoa: 'card6-img'
     };
     const outros = Object.keys(DB).filter(k => k !== id).slice(0, 4);
     const cardsEl = document.getElementById('outros-cards');
