@@ -453,11 +453,11 @@
             <i class="fa-solid fa-chevron-right"></i>
             <span id="breadcrumb-title">Carregando…</span>
         </div>
-        <h1 id="pkg-title">Carregando…</h1>
-        <p id="pkg-subtitle" style="color:rgba(255,255,255,.65);font-size:1.05rem;margin-top:8px;"></p>
+        <h1 id="pkg-title" data-eid="pkg-title" data-elabel="Título Pacote">Carregando…</h1>
+        <p id="pkg-subtitle" data-eid="pkg-subtitle" data-elabel="Subtítulo Pacote" style="color:rgba(255,255,255,.65);font-size:1.05rem;margin-top:8px;"></p>
         <div class="hero-mini-meta">
-            <div class="meta-tag"><i class="fa-solid fa-location-dot"></i><span id="meta-loc">—</span></div>
-            <div class="meta-tag"><i class="fa-solid fa-moon"></i><span id="meta-dur">—</span></div>
+            <div class="meta-tag"><i class="fa-solid fa-location-dot"></i><span id="meta-loc" data-eid="pkg-loc" data-elabel="Localização">—</span></div>
+            <div class="meta-tag"><i class="fa-solid fa-moon"></i><span id="meta-dur" data-eid="pkg-dur" data-elabel="Duração">—</span></div>
             <div class="meta-tag"><i class="fa-solid fa-star"></i> Pacote Premium</div>
         </div>
     </div>
@@ -482,7 +482,7 @@
             <!-- SOBRE O DESTINO -->
             <div class="cblock" style="margin-top:32px;">
                 <div class="cblock-title"><i class="fa-solid fa-earth-americas" style="color:var(--accent);margin-right:8px"></i>Sobre o Destino</div>
-                <p class="pkg-desc" id="pkg-desc">Carregando…</p>
+                <p class="pkg-desc" id="pkg-desc" data-eid="pkg-desc" data-elabel="Descrição do Destino">Carregando…</p>
             </div>
 
             <!-- INCLUSO / NÃO INCLUSO -->
@@ -505,8 +505,8 @@
         <aside class="sidebar">
             <div class="price-card">
                 <p class="price-from">A partir de:</p>
-                <div class="price-num" id="price-num">R$ —</div>
-                <p class="price-acc" id="price-parc"></p>
+                <div class="price-num" id="price-num" data-eid="pkg-price" data-elabel="Preço">R$ —</div>
+                <p class="price-acc" id="price-parc" data-eid="pkg-parcelas" data-elabel="Parcelamento"></p>
                 <div class="price-meta">
                     <div class="pm-row"><i class="fa-solid fa-location-dot"></i><span id="sb-loc">—</span></div>
                     <div class="pm-row"><i class="fa-solid fa-moon"></i><span id="sb-dur">—</span></div>
@@ -640,6 +640,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const img = document.createElement('img');
         img.src = src; img.alt = pkg.title + ' ' + (i+1);
         img.loading = i === 0 ? 'eager' : 'lazy';
+        img.dataset.eid = 'pkg-img-' + i;
+        img.dataset.elabel = 'Foto ' + (i+1) + ' do Carrossel';
         slide.appendChild(img); track.appendChild(slide);
 
         // dot

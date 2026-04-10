@@ -164,6 +164,12 @@
             sessionStorage.setItem('editor_active', '1');
             this.buildBar();
             this.bindAll();
+            // Bloqueia navegação de todos os links de card (capture phase)
+            document.querySelectorAll('a[href]').forEach(a => {
+                a.addEventListener('click', e => {
+                    if (document.body.classList.contains('ld-on')) e.preventDefault();
+                }, true);
+            });
         },
 
         buildBar() {
@@ -467,6 +473,8 @@
         await loadAndApply();
         if (editMode) {
             await ED.start();
+            // Re-registra listeners após renders dinâmicos (ex: pacote.html)
+            setTimeout(() => ED.bindAll(), 300);
         }
     });
 
