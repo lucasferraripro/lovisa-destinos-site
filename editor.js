@@ -144,9 +144,9 @@
         async start() {
             injectCSS();
             this.cms = JSON.parse(localStorage.getItem(CMS_KEY) || '{}');
-            // Sincroniza do servidor
+            // Sincroniza do GitHub raw (sempre atualizado)
             try {
-                const r = await fetch('/content.json?_=' + Date.now());
+                const r = await fetch(CONTENT_URL + '?_=' + Date.now());
                 if (r.ok) {
                     const srv = await r.json();
                     // Mantém rascunho local se existir
@@ -367,19 +367,20 @@
                 const data = await res.json();
 
                 if (res.ok && data.success) {
+                    // Mantém o CMS no localStorage (É o conteúdo publicado agora)
+                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    // Aplica as mudanças diretamente na página atual
+                    applyContent(this.cms);
                     p.querySelector('.ld-pb').innerHTML = `
                         <div class="ld-pub-box">
                             <strong>✅ Publicado com sucesso!</strong>
                             <ul>
-                                <li>O site está sendo atualizado</li>
-                                <li>Aguarde ~30 segundos</li>
-                                <li>Recarregue a página para ver as mudanças</li>
+                                <li>Alterações aplicadas na página</li>
+                                <li>Visitantes verão em ~30 segundos</li>
                             </ul>
                         </div>
-                        <button class="ld-ok" style="width:100%" onclick="location.reload()">🔄 Recarregar página</button>`;
-                    this.toast('🚀 Publicado! Atualizando em ~30s', 'ok');
-                    // Limpa rascunho local
-                    localStorage.removeItem(CMS_KEY);
+                        <button class="ld-ok" style="width:100%" onclick="this.closest('.ld-panel').remove()">✓ Continuar editando</button>`;
+                    this.toast('🚀 Publicado com sucesso!', 'ok');
                 } else {
                     throw new Error(data.error || 'Erro desconhecido');
                 }
@@ -456,11 +457,10 @@
 
     /* ─── BOOT ──────────────────────────────────────────────── */
     document.addEventListener('DOMContentLoaded', async () => {
+        // Sempre aplica o conteúdo salvo na página (admin e visitantes)
+        await loadAndApply();
         if (editMode) {
             await ED.start();
-        } else {
-            // Visitantes normais: aplica content.json do servidor
-            await loadAndApply();
         }
     });
 
