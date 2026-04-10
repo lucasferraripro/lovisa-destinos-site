@@ -109,46 +109,48 @@
 </div>
 
 <script>
-    // Credenciais de acesso
-    const CREDENTIALS = {
-        email: 'admin@lovisadestinos.com.br',
-        // Senha: Lovisa@2025 (hash SHA-256 simples)
-        senhaHash: '7c4f5e6b8a1d2f9e0c3b7a8d4f1e6c2b9a5d8f3e7b0c4a9d2f6e1b8c5a3d7f0'
-    };
-
-    // Função hash simples (não criptografia real, apenas ofuscação)
-    async function hashSenha(senha) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(senha + '_lovisa_salt_2025');
-        const hash = await crypto.subtle.digest('SHA-256', data);
-        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('email').value.trim().toLowerCase();
         const senha = document.getElementById('senha').value;
         const btn = e.target.querySelector('button');
+        const errEl = document.getElementById('error-msg');
 
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
         btn.disabled = true;
+        errEl.style.display = 'none';
 
-        const hash = await hashSenha(senha);
+        if (email !== 'admin@lovisadestinos.com.br') {
+            errEl.style.display = 'block';
+            btn.innerHTML = '<i class="fa-solid fa-lock-open"></i> Entrar no Editor';
+            btn.disabled = false;
+            return;
+        }
 
-        // Validação: email correto E (senha hash OU senha direta para facilitar)
-        const senhaCorreta = senha === 'Lovisa@2025';
-        const emailCorreto = email === 'admin@lovisadestinos.com.br';
+        try {
+            const res = await fetch('../api/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ secret: senha })
+            });
+            const data = await res.json();
 
-        if (emailCorreto && senhaCorreta) {
-            sessionStorage.setItem('lovisa_auth', JSON.stringify({
-                email,
-                ts: Date.now(),
-                expires: Date.now() + (8 * 60 * 60 * 1000) // 8 horas
-            }));
-            sessionStorage.setItem('lovisa_secret', senha);
-            window.location.href = '../index.html?editor=1';
-        } else {
-            document.getElementById('error-msg').style.display = 'block';
+            if (data.ok) {
+                sessionStorage.setItem('lovisa_auth', JSON.stringify({
+                    email,
+                    ts: Date.now(),
+                    expires: Date.now() + (8 * 60 * 60 * 1000)
+                }));
+                sessionStorage.setItem('lovisa_secret', senha);
+                window.location.href = '../index.html?editor=1';
+            } else {
+                errEl.style.display = 'block';
+                btn.innerHTML = '<i class="fa-solid fa-lock-open"></i> Entrar no Editor';
+                btn.disabled = false;
+            }
+        } catch {
+            errEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Erro de conexão. Tente novamente.';
+            errEl.style.display = 'block';
             btn.innerHTML = '<i class="fa-solid fa-lock-open"></i> Entrar no Editor';
             btn.disabled = false;
         }

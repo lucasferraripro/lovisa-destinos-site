@@ -135,8 +135,17 @@
         .ld-last-pub{color:rgba(255,255,255,.35);font-size:11px;white-space:nowrap;}
 
         @media(max-width:600px){
-            .ld-panel{left:8px;right:8px;width:auto;}
-            .ld-hint-text{display:none;}
+            #ld-bar{padding:0 8px;gap:2px;height:52px;}
+            .ld-hint-text,.ld-sep,.ld-last-pub{display:none;}
+            .ld-brand{padding-right:8px;font-size:12px;}
+            .ld-btn{padding:7px 10px;font-size:14px;}
+            .ld-btn-label{display:none;}
+            .ld-panel{left:6px;right:6px;width:auto;top:58px;max-height:calc(100dvh - 66px);overflow-y:auto;}
+            .ld-pb{max-height:none;padding:14px;}
+            .ld-ph{cursor:default;}
+            .ld-f input[type=text],.ld-f input[type=url],.ld-f textarea,.ld-f select,.ld-f input[type=password],.ld-rich{font-size:16px;}
+            .ld-cr input[type=color]{width:44px;height:38px;}
+            .ld-ok,.ld-ko{font-size:15px;padding:11px;}
         }
         `;
         document.head.appendChild(s);
@@ -178,12 +187,12 @@
             <span class="ld-hint-text">👆 Clique em qualquer elemento laranja para editar</span>
             <div class="ld-spacer"></div>
             ${lastPub ? `<span class="ld-last-pub">Publicado: ${lastPub}</span><div class="ld-sep"></div>` : ''}
-            <button class="ld-btn orange" id="ld-colors">🎨 Cores</button>
+            <button class="ld-btn orange" id="ld-colors">🎨 <span class="ld-btn-label">Cores</span></button>
             <div class="ld-sep"></div>
-            <button class="ld-btn green" id="ld-pub">🚀 Publicar</button>
+            <button class="ld-btn green" id="ld-pub">🚀 <span class="ld-btn-label">Publicar</span></button>
             <div class="ld-sep"></div>
-            <button class="ld-btn" id="ld-revert" title="Descartar rascunho não publicado">↩ Reverter</button>
-            <button class="ld-btn red" id="ld-exit">✕ Sair</button>`;
+            <button class="ld-btn" id="ld-revert" title="Descartar rascunho não publicado">↩ <span class="ld-btn-label">Reverter</span></button>
+            <button class="ld-btn red" id="ld-exit">✕ <span class="ld-btn-label">Sair</span></button>`;
             document.body.prepend(bar);
             document.getElementById('ld-colors').onclick = () => this.pColors();
             document.getElementById('ld-pub').onclick    = () => this.publish();
@@ -593,6 +602,7 @@
         },
 
         drag_(el) {
+            if (window.matchMedia('(max-width:600px)').matches) return; // sem drag em mobile
             const h = el.querySelector('.ld-ph');
             let d=false, sx=0, sy=0, ox=0, oy=0;
             h.onmousedown = e => { d=true; sx=e.clientX; sy=e.clientY; ox=el.offsetLeft; oy=el.offsetTop; e.preventDefault(); };
