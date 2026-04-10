@@ -89,6 +89,12 @@
         body.ld-on [data-eid]:hover{outline:2px dashed #F97316!important;outline-offset:2px;}
         body.ld-on [data-eid]:hover::after{content:attr(data-elabel);position:absolute;top:-24px;left:0;background:#F97316;color:#fff;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:4px 4px 4px 0;white-space:nowrap;z-index:9999;pointer-events:none;font-family:-apple-system,sans-serif;}
         body.ld-on [data-eid].ld-sel{outline:2px solid #1565C0!important;outline-offset:2px;}
+        /* Impede overlays/flags de bloquearem cliques nas imagens dos cards */
+        body.ld-on .card-overlay,
+        body.ld-on .card-flag{pointer-events:none!important;}
+        /* Impede links dos cards de navegar ao clicar em elementos editáveis */
+        body.ld-on a.card-link{pointer-events:none!important;}
+        body.ld-on a.card-link [data-eid]{pointer-events:all!important;}
 
         .ld-panel{position:fixed;top:64px;right:18px;width:310px;background:#fff;border-radius:16px;z-index:99998;box-shadow:0 20px 60px rgba(0,0,0,.22);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;}
         .ld-ph{background:#111827;color:#fff;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;cursor:move;user-select:none;}
