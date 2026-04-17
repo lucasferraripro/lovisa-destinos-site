@@ -326,6 +326,15 @@
         .dep-hdr .h2 { color: #fff; }
         .dep-hdr .lead { color: rgba(255,255,255,.56); max-width: 480px; margin: 0 auto; }
         .dep-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+        /* editor: remover card */
+        .ld-remove-card { display:none; position:absolute; top:8px; right:8px; width:26px; height:26px; border-radius:50%; background:#ef4444; border:none; color:#fff; font-size:13px; cursor:pointer; align-items:center; justify-content:center; z-index:10; transition:background .2s; }
+        .ld-remove-card:hover { background:#dc2626; }
+        body.ld-on .dep-card { position:relative; }
+        body.ld-on .ld-remove-card { display:flex; }
+        body.ld-on .card-link-wrap { position:relative; }
+        body.ld-on .ld-remove-pkg { display:flex; }
+        .ld-remove-pkg { display:none; position:absolute; top:10px; right:10px; background:#ef4444; color:#fff; border:none; border-radius:50px; padding:5px 12px; font-size:11px; font-weight:700; cursor:pointer; z-index:20; align-items:center; gap:5px; transition:background .2s; }
+        .ld-remove-pkg:hover { background:#dc2626; }
         .dep-card {
             background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
             border-radius: var(--r); padding: 32px; transition: all .3s;
@@ -760,7 +769,7 @@
             <!-- POST 1 -->
             <div class="card-link rv">
                 <div class="card-img" style="height: 350px;">
-                    <img src="https://instagram.ffor50-1.fna.fbcdn.net/v/t51.82787-15/610996218_18084481058164562_3741199386886853571_n.jpg?stp=dst-jpegr_e35_tt6&_nc_cat=104&ig_cache_key=MzgwNTcyODQ3NDI1NTA0ODc2Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5oZHIuQzMifQ%3D%3D&_nc_ohc=0-Az-qbqxwYQ7kNvwH97oSB&_nc_oc=AdqDxyVaexliHvlrFXjRgLZ-qn_b74D5mYRnXdzJEULvYIP_3LhcExABTrO1ZGzRlqUvywT-LVIbIKaFxvdnibsg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ffor50-1.fna&_nc_gid=KKA2tImf0VCmCBHkKtjlZQ&_nc_ss=7a32e&oh=00_Af2KWaCQjvChm6YWVOI1s7zA-H_VVqF_xEmjyPHvyO26kw&oe=69DF08B1" alt="Cliente Lovisa" data-eid="insta-img-1" data-elabel="Foto Instagram 1">
+                    <img src="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&w=700&q=80" alt="Cliente Lovisa - Primeiro Voo" data-eid="insta-img-1" data-elabel="Foto Instagram 1">
                     <div class="card-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);"><span style="font-size: 11px;"><i class="fab fa-instagram"></i> @esthereesthefany</span></div>
                 </div>
                 <div class="card-body" style="padding: 15px;">
@@ -769,7 +778,7 @@
                 </div>
             </div>
 
-            <!-- POST 2 (Private account placeholder) -->
+            <!-- POST 2 -->
             <div class="card-link rv">
                 <div class="card-img" style="height: 350px;">
                     <img src="https://images.unsplash.com/photo-1539635278303-d4002c07dee3?auto=format&fit=crop&w=700&q=80" alt="Cliente Lovisa" data-eid="insta-img-2" data-elabel="Foto Instagram 2">
@@ -784,7 +793,7 @@
             <!-- POST 3 -->
             <div class="card-link rv">
                 <div class="card-img" style="height: 350px;">
-                    <img src="https://instagram.ffor50-1.fna.fbcdn.net/v/t51.82787-15/658214146_18089048351337413_8564561480288424097_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=107&ig_cache_key=Mzg2NjY4NzQ0NDE4NDE5MDAxMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTY0NC5zZHIuQzMifQ%3D%3D&_nc_ohc=w0QDY3ut1K0Q7kNvwGJClz6&_nc_oc=Adqtd2lEEJTwEw2PjuanPntKNLV1MhOpslQXTZVEFf1V3Q0h5Ol3lVlunwvRAFBNDxuXOgZQ0Wu_jwASm2Nj5Sqt&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ffor50-1.fna&_nc_gid=tINFk5hiqRuYJodzw5HDRw&_nc_ss=7a32e&oh=00_Af3N8y4McnVaRGrBpXTnPb95Ag_EbryobsT7MBL4Ca1L1Q&oe=69DEFEF3" alt="Cliente Lovisa" data-eid="insta-img-3" data-elabel="Foto Instagram 3">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=80" alt="Cliente Lovisa - Viagem" data-eid="insta-img-3" data-elabel="Foto Instagram 3">
                     <div class="card-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);"><span style="font-size: 11px;"><i class="fab fa-instagram"></i> @ju_sanfitness</span></div>
                 </div>
                 <div class="card-body" style="padding: 15px;">
@@ -805,35 +814,89 @@
 <section class="section dep-bg" id="depoimentos">
     <div class="container">
         <div class="dep-hdr rv">
-            <span class="label">Depoimentos</span>
-            <h2 class="h2" data-eid="dep-title" data-elabel="Título Depoimentos">O que nossos viajantes dizem</h2>
-            <p class="lead" data-eid="dep-sub" data-elabel="Subtítulo Depoimentos">Mais de 15.000 pessoas já confiaram na Lovisa Destinos para realizar os sonhos da vida.</p>
+            <span class="label">Avaliações Reais</span>
+            <h2 class="h2" data-eid="dep-title" data-elabel="Título Depoimentos">O que nossos clientes dizem</h2>
+            <p class="lead" data-eid="dep-sub" data-elabel="Subtítulo Depoimentos">Avaliações reais do Google. 25 clientes satisfeitos e nota 5.0 ⭐</p>
+            <!-- Badge Google -->
+            <a href="https://www.google.com/maps/place/Lovisa+Destinos/@-13.3722091,-73.1397804,4z" target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:10px 20px;margin-top:16px;color:#fff;font-size:13px;font-weight:700;text-decoration:none;transition:background .2s;"
+               onmouseover="this.style.background='rgba(255,255,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/24px-Google_%22G%22_Logo.svg.png" alt="Google" style="width:20px;height:20px;display:inline;">
+                <span>5.0 ★★★★★ &nbsp;·&nbsp; 25 avaliações no Google</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;opacity:.7"></i>
+            </a>
         </div>
-        <div class="dep-grid">
-            <div class="dep-card rv">
-                <div class="dep-stars">★★★★★</div>
-                <p class="dep-text" data-eid="dep-1-text" data-elabel="Depoimento 1">"A viagem para as Maldivas foi simplesmente perfeita. Cada detalhe foi pensado para nós. O hotel, os passeios, tudo impecável. Voltaremos com certeza!"</p>
+        <div class="dep-grid" id="dep-grid">
+            <div class="dep-card rv" data-dep-id="0">
+                <div class="dep-stars" data-eid="dep-1-stars" data-elabel="Estrelas Depoimento 1">★★★★★</div>
+                <p class="dep-text" data-eid="dep-1-text" data-elabel="Depoimento 1">"Foi minha primeira experiência viajando de avião, nunca tinha entrado no aeroporto, nunca tinha alugado carro nem nada do tipo. Graças aos serviços oferecidos foi tudo bem fácil. Obrigada Lovisa, tive uma ótima experiência. Já vou planejar a próxima viagem."</p>
                 <div class="dep-author">
-                    <div class="dep-av"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80" alt="Ana Carolina" data-eid="dep-1-foto" data-elabel="Foto Depoimento 1"></div>
-                    <div><div class="dep-name" data-eid="dep-1-nome" data-elabel="Nome Depoimento 1">Ana Carolina M.</div><div class="dep-dest" data-eid="dep-1-dest" data-elabel="Destino Depoimento 1">Maldivas — Jul 2025</div></div>
+                    <div class="dep-av"><img src="https://ui-avatars.com/api/?name=Kenia+Patricia&background=1565C0&color=fff&size=80" alt="Kenia Patricia" data-eid="dep-1-foto" data-elabel="Foto Depoimento 1"></div>
+                    <div>
+                        <div class="dep-name" data-eid="dep-1-nome" data-elabel="Nome Depoimento 1">Kenia Patricia</div>
+                        <div class="dep-dest" data-eid="dep-1-dest" data-elabel="Destino Depoimento 1">via Google · há 1 ano</div>
+                    </div>
                 </div>
             </div>
-            <div class="dep-card rv">
-                <div class="dep-stars">★★★★★</div>
-                <p class="dep-text" data-eid="dep-2-text" data-elabel="Depoimento 2">"Contratei o roteiro para Paris e Amalfi para nosso aniversário. Foi a melhor decisão da nossa vida. A equipe cuida de absolutamente tudo!"</p>
+            <div class="dep-card rv" data-dep-id="1">
+                <div class="dep-stars" data-eid="dep-2-stars" data-elabel="Estrelas Depoimento 2">★★★★★</div>
+                <p class="dep-text" data-eid="dep-2-text" data-elabel="Depoimento 2">"Viagem impecável, com tudo organizado pela Lovisa. Desde as passagens, check in, transfer, hotel e passeios. Tudo perfeito!"</p>
                 <div class="dep-author">
-                    <div class="dep-av"><img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=100&q=80" alt="Ricardo Santos" data-eid="dep-2-foto" data-elabel="Foto Depoimento 2"></div>
-                    <div><div class="dep-name" data-eid="dep-2-nome" data-elabel="Nome Depoimento 2">Ricardo & Camila S.</div><div class="dep-dest" data-eid="dep-2-dest" data-elabel="Destino Depoimento 2">Paris & Amalfi — Mai 2025</div></div>
+                    <div class="dep-av"><img src="https://ui-avatars.com/api/?name=Beatriz+Andrade&background=F97316&color=fff&size=80" alt="Beatriz" data-eid="dep-2-foto" data-elabel="Foto Depoimento 2"></div>
+                    <div>
+                        <div class="dep-name" data-eid="dep-2-nome" data-elabel="Nome Depoimento 2">Beatriz dos Santos Andrade</div>
+                        <div class="dep-dest" data-eid="dep-2-dest" data-elabel="Destino Depoimento 2">via Google · 5 meses atrás</div>
+                    </div>
                 </div>
             </div>
-            <div class="dep-card rv">
-                <div class="dep-stars">★★★★★</div>
-                <p class="dep-text" data-eid="dep-3-text" data-elabel="Depoimento 3">"Já viajei com várias agências, mas nunca tive atendimento tão personalizado. Eles realmente entenderam o que eu queria e entregaram muito além."</p>
+            <div class="dep-card rv" data-dep-id="2">
+                <div class="dep-stars" data-eid="dep-3-stars" data-elabel="Estrelas Depoimento 3">★★★★★</div>
+                <p class="dep-text" data-eid="dep-3-text" data-elabel="Depoimento 3">"Minha primeira viagem de avião: Piracicaba SP/Porto Seguro BA. Tive uma guia perfeita com a Lovisa — foi super atenciosa, prestativa e me orientou em tudo, explicando em detalhes com clareza."</p>
                 <div class="dep-author">
-                    <div class="dep-av"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Fernanda Lima" data-eid="dep-3-foto" data-elabel="Foto Depoimento 3"></div>
-                    <div><div class="dep-name" data-eid="dep-3-nome" data-elabel="Nome Depoimento 3">Fernanda L.</div><div class="dep-dest" data-eid="dep-3-dest" data-elabel="Destino Depoimento 3">Santorini — Set 2025</div></div>
+                    <div class="dep-av"><img src="https://ui-avatars.com/api/?name=Marina+Fernandes&background=1565C0&color=fff&size=80" alt="Marina" data-eid="dep-3-foto" data-elabel="Foto Depoimento 3"></div>
+                    <div>
+                        <div class="dep-name" data-eid="dep-3-nome" data-elabel="Nome Depoimento 3">Marina Fernandes</div>
+                        <div class="dep-dest" data-eid="dep-3-dest" data-elabel="Destino Depoimento 3">via Google · 2 meses atrás</div>
+                    </div>
                 </div>
             </div>
+            <div class="dep-card rv" data-dep-id="3">
+                <div class="dep-stars" data-eid="dep-4-stars" data-elabel="Estrelas Depoimento 4">★★★★★</div>
+                <p class="dep-text" data-eid="dep-4-text" data-elabel="Depoimento 4">"Fui muito bem atendida, me auxiliaram todo tempo da viagem. Com certeza recomendo e minhas próximas viagens serão programadas com a Lovisa e minha atendente maravilhosa Vânia."</p>
+                <div class="dep-author">
+                    <div class="dep-av"><img src="https://ui-avatars.com/api/?name=Marisa+Weber&background=F97316&color=fff&size=80" alt="Marisa Weber" data-eid="dep-4-foto" data-elabel="Foto Depoimento 4"></div>
+                    <div>
+                        <div class="dep-name" data-eid="dep-4-nome" data-elabel="Nome Depoimento 4">Marisa Weber</div>
+                        <div class="dep-dest" data-eid="dep-4-dest" data-elabel="Destino Depoimento 4">via Google · 6 meses atrás</div>
+                    </div>
+                </div>
+            </div>
+            <div class="dep-card rv" data-dep-id="4">
+                <div class="dep-stars" data-eid="dep-5-stars" data-elabel="Estrelas Depoimento 5">★★★★★</div>
+                <p class="dep-text" data-eid="dep-5-text" data-elabel="Depoimento 5">"Viagem maravilhosa. Foi top demais, hospedagem top. Recomendo a todos que querem viajar com segurança e conforto!"</p>
+                <div class="dep-author">
+                    <div class="dep-av"><img src="https://ui-avatars.com/api/?name=Sebastiao+Silva&background=1565C0&color=fff&size=80" alt="Sebastião" data-eid="dep-5-foto" data-elabel="Foto Depoimento 5"></div>
+                    <div>
+                        <div class="dep-name" data-eid="dep-5-nome" data-elabel="Nome Depoimento 5">Sebastião da Silva</div>
+                        <div class="dep-dest" data-eid="dep-5-dest" data-elabel="Destino Depoimento 5">via Google · 6 meses atrás</div>
+                    </div>
+                </div>
+            </div>
+            <div class="dep-card rv" data-dep-id="5">
+                <div class="dep-stars" data-eid="dep-6-stars" data-elabel="Estrelas Depoimento 6">★★★★★</div>
+                <p class="dep-text" data-eid="dep-6-text" data-elabel="Depoimento 6">"Bom dia. Gostei muito, deu suporte durante toda a viagem. Super indico a Lovisa Destinos para quem quer viajar tranquilo e bem assistido."</p>
+                <div class="dep-author">
+                    <div class="dep-av"><img src="https://ui-avatars.com/api/?name=Elias+Paixao&background=F97316&color=fff&size=80" alt="Elias" data-eid="dep-6-foto" data-elabel="Foto Depoimento 6"></div>
+                    <div>
+                        <div class="dep-name" data-eid="dep-6-nome" data-elabel="Nome Depoimento 6">Elias Paixao</div>
+                        <div class="dep-dest" data-eid="dep-6-dest" data-elabel="Destino Depoimento 6">via Google · 11 meses atrás</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Botão adicionar depoimento (editor only) -->
+        <div id="dep-add-btn" style="display:none;text-align:center;margin-top:28px;">
+            <button onclick="addDepoimento()" style="padding:12px 28px;background:#1565C0;color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;">+ Adicionar Depoimento</button>
         </div>
     </div>
 </section>
