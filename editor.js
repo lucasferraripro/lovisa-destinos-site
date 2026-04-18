@@ -514,7 +514,11 @@
                 <div class="ld-f"><label>Duração</label><input type="text" id="pkg-dur" placeholder="7 dias / 6 noites"></div>
                 <div class="ld-f"><label>Preço (ex: 4.990,00)</label><input type="text" id="pkg-price" placeholder="4.990,00"></div>
                 <div class="ld-f"><label>Parcelamento (ex: 10x de R$ 499)</label><input type="text" id="pkg-parc" placeholder="10x de R$ 499"></div>
-                <div class="ld-f"><label>Galeria de Fotos (Uma URL por linha ou separadas por vírgula)</label><textarea id="pkg-gallery" rows="4" placeholder="https://foto1.jpg&#10;https://foto2.jpg"></textarea></div>
+                <div class="ld-f">
+                    <label>Galeria de Fotos (Uma URL por linha)</label>
+                    <div style="font-size:11px;color:#666;margin-bottom:5px;">⚠️ Recomendação: Use imagens <b>.webp</b> (máx 1200px) para o site carregar rápido. <a href="https://squoosh.app/" target="_blank" style="color:#1A73E8;text-decoration:none;">Optimizar Imagens aqui ↗</a></div>
+                    <textarea id="pkg-gallery" rows="4" placeholder="https://foto1.jpg&#10;https://foto2.jpg"></textarea>
+                </div>
                 <div class="ld-f"><label>Descrição do destino</label><textarea id="pkg-desc" rows="3"></textarea></div>
                 <div class="ld-f"><label>O que está incluso (um por linha)</label><textarea id="pkg-incluso" rows="4" placeholder="Passagem aérea ida e volta&#10;Hospedagem com café da manhã"></textarea></div>
                 <div class="ld-acts">
