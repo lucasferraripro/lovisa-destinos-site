@@ -182,6 +182,10 @@
             <span class="ld-hint-text">👆 Clique em qualquer elemento laranja para editar</span>
             <div class="ld-spacer"></div>
             ${lastPub ? `<span class="ld-last-pub">Publicado: ${lastPub}</span><div class="ld-sep"></div>` : ''}
+            <button class="ld-btn blue" id="ld-add-pkg">➕ <span class="ld-btn-label">Novo Pacote</span></button>
+            <div class="ld-sep"></div>
+            <button class="ld-btn" id="ld-dep">⭐ <span class="ld-btn-label">Depoimentos</span></button>
+            <div class="ld-sep"></div>
             <button class="ld-btn orange" id="ld-colors">🎨 <span class="ld-btn-label">Cores</span></button>
             <div class="ld-sep"></div>
             <button class="ld-btn green" id="ld-pub">🚀 <span class="ld-btn-label">Publicar</span></button>
@@ -189,6 +193,8 @@
             <button class="ld-btn" id="ld-revert" title="Descartar rascunho não publicado">↩ <span class="ld-btn-label">Reverter</span></button>
             <button class="ld-btn red" id="ld-exit">✕ <span class="ld-btn-label">Sair</span></button>`;
             document.body.prepend(bar);
+            document.getElementById('ld-add-pkg').onclick  = () => this.pAddPacote();
+            document.getElementById('ld-dep').onclick       = () => this.pManageDep();
             document.getElementById('ld-colors').onclick = () => this.pColors();
             document.getElementById('ld-pub').onclick    = () => this.publish();
             document.getElementById('ld-revert').onclick = () => this.revert();
@@ -207,6 +213,13 @@
                     this.dispatch(el);
                 });
             });
+            // Mostrar botão de adicionar depoimento
+            const depBtn = document.getElementById('dep-add-btn');
+            if (depBtn) depBtn.style.display = 'block';
+            // Adicionar botões de remover em cada card de pacote
+            this.bindPackageRemoveButtons();
+            // Adicionar botões de remover em cada card de depoimento
+            this.bindDepRemoveButtons();
         },
 
         dispatch(el) {
@@ -488,6 +501,207 @@
             };
         },
 
+        /* ── ADICIONAR PACOTE ── */
+        pAddPacote() {
+            const p = this.panel_('➕ Adicionar Novo Pacote');
+            p.innerHTML += `<div class="ld-pb">
+                <div class="ld-info">Preencha os dados do novo pacote. Ele aparecerá na grade de destinos.</div>
+                <div class="ld-f"><label>ID único (ex: cancun, paris, noronha)</label><input type="text" id="pkg-id" placeholder="cancun"></div>
+                <div class="ld-f"><label>País / Bandeira (ex: México 🌮)</label><input type="text" id="pkg-flag" placeholder="Brasil 🏖️"></div>
+                <div class="ld-f"><label>Título do pacote</label><input type="text" id="pkg-title" placeholder="Cancún & Riviera Maya"></div>
+                <div class="ld-f"><label>Subtítulo</label><input type="text" id="pkg-subtitle" placeholder="O Caribe Mexicano te espera"></div>
+                <div class="ld-f"><label>Localização</label><input type="text" id="pkg-loc" placeholder="Cancún, México"></div>
+                <div class="ld-f"><label>Duração</label><input type="text" id="pkg-dur" placeholder="7 dias / 6 noites"></div>
+                <div class="ld-f"><label>Preço (ex: 4.990,00)</label><input type="text" id="pkg-price" placeholder="4.990,00"></div>
+                <div class="ld-f"><label>Parcelamento (ex: 10x de R$ 499)</label><input type="text" id="pkg-parc" placeholder="10x de R$ 499"></div>
+                <div class="ld-f"><label>URL da foto principal</label><input type="url" id="pkg-img" placeholder="https://images.unsplash.com/..."></div>
+                <div class="ld-f"><label>Descrição do destino</label><textarea id="pkg-desc" rows="3"></textarea></div>
+                <div class="ld-f"><label>O que está incluso (um por linha)</label><textarea id="pkg-incluso" rows="4" placeholder="Passagem aérea ida e volta&#10;Hospedagem com café da manhã"></textarea></div>
+                <div class="ld-acts">
+                    <button class="ld-ok" id="lda">✓ Criar Pacote</button>
+                    <button class="ld-ko" id="ldc">Cancelar</button>
+                </div>
+            </div>`;
+            p.querySelector('#ldc').onclick = () => this.closePanel();
+            p.querySelector('#lda').onclick = () => {
+                const id       = p.querySelector('#pkg-id').value.trim().replace(/\s+/g,'').toLowerCase();
+                const flag     = p.querySelector('#pkg-flag').value.trim();
+                const title    = p.querySelector('#pkg-title').value.trim();
+                const subtitle = p.querySelector('#pkg-subtitle').value.trim();
+                const loc      = p.querySelector('#pkg-loc').value.trim();
+                const dur      = p.querySelector('#pkg-dur').value.trim();
+                const price    = p.querySelector('#pkg-price').value.trim();
+                const parc     = p.querySelector('#pkg-parc').value.trim();
+                const img      = p.querySelector('#pkg-img').value.trim();
+                const desc     = p.querySelector('#pkg-desc').value.trim();
+                const inclusoBruto = p.querySelector('#pkg-incluso').value.trim();
+                if (!id || !title || !price) {
+                    this.toast('⚠️ Preencha ID, Título e Preço', 'err'); return;
+                }
+                const incluso = inclusoBruto ? inclusoBruto.split('\n').map(s=>s.trim()).filter(Boolean) : ['Aéreo ida e volta','Hospedagem com café da manhã','Transfer aeroporto-hotel','Guia local'];
+                // Salvar no CMS para publicação
+                const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img, desc, incluso, _new: true };
+                if (!this.cms._packages) this.cms._packages = {};
+                this.cms._packages[id] = pkgData;
+                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                this.markDirty();
+                // Renderizar card na home
+                this._renderNewPackageCard(pkgData);
+                this.closePanel();
+                this.toast('✓ Pacote "' + title + '" criado! Publique para salvar.', 'ok');
+            };
+        },
+
+        _renderNewPackageCard(pkg) {
+            const grid = document.querySelector('.cards-grid');
+            if (!grid) return;
+            const cardId = 'card-new-' + pkg.id;
+            const wrap = document.createElement('div');
+            wrap.style.position = 'relative';
+            wrap.className = 'card-link-wrap';
+            wrap.innerHTML = `
+                <button class="ld-remove-pkg" data-pkg-id="${pkg.id}" title="Remover pacote">🗑 Remover</button>
+                <a href="pacote.html?id=${pkg.id}" class="card-link rv">
+                    <div class="card-img">
+                        <img src="${pkg.img || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80'}" alt="${pkg.title}" loading="lazy">
+                        <div class="card-flag">${pkg.flag || ''}</div>
+                        <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-loc"><i class="fa-solid fa-location-dot"></i> ${pkg.location || ''}</div>
+                        <h3>${pkg.title}</h3>
+                        <div class="card-foot">
+                            <div class="card-price">R$ ${pkg.price} <small>/ pessoa</small></div>
+                            <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </a>`;
+            grid.appendChild(wrap);
+            wrap.querySelector('.ld-remove-pkg').addEventListener('click', e => {
+                e.stopPropagation();
+                this._confirmRemovePkg(pkg.id, wrap);
+            });
+        },
+
+        bindPackageRemoveButtons() {
+            // Adicionar botão de remover em cada card existente
+            document.querySelectorAll('.cards-grid .card-link').forEach(card => {
+                if (card.querySelector('.ld-remove-pkg')) return; // já tem
+                const href = card.getAttribute('href') || '';
+                const m = href.match(/id=([^&]+)/);
+                if (!m) return;
+                const pkgId = m[1];
+                // Envolver em wrapper relativo se necessário
+                if (!card.parentElement.classList.contains('card-link-wrap')) {
+                    const wrap = document.createElement('div');
+                    wrap.style.position = 'relative';
+                    wrap.className = 'card-link-wrap';
+                    card.parentNode.insertBefore(wrap, card);
+                    wrap.appendChild(card);
+                    const btn = document.createElement('button');
+                    btn.className = 'ld-remove-pkg';
+                    btn.dataset.pkgId = pkgId;
+                    btn.title = 'Remover pacote';
+                    btn.innerHTML = '🗑 Remover';
+                    wrap.appendChild(btn);
+                    btn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        this._confirmRemovePkg(pkgId, wrap);
+                    });
+                }
+            });
+        },
+
+        _confirmRemovePkg(pkgId, el) {
+            if (!confirm(`Remover o pacote "${pkgId}" do site?\n\nEsta ação será aplicada ao publicar.`)) return;
+            if (!this.cms._removedPackages) this.cms._removedPackages = [];
+            if (!this.cms._removedPackages.includes(pkgId)) this.cms._removedPackages.push(pkgId);
+            localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+            this.markDirty();
+            el.style.opacity = '0.3';
+            el.style.pointerEvents = 'none';
+            el.style.outline = '2px dashed #ef4444';
+            this.toast('🗑 Pacote marcado para remover. Publique para confirmar.', 'ok');
+        },
+
+        /* ── GERENCIAR DEPOIMENTOS ── */
+        pManageDep() {
+            const grid = document.getElementById('dep-grid');
+            if (!grid) { this.toast('Seção de depoimentos não encontrada', 'err'); return; }
+            const count = grid.querySelectorAll('.dep-card').length;
+            const p = this.panel_('⭐ Gerenciar Depoimentos');
+            p.innerHTML += `<div class="ld-pb">
+                <div class="ld-info">Você tem <strong>${count} depoimento(s)</strong>. Clique nos cards do site para editar o texto. Use os botões vermelhos para remover.</div>
+                <hr class="ld-hr">
+                <p style="font-size:13px;font-weight:700;color:#374151;margin-bottom:12px;">Adicionar novo depoimento:</p>
+                <div class="ld-f"><label>Nome</label><input type="text" id="dep-nome" placeholder="João Silva"></div>
+                <div class="ld-f"><label>Origem (ex: via Google · há 1 mês)</label><input type="text" id="dep-dest" placeholder="via Google · há 1 mês"></div>
+                <div class="ld-f"><label>Texto do depoimento</label><textarea id="dep-texto" rows="3" placeholder="Viagem perfeita, te qualidade..."></textarea></div>
+                <div class="ld-acts">
+                    <button class="ld-ok" id="lda">+ Adicionar</button>
+                    <button class="ld-ko" id="ldc">Fechar</button>
+                </div>
+            </div>`;
+            p.querySelector('#ldc').onclick = () => this.closePanel();
+            p.querySelector('#lda').onclick = () => {
+                const nome  = p.querySelector('#dep-nome').value.trim();
+                const dest  = p.querySelector('#dep-dest').value.trim();
+                const texto = p.querySelector('#dep-texto').value.trim();
+                if (!nome || !texto) { this.toast('Preencha nome e texto', 'err'); return; }
+                const idx = grid.querySelectorAll('.dep-card').length;
+                const eid_n = `dep-${idx+1}-nome`;
+                const eid_t = `dep-${idx+1}-text`;
+                const eid_d = `dep-${idx+1}-dest`;
+                const eid_f = `dep-${idx+1}-foto`;
+                const card = document.createElement('div');
+                card.className = 'dep-card rv';
+                card.dataset.depId = idx;
+                const initials = nome.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+                const colors = ['1565C0','F97316','16A34A','7C3AED','EA6C0A'];
+                const bg = colors[idx % colors.length];
+                card.innerHTML = `
+                    <button class="ld-remove-card" title="Remover">✕</button>
+                    <div class="dep-stars" data-eid="${eid_n}-stars">★★★★★</div>
+                    <p class="dep-text" data-eid="${eid_t}" data-elabel="Depoimento ${idx+1}">${texto}</p>
+                    <div class="dep-author">
+                        <div class="dep-av"><img src="https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=${bg}&color=fff&size=80" alt="${nome}" data-eid="${eid_f}" data-elabel="Foto Depoimento ${idx+1}"></div>
+                        <div>
+                            <div class="dep-name" data-eid="${eid_n}" data-elabel="Nome Depoimento ${idx+1}">${nome}</div>
+                            <div class="dep-dest" data-eid="${eid_d}" data-elabel="Destino Depoimento ${idx+1}">${dest || 'via Google'}</div>
+                        </div>
+                    </div>`;
+                grid.appendChild(card);
+                // Salvar no CMS
+                this.store(eid_t, { html: texto });
+                this.store(eid_n, { html: nome });
+                this.store(eid_d, { html: dest || 'via Google' });
+                // Bind do botão de remover
+                card.querySelector('.ld-remove-card').addEventListener('click', e => {
+                    e.stopPropagation();
+                    if (confirm('Remover este depoimento?')) { card.remove(); this.markDirty(); }
+                });
+                // Bind de clique para editar
+                this.bindAll();
+                this.closePanel();
+                this.toast('✓ Depoimento adicionado!', 'ok');
+            };
+        },
+
+        bindDepRemoveButtons() {
+            document.querySelectorAll('.dep-card').forEach(card => {
+                if (card.querySelector('.ld-remove-card')) return;
+                const btn = document.createElement('button');
+                btn.className = 'ld-remove-card';
+                btn.title = 'Remover depoimento';
+                btn.innerHTML = '✕';
+                card.appendChild(btn);
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    if (confirm('Remover este depoimento?')) { card.remove(); this.markDirty(); this.toast('Depoimento removido', 'ok'); }
+                });
+            });
+        },
+
         /* ── REVERTER ── */
         revert() {
             const hasDraft = Object.keys(JSON.parse(localStorage.getItem(CMS_KEY) || '{}')).length > 0;
@@ -664,4 +878,6 @@
     });
 
     window._LD = ED;
+    // Expor funções globais para onclick HTML
+    window.addDepoimento = () => ED.pManageDep();
 })();
