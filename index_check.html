@@ -1,0 +1,1227 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lovisa Destinos ├óÔé¼ÔÇØ Viagens de Lazer & Corporativas</title>
+    <meta name="description" content="Roteiros exclusivos e personalizados para viajantes que n├â┬úo aceitam o comum. Parceira CVC com atendimento humanizado e personalizado.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link rel="icon" href="logo.png" type="image/png">
+    <style>
+        /* ├óÔÇØÔé¼├óÔÇØÔé¼ RESET ├óÔÇØÔé¼├óÔÇØÔé¼ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ├óÔÇØÔé¼├óÔÇØÔé¼ TOKENS ├óÔÇØÔé¼├óÔÇØÔé¼ */
+        :root {
+            --navy:       #1565C0;
+            --navy-dark:  #0D47A1;
+            --accent:     #F97316;
+            --accent-d:   #EA6C0A;
+            --gold:       #F97316;
+            --text:       #1A1F2E;
+            --muted:      #6B7280;
+            --bg:         #F8F9FC;
+            --white:      #FFFFFF;
+            --border:     #E5E9F2;
+            --wa:         #25D366;
+            --hh:         68px;           /* header height */
+            --r:          18px;           /* radius */
+            --rl:         28px;
+        }
+
+        /* ├óÔÇØÔé¼├óÔÇØÔé¼ BASE ├óÔÇØÔé¼├óÔÇØÔé¼ */
+        html { scroll-behavior: smooth; scroll-padding-top: var(--hh); overflow-x: hidden; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+                         'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--white);
+            overflow-x: hidden;
+            max-width: 100vw;
+            -webkit-font-smoothing: antialiased;
+        }
+        img { display: block; max-width: 100%; }
+        a { text-decoration: none; color: inherit; }
+
+        /* ├óÔÇØÔé¼├óÔÇØÔé¼ LAYOUT ├óÔÇØÔé¼├óÔÇØÔé¼ */
+        .container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+        .section    { padding: 80px 0; }
+
+        /* ├óÔÇØÔé¼├óÔÇØÔé¼ TYPE ├óÔÇØÔé¼├óÔÇØÔé¼ */
+        .serif { font-family: 'Playfair Display', Georgia, serif; }
+        .label {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+            font-weight: 700;
+            color: var(--navy);
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        .lead { font-size: 1.05rem; color: var(--muted); line-height: 1.7; }
+
+        /* ├óÔÇØÔé¼├óÔÇØÔé¼ BUTTONS ├óÔÇØÔé¼├óÔÇØÔé¼ */
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 50px;
+            font-size: 15px; font-weight: 600; border: none;
+            cursor: pointer; transition: all .22s ease;
+            font-family: inherit;
+        }
+        .btn-accent  { background: var(--accent); color: #fff; }
+        .btn-accent:hover  { background: var(--accent-d); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(232,130,74,.33); }
+        .btn-ghost   { background: rgba(255,255,255,.14); color: #fff; border: 1.5px solid rgba(255,255,255,.5); backdrop-filter: blur(6px); }
+        .btn-ghost:hover   { background: rgba(255,255,255,.22); }
+        .btn-navy    { background: var(--navy); color: #fff; }
+        .btn-navy:hover    { background: var(--navy-dark); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(27,58,107,.3); }
+        .btn-sm { padding: 10px 20px; font-size: 14px; }
+        .btn-block { width: 100%; justify-content: center; }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           HEADER
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        #header {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--hh); z-index: 900;
+            transition: background .3s, box-shadow .3s;
+        }
+        #header.solid { background: var(--white); box-shadow: 0 1px 16px rgba(0,0,0,.09); }
+
+        .hdr-inner {
+            height: var(--hh);
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 24px;
+        }
+        .logo {
+            display: flex; align-items: center; gap: 9px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem; font-weight: 700;
+            color: #fff;
+            transition: color .3s;
+        }
+        .logo-dot { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .logo-dot i { font-size: 13px; color: #fff; }
+        #header.solid .logo { color: var(--navy); }
+
+        .hdr-nav { display: flex; align-items: center; gap: 28px; }
+        .hdr-nav a { font-size: 14px; font-weight: 500; color: rgba(255,255,255,.88); transition: color .2s; }
+        .hdr-nav a:hover { color: var(--accent); }
+        #header.solid .hdr-nav a { color: var(--text); }
+        #header.solid .hdr-nav a:hover { color: var(--accent); }
+
+        .hdr-cta { flex-shrink: 0; }
+
+        /* burger */
+        .burger { display: none; flex-direction: column; gap: 5px; padding: 6px; background: none; border: none; cursor: pointer; }
+        .burger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: all .3s; }
+        #header.solid .burger span { background: var(--navy); }
+        .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .burger.open span:nth-child(2) { opacity: 0; }
+        .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* mobile nav panel */
+        #mobile-panel {
+            display: none; position: fixed;
+            top: var(--hh); left: 0; right: 0;
+            background: var(--white);
+            padding: 16px 20px 28px;
+            box-shadow: 0 8px 32px rgba(0,0,0,.12);
+            z-index: 899; flex-direction: column; gap: 2px;
+        }
+        #mobile-panel.open { display: flex; }
+        #mobile-panel a {
+            padding: 13px 14px; font-size: 15px; font-weight: 600;
+            color: var(--text); border-radius: 12px; transition: background .2s;
+        }
+        #mobile-panel a:hover { background: var(--bg); color: var(--accent); }
+        #mobile-panel .mpanel-cta {
+            margin-top: 12px; background: var(--wa); color: #fff;
+            border-radius: 50px; text-align: center; padding: 14px;
+        }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           HERO
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        #home {
+            position: relative; height: 100svh; min-height: 600px;
+            display: flex; align-items: center; overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=85') center/cover no-repeat;
+        }
+        .hero-bg::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(15,36,71,.88) 0%, rgba(15,36,71,.46) 70%);
+        }
+        .hero-body { position: relative; z-index: 1; color: #fff; max-width: 680px; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: rgba(255,255,255,.12); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,.22); border-radius: 50px;
+            padding: 7px 18px; font-size: 12px; font-weight: 600;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: rgba(255,255,255,.9); margin-bottom: 24px;
+        }
+        .hero-badge i { color: var(--accent); }
+        .hero-h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.6rem, 7vw, 4.8rem);
+            font-weight: 700; line-height: 1.08; margin-bottom: 20px;
+        }
+        .hero-h1 em { font-style: normal; color: var(--accent); }
+        .hero-p { font-size: 1.1rem; color: rgba(255,255,255,.8); line-height: 1.7; margin-bottom: 36px; max-width: 500px; }
+        .hero-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+
+        .hero-scroll {
+            position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            color: rgba(255,255,255,.45); font-size: 11px; letter-spacing: .1em;
+            text-transform: uppercase; z-index: 1;
+            animation: hbounce 2s infinite;
+        }
+        @keyframes hbounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           STATS
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        .stats-bar { background: var(--navy-dark); border-bottom: 3px solid var(--accent); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); }
+        .stat {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 36px 16px; border-right: 1px solid rgba(255,255,255,.07);
+            text-align: center;
+        }
+        .stat:last-child { border-right: none; }
+        .stat-n {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem; font-weight: 700; color: var(--accent); line-height: 1;
+            margin-bottom: 6px;
+        }
+        .stat-l { font-size: 11px; color: rgba(255,255,255,.55); font-weight: 600; letter-spacing: .07em; text-transform: uppercase; }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           COMO FUNCIONA
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        .steps-hdr { text-align: center; margin-bottom: 56px; }
+        .steps-hdr .lead { max-width: 520px; margin: 0 auto; }
+        .steps-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; position: relative; }
+        .steps-row::before {
+            content: ''; position: absolute;
+            top: 44px; left: 16%; right: 16%; height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+        }
+        .step {
+            position: relative; z-index: 1; background: var(--white);
+            border: 1px solid var(--border); border-radius: var(--r);
+            padding: 40px 28px; text-align: center; transition: all .3s;
+        }
+        .step:hover { border-color: var(--accent); box-shadow: 0 14px 40px rgba(232,130,74,.11); transform: translateY(-5px); }
+        .step-num {
+            width: 52px; height: 52px; background: var(--accent); color: #fff;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700;
+            margin: 0 auto 20px; box-shadow: 0 6px 18px rgba(232,130,74,.3);
+        }
+        .step h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+        .step p  { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           DESTINOS
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        .dest-bg { background: var(--bg); }
+        .dest-hdr { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 40px; }
+
+        .cards-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+
+        /* FULLY CLICKABLE CARD */
+        .card-link {
+            display: block;
+            border-radius: var(--r); overflow: hidden;
+            background: var(--white);
+            box-shadow: 0 3px 14px rgba(0,0,0,.06);
+            transition: all .35s ease;
+            color: inherit;
+        }
+        .card-link:hover { transform: translateY(-9px); box-shadow: 0 18px 44px rgba(0,0,0,.13); }
+
+        .card-img { position: relative; height: 236px; overflow: hidden; }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; aspect-ratio: 4/3; }
+        .card-link:hover .card-img img { transform: scale(1.07); }
+
+        .card-flag {
+            position: absolute; top: 14px; left: 14px;
+            background: rgba(255,255,255,.93); backdrop-filter: blur(6px);
+            padding: 4px 13px; border-radius: 50px;
+            font-size: 11px; font-weight: 700; color: var(--navy);
+            text-transform: uppercase; letter-spacing: .05em;
+        }
+        .card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(15,36,71,.72) 0%, transparent 55%);
+            opacity: 0; transition: opacity .33s;
+            display: flex; align-items: flex-end; padding: 20px;
+        }
+        .card-link:hover .card-overlay { opacity: 1; }
+        .card-overlay span { color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+
+        .card-body { padding: 20px; }
+        .card-loc { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+        .card-loc i { color: var(--accent); font-size: 11px; }
+        .card-body h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+        .card-foot {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 14px; border-top: 1px solid var(--border);
+        }
+        .card-price { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+        .card-price small { font-family: inherit; font-family: -apple-system, sans-serif; font-size: 11px; color: var(--muted); font-weight: 400; }
+        .card-arrow { font-size: 13px; color: var(--navy); font-weight: 600; display: flex; align-items: center; gap: 5px; transition: gap .2s, color .2s; }
+        .card-link:hover .card-arrow { gap: 10px; color: var(--accent); }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           DIFERENCIAIS
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        .dif-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+        .dif-img-wrap { position: relative; }
+        .dif-img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: var(--rl); box-shadow: 0 20px 56px rgba(27,58,107,.18); }
+        .dif-badge {
+            position: absolute; bottom: -18px; right: -18px;
+            background: var(--navy-dark); color: #fff;
+            border-radius: var(--r); padding: 20px 24px; text-align: center;
+            box-shadow: 0 8px 28px rgba(0,0,0,.2);
+        }
+        .dif-badge strong { font-family: 'Playfair Display', serif; font-size: 1.8rem; display: block; color: var(--accent); }
+        .dif-badge small  { font-size: 11px; color: rgba(255,255,255,.6); }
+        .dif-list { margin-top: 32px; display: flex; flex-direction: column; gap: 18px; }
+        .dif-item { display: flex; gap: 14px; align-items: flex-start; }
+        .dif-icon {
+            width: 44px; height: 44px; flex-shrink: 0;
+            background: rgba(232,130,74,.1); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: var(--accent);
+        }
+        .dif-item h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+        .dif-item p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           DEPOIMENTOS ├óÔé¼ÔÇØ GOOGLE STYLE
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        .dep-bg { background: #F1F3F4; }
+        .dep-hdr { text-align: center; margin-bottom: 48px; }
+        .dep-hdr .h2 { color: var(--navy); }
+        .dep-hdr .lead { color: var(--muted); max-width: 520px; margin: 0 auto; }
+        .dep-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+        /* editor: remover card */
+        .ld-remove-card { display:none; position:absolute; top:8px; right:8px; width:26px; height:26px; border-radius:50%; background:#ef4444; border:none; color:#fff; font-size:13px; cursor:pointer; align-items:center; justify-content:center; z-index:10; transition:background .2s; }
+        .ld-remove-card:hover { background:#dc2626; }
+        body.ld-on .dep-card { position:relative; }
+        body.ld-on .ld-remove-card { display:flex; }
+        body.ld-on .card-link-wrap { position:relative; }
+        body.ld-on .ld-remove-pkg { display:flex; }
+        .ld-remove-pkg { display:none; position:absolute; top:10px; right:10px; background:#ef4444; color:#fff; border:none; border-radius:50px; padding:5px 12px; font-size:11px; font-weight:700; cursor:pointer; z-index:20; align-items:center; gap:5px; transition:background .2s; }
+        .ld-remove-pkg:hover { background:#dc2626; }
+        /* Google Review Card */
+        .dep-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+            transition: box-shadow .25s, transform .25s;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .dep-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,.16); transform: translateY(-3px); }
+        /* Google review header row */
+        .dep-header { display: flex; align-items: center; justify-content: space-between; }
+        .dep-user { display: flex; align-items: center; gap: 10px; }
+        .dep-av {
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 700; color: #fff;
+            flex-shrink: 0; overflow: hidden;
+        }
+        .dep-av img { width: 100%; height: 100%; object-fit: cover; }
+        .dep-name { font-size: 14px; font-weight: 600; color: #202124; }
+        .dep-dest { font-size: 12px; color: #70757A; margin-top: 1px; }
+        /* Google G logo badge */
+        .dep-g-logo { flex-shrink: 0; }
+        .dep-g-logo img { width: 20px; height: 20px; display: block; }
+        /* Stars ├óÔé¼ÔÇØ Google yellow */
+        .dep-stars { display: flex; align-items: center; gap: 2px; }
+        .dep-stars i { color: #FBBC04; font-size: 14px; }
+        .dep-stars span { font-size: 11px; color: #70757A; margin-left: 4px; }
+        /* Review text */
+        .dep-text { font-size: 13.5px; color: #3C4043; line-height: 1.65; flex: 1; }
+        /* Google Maps link */
+        .dep-link { font-size: 12px; color: #1A73E8; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
+        .dep-link:hover { text-decoration: underline; }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           CONTATO
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        .contact-bg { background: var(--bg); }
+        .form-wrap  { display: grid; grid-template-columns: 1fr 1.1fr; gap: 72px; align-items: start; }
+        .form-left p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 32px; }
+        .finfo { display: flex; flex-direction: column; gap: 18px; }
+        .finfo-row { display: flex; gap: 14px; align-items: center; }
+        .finfo-ico { width: 40px; height: 40px; flex-shrink: 0; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+        .finfo-row strong { display: block; font-size: 13px; font-weight: 700; color: var(--navy); }
+        .finfo-row span   { font-size: 13px; color: var(--muted); }
+
+        .form-card {
+            background: var(--white); border-radius: var(--rl);
+            padding: 40px 36px; box-shadow: 0 10px 44px rgba(27,58,107,.1);
+        }
+        .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .ig { margin-bottom: 16px; }
+        .ig label {
+            display: block; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .05em;
+            color: var(--navy); margin-bottom: 7px;
+        }
+        .ig input, .ig select, .ig textarea {
+            width: 100%; padding: 12px 14px;
+            border: 1.5px solid var(--border); border-radius: 12px;
+            font-family: inherit; font-size: 15px; color: var(--text);
+            background: var(--bg); outline: none;
+            transition: border .2s, box-shadow .2s;
+            -webkit-appearance: none;
+        }
+        .ig input:focus, .ig select:focus, .ig textarea:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,130,74,.12);
+            background: #fff;
+        }
+        .ig textarea { resize: vertical; min-height: 80px; }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           FOOTER
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        footer { background: var(--navy-dark); color: rgba(255,255,255,.5); padding: 72px 0 0; }
+        .ft-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 48px; padding-bottom: 56px; }
+        .ft-brand p { font-size: 13px; line-height: 1.7; margin-top: 14px; max-width: 240px; }
+        .ft-brand .logo { color: #fff; }
+        footer h5 { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 18px; }
+        .ft-links { display: flex; flex-direction: column; gap: 10px; }
+        .ft-links a { font-size: 13px; color: rgba(255,255,255,.58); transition: color .2s; }
+        .ft-links a:hover { color: var(--accent); }
+        .ft-social { display: flex; gap: 10px; margin-top: 6px; }
+        .ft-social a {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.14);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,.55); font-size: 13px; transition: all .2s;
+        }
+        .ft-social a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .ft-bottom {
+            border-top: 1px solid rgba(255,255,255,.07); padding: 22px 0;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 12px; gap: 12px;
+        }
+
+        /* ├óÔÇØÔé¼├óÔÇØÔé¼ WA FLOAT ├óÔÇØÔé¼├óÔÇØÔé¼ */
+        .wa {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 56px; height: 56px; background: var(--wa); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 1.5rem; z-index: 888;
+            box-shadow: 0 6px 18px rgba(37,211,102,.42);
+            transition: transform .25s, box-shadow .25s;
+        }
+        .wa:hover { transform: scale(1.12); box-shadow: 0 10px 26px rgba(37,211,102,.55); }
+        .wa::before {
+            content: ''; position: absolute; inset: -6px; border-radius: 50%;
+            background: rgba(37,211,102,.24); animation: wapulse 2s infinite;
+        }
+        @keyframes wapulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.35);opacity:0} }
+
+        /* ├óÔÇØÔé¼├óÔÇØÔé¼ REVEAL ├óÔÇØÔé¼├óÔÇØÔé¼ */
+        .rv { opacity: 0; transform: translateY(26px); transition: opacity .55s ease, transform .55s ease; }
+        .rv.on { opacity: 1; transform: none; }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           RESPONSIVE ├óÔé¼ÔÇØ TABLET (├óÔÇ░┬ñ1024px)
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        @media(max-width:1024px) {
+            .dif-grid { gap: 48px; }
+            .ft-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+        }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           RESPONSIVE ├óÔé¼ÔÇØ MOBILE (├óÔÇ░┬ñ768px)
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        @media(max-width:768px) {
+            :root { --hh: 60px; }
+            .section { padding: 56px 0; }
+
+            /* header */
+            .hdr-nav  { display: none; }
+            .hdr-cta  { display: none; }
+            .burger   { display: flex; }
+
+            /* hero */
+            .hero-bg { background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80'); }
+            .hero-h1  { font-size: 2.4rem; }
+            .hero-p   { font-size: 1rem; }
+            .hero-btns .btn { width: 100%; justify-content: center; }
+
+            /* stats */
+            .stats-grid { 
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 0;
+                padding: 0 5px;
+            }
+            .stat { 
+                padding: 24px 5px; 
+                border-right: 1px solid rgba(255,255,255,.07); 
+                border-bottom: none; 
+            }
+            .stat-n { font-size: 1.4rem; }
+            .stat-l { font-size: 8px; letter-spacing: 0; }
+            .stat:last-child { border-right: none; }
+
+            /* steps */
+            .steps-row { grid-template-columns: 1fr; }
+            .steps-row::before { display: none; }
+
+            /* cards */
+            .cards-grid { grid-template-columns: 1fr; }
+            .dest-hdr   { flex-direction: column; align-items: flex-start; }
+
+            /* dif */
+            .dif-grid { grid-template-columns: 1fr; }
+            .dif-img-wrap { display: none; }
+
+            /* dep */
+            .dep-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+
+            /* form */
+            .form-wrap { grid-template-columns: 1fr; gap: 40px; }
+            .row2 { grid-template-columns: 1fr; }
+
+            /* footer */
+            .ft-top { grid-template-columns: 1fr; gap: 28px; }
+            .ft-bottom { flex-direction: column; text-align: center; }
+        }
+
+        /* ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É
+           RESPONSIVE ├óÔé¼ÔÇØ SMALL (├óÔÇ░┬ñ480px)
+        ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É */
+        @media(max-width:480px) {
+            .container { padding: 0 16px; }
+            .form-card { padding: 28px 20px; }
+            .card-img { height: 200px; }
+            .hero-h1 { font-size: 2.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É HEADER ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<header id="header">
+    <div class="container">
+        <div class="hdr-inner">
+            <a href="#home" class="logo">
+                <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid rgba(255,255,255,0.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="logo.png" alt="Lovisa Destinos" style="width:48px;height:48px;object-fit:contain;"></div>
+            </a>
+            <nav class="hdr-nav">
+                <a href="#home">In├â┬¡cio</a>
+                <a href="#destinos">Destinos</a>
+                <a href="#clientes">Clientes</a>
+                <a href="#diferenciais">Por Que N├â┬│s</a>
+                <a href="#contato">Or├â┬ºamento</a>
+                <a href="sobre.html">Sobre</a>
+            </nav>
+            <div class="hdr-cta">
+                <a href="https://wa.me/5519995396281" class="btn btn-accent btn-sm">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+            <button class="burger" id="burger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<nav id="mobile-panel">
+    <a href="#home"          onclick="closePanel()">In├â┬¡cio</a>
+    <a href="#destinos"      onclick="closePanel()">Destinos</a>
+    <a href="#clientes"      onclick="closePanel()">Clientes</a>
+    <a href="#diferenciais"  onclick="closePanel()">Por Que N├â┬│s</a>
+    <a href="#depoimentos"   onclick="closePanel()">Depoimentos</a>
+    <a href="#contato"       onclick="closePanel()">Or├â┬ºamento</a>
+    <a href="sobre.html">Sobre</a>
+    <a href="https://wa.me/5519995396281" class="mpanel-cta">
+        <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+    </a>
+</nav>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É HERO ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<section id="home">
+    <div class="hero-bg"></div>
+    <div class="container">
+        <div class="hero-body">
+            <div class="hero-badge" data-eid="hero-badge" data-elabel="Badge Hero"><i class="fa-solid fa-star"></i> Consultoria Premium de Viagens</div>
+            <h1 class="hero-h1" data-eid="hero-title" data-elabel="T├â┬¡tulo Principal">Viagens que <em>transformam</em> para sempre</h1>
+            <p class="hero-p" data-eid="hero-sub" data-elabel="Subt├â┬¡tulo Hero">Roteiros exclusivos e sob medida para viajantes que n├â┬úo aceitam o comum. Da primeira reuni├â┬úo ao retorno em casa ├óÔé¼ÔÇØ cuidamos de cada detalhe.</p>
+            <div class="hero-btns">
+                <a href="#contato" class="btn btn-accent">Solicitar Meu Roteiro <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="#destinos" class="btn btn-ghost">Ver Destinos</a>
+            </div>
+        </div>
+    </div>
+    <div class="hero-scroll"><span>Explorar</span><i class="fa-solid fa-chevron-down"></i></div>
+</section>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É STATS ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<div class="stats-bar">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat rv"><div class="stat-n" data-eid="home-stat1-n" data-elabel="Stat 1 N├â┬║mero">12+</div><div class="stat-l" data-eid="home-stat1-l" data-elabel="Stat 1 Texto">Anos de Experi├â┬¬ncia</div></div>
+            <div class="stat rv"><div class="stat-n" data-eid="home-stat2-n" data-elabel="Stat 2 N├â┬║mero">15k+</div><div class="stat-l" data-eid="home-stat2-l" data-elabel="Stat 2 Texto">Viajantes Felizes</div></div>
+            <div class="stat rv"><div class="stat-n" data-eid="home-stat3-n" data-elabel="Stat 3 N├â┬║mero">25</div><div class="stat-l" data-eid="home-stat3-l" data-elabel="Stat 3 Texto">Pa├â┬¡ses Atendidos</div></div>
+            <div class="stat rv"><div class="stat-n" data-eid="home-stat4-n" data-elabel="Stat 4 N├â┬║mero">99%</div><div class="stat-l" data-eid="home-stat4-l" data-elabel="Stat 4 Texto">Satisfa├â┬º├â┬úo</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É COMO FUNCIONA ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<section class="section" id="como-funciona">
+    <div class="container">
+        <div class="steps-hdr rv">
+            <span class="label">Processo</span>
+            <h2 class="h2" data-eid="steps-title" data-elabel="T├â┬¡tulo Processo">Sua viagem dos sonhos em 3 passos</h2>
+            <p class="lead">Desde a primeira conversa at├â┬® o embarque, uma equipe dedicada cuida de cada detalhe por voc├â┬¬.</p>
+        </div>
+        <div class="steps-row">
+            <div class="step rv">
+                <div class="step-num">1</div>
+                <h3 data-eid="step1-title" data-elabel="Passo 1 T├â┬¡tulo">Consulta Personalizada</h3>
+                <p data-eid="step1-desc" data-elabel="Passo 1 Texto">Entendemos seus sonhos, datas, or├â┬ºamento e estilo em uma conversa de 30 minutos sem compromisso.</p>
+            </div>
+            <div class="step rv">
+                <div class="step-num">2</div>
+                <h3 data-eid="step2-title" data-elabel="Passo 2 T├â┬¡tulo">Curadoria Exclusiva</h3>
+                <p data-eid="step2-desc" data-elabel="Passo 2 Texto">Criamos um roteiro 100% personalizado com os melhores hot├â┬®is, passeios e experi├â┬¬ncias para o seu perfil.</p>
+            </div>
+            <div class="step rv">
+                <div class="step-num">3</div>
+                <h3 data-eid="step3-title" data-elabel="Passo 3 T├â┬¡tulo">Embarque Tranquilo</h3>
+                <p data-eid="step3-desc" data-elabel="Passo 3 Texto">Cuidamos de passagens, hospedagem, transfers e suporte 24h durante toda a sua viagem.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É DESTINOS ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<section class="section dest-bg" id="destinos">
+    <div class="container">
+        <div class="dest-hdr rv">
+            <div>
+                <span class="label">Destinos</span>
+                <h2 class="h2" data-eid="dest-title" data-elabel="T├â┬¡tulo Destinos">Experi├â┬¬ncias que ficam<br>na mem├â┬│ria para sempre</h2>
+            </div>
+            <a href="#contato" class="btn btn-navy" style="flex-shrink:0">Ver Todos <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="cards-grid">
+
+            <a href="pacote.html?id=lencois" class="card-link rv">
+                <div class="card-img">
+                    <img src="https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=700&q=80" alt="Len├â┬º├â┬│is Maranhenses" loading="lazy" decoding="async" data-eid="card1-img" data-elabel="Foto Len├â┬º├â┬│is">
+                    <div class="card-flag" data-eid="card1-flag" data-elabel="Pa├â┬¡s Len├â┬º├â┬│is">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card1-loc" data-elabel="Local Len├â┬º├â┬│is"><i class="fa-solid fa-location-dot"></i> Maranh├â┬úo, Brasil</div>
+                    <h3 data-eid="card1-title" data-elabel="T├â┬¡tulo Len├â┬º├â┬│is">Len├â┬º├â┬│is Maranhenses</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card1-price" data-elabel="Pre├â┬ºo Len├â┬º├â┬│is">R$ 3.890 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=disney" class="card-link rv">
+                <div class="card-img">
+                    <img src="https://images.unsplash.com/photo-1568092816214-02404ef89f59?auto=format&fit=crop&w=700&q=80" alt="Disney Orlando" loading="lazy" decoding="async" data-eid="card2-img" data-elabel="Foto Disney">
+                    <div class="card-flag" data-eid="card2-flag" data-elabel="Pa├â┬¡s Disney">EUA</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card2-loc" data-elabel="Local Disney"><i class="fa-solid fa-location-dot"></i> Orlando, Florida, EUA</div>
+                    <h3 data-eid="card2-title" data-elabel="T├â┬¡tulo Disney">Disney & Orlando</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card2-price" data-elabel="Pre├â┬ºo Disney">R$ 9.900 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=maceio" class="card-link rv">
+                <div class="card-img">
+                    <img src="https://images.unsplash.com/photo-1564939558297-fc396f18e5c7?auto=format&fit=crop&w=700&q=80" alt="Macei├â┬│" loading="lazy" decoding="async" data-eid="card3-img" data-elabel="Foto Macei├â┬│">
+                    <div class="card-flag" data-eid="card3-flag" data-elabel="Pa├â┬¡s Macei├â┬│">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card3-loc" data-elabel="Local Macei├â┬│"><i class="fa-solid fa-location-dot"></i> Alagoas, Brasil</div>
+                    <h3 data-eid="card3-title" data-elabel="T├â┬¡tulo Macei├â┬│">Macei├â┬│ & Maragogi</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card3-price" data-elabel="Pre├â┬ºo Macei├â┬│">R$ 2.890 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=portogalinhas" class="card-link rv">
+                <div class="card-img">
+                    <img src="https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=700&q=80" alt="Porto de Galinhas" loading="lazy" decoding="async" data-eid="card4-img" data-elabel="Foto Porto de Galinhas">
+                    <div class="card-flag" data-eid="card4-flag" data-elabel="Pa├â┬¡s Porto de Galinhas">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card4-loc" data-elabel="Local Porto de Galinhas"><i class="fa-solid fa-location-dot"></i> Pernambuco, Brasil</div>
+                    <h3 data-eid="card4-title" data-elabel="T├â┬¡tulo Porto de Galinhas">Porto de Galinhas</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card4-price" data-elabel="Pre├â┬ºo Porto de Galinhas">R$ 3.290 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=riodejaneiro" class="card-link rv">
+                <div class="card-img">
+                    <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=700&q=80" alt="Rio de Janeiro" loading="lazy" decoding="async" data-eid="card5-img" data-elabel="Foto Rio de Janeiro">
+                    <div class="card-flag" data-eid="card5-flag" data-elabel="Pa├â┬¡s Rio de Janeiro">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card5-loc" data-elabel="Local Rio de Janeiro"><i class="fa-solid fa-location-dot"></i> Rio de Janeiro, Brasil</div>
+                    <h3 data-eid="card5-title" data-elabel="T├â┬¡tulo Rio de Janeiro">Rio de Janeiro</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card5-price" data-elabel="Pre├â┬ºo Rio de Janeiro">R$ 3.490 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=joaopessoa" class="card-link rv">
+                <div class="card-img">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80" alt="Jo├â┬úo Pessoa" loading="lazy" decoding="async" data-eid="card6-img" data-elabel="Foto Jo├â┬úo Pessoa">
+                    <div class="card-flag" data-eid="card6-flag" data-elabel="Pa├â┬¡s Jo├â┬úo Pessoa">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card6-loc" data-elabel="Local Jo├â┬úo Pessoa"><i class="fa-solid fa-location-dot"></i> Para├â┬¡ba, Brasil</div>
+                    <h3 data-eid="card6-title" data-elabel="T├â┬¡tulo Jo├â┬úo Pessoa">Jo├â┬úo Pessoa</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card6-price" data-elabel="Pre├â┬ºo Jo├â┬úo Pessoa">R$ 2.490 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É EQUIPE & DIFERENCIAIS ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<section class="section" id="diferenciais">
+    <div class="container">
+        <div class="dif-grid">
+            <div class="dif-img-wrap rv">
+                <img src="https://sonhoreal.tur.br/wp-content/uploads/2025/10/Como-escolher-a-agencia-de-turismo-ideal-para-uma-viagem.webp" alt="Equipe Lovisa Destinos" class="dif-img" loading="lazy" data-eid="dif-img" data-elabel="Foto Equipe">
+                <div class="dif-badge" data-eid="dif-badge" data-elabel="Badge Clientes"><strong>+15k</strong><small>Clientes Satisfeitos</small></div>
+            </div>
+            <div class="rv">
+                <span class="label">Nossa equipe</span>
+                <h2 class="h2" data-eid="dif-title" data-elabel="T├â┬¡tulo Diferenciais">Uma equipe dedicada exclusivamente a voc├â┬¬</h2>
+                <p class="lead" data-eid="dif-sub" data-elabel="Subt├â┬¡tulo Diferenciais">Cada viagem come├â┬ºa com uma conversa real. Nossa equipe de especialistas conhece os destinos de perto ├óÔé¼ÔÇØ cada detalhe pensado para o seu perfil, seus sonhos e o seu momento.</p>
+                <div class="dif-list">
+                    <div class="dif-item">
+                        <div class="dif-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div><h4 data-eid="dif-item1-title" data-elabel="Diferencial 1 T├â┬¡tulo">Seguran├â┬ºa e Confiabilidade</h4><p data-eid="dif-item1-desc" data-elabel="Diferencial 1 Texto">12 anos de atua├â┬º├â┬úo com milhares de fam├â┬¡lias e parceiros verificados mundialmente.</p></div>
+                    </div>
+                    <div class="dif-item">
+                        <div class="dif-icon"><i class="fa-solid fa-headset"></i></div>
+                        <div><h4 data-eid="dif-item2-title" data-elabel="Diferencial 2 T├â┬¡tulo">Suporte 24h Durante a Viagem</h4><p data-eid="dif-item2-desc" data-elabel="Diferencial 2 Texto">Nossa equipe est├â┬í dispon├â┬¡vel a qualquer hora. Qualquer imprevisto, resolvemos.</p></div>
+                    </div>
+                    <div class="dif-item">
+                        <div class="dif-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <div><h4 data-eid="dif-item3-title" data-elabel="Diferencial 3 T├â┬¡tulo">Experi├â┬¬ncias Exclusivas</h4><p data-eid="dif-item3-desc" data-elabel="Diferencial 3 Texto">Acesso a hot├â┬®is e experi├â┬¬ncias que n├â┬úo est├â┬úo dispon├â┬¡veis para o p├â┬║blico geral.</p></div>
+                    </div>
+                    <div class="dif-item">
+                        <div class="dif-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                        <div><h4 data-eid="dif-item4-title" data-elabel="Diferencial 4 T├â┬¡tulo">Melhor Custo-Benef├â┬¡cio</h4><p data-eid="dif-item4-desc" data-elabel="Diferencial 4 Texto">Nossa rede de parceiros oferece condi├â┬º├â┬Áes especiais que voc├â┬¬ n├â┬úo encontra em outros lugares.</p></div>
+                    </div>
+                </div>
+                <a href="#contato" class="btn btn-accent" style="display:inline-flex;align-items:center;gap:8px;margin-top:24px;">
+                    Falar com um especialista <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É NOSSOS CLIENTES (INSTAGRAM) ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<section class="section" id="clientes" style="background: #fff;">
+    <div class="container">
+        <div class="steps-hdr rv">
+            <span class="label">Comunidade</span>
+            <h2 class="h2" data-eid="clientes-title" data-elabel="T├â┬¡tulo Clientes">Nossos Viajantes pelo Mundo</h2>
+            <p class="lead">Veja os momentos inesquec├â┬¡veis compartilhados por quem viaja com a Lovisa Destinos.</p>
+        </div>
+        
+        <div class="cards-grid" style="grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            
+            <!-- POST 1 -->
+            <div class="card-link rv">
+                <div class="card-img" style="height: 350px;">
+                    <img src="img-insta-1.jpg" alt="Cliente @esthereesthefany" data-eid="insta-img-1" data-elabel="Foto Instagram 1">
+                    <div class="card-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);"><span style="font-size: 11px;"><i class="fab fa-instagram"></i> @esthereesthefany</span></div>
+                </div>
+                <div class="card-body" style="padding: 15px;">
+                    <p style="font-size: 13px; color: var(--muted); line-height: 1.5; font-style: italic;" data-eid="insta-txt-1" data-elabel="Legenda Instagram 1">"Primeiro Voo de Janeiro crendo que ser├â┬í muitos 2026 Deus ele ├â┬® fiel Gratid├â┬úo Sempre..."</p>
+                    <div style="margin-top: 10px;"><a href="https://www.instagram.com/p/DTQqeI7j8A7/" target="_blank" class="btn-arrow" style="font-size: 12px; color: var(--navy); font-weight: 700;">Ver no Instagram <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
+                </div>
+            </div>
+
+            <!-- POST 2 -->
+            <div class="card-link rv">
+                <div class="card-img" style="height: 350px;">
+                    <img src="https://images.unsplash.com/photo-1502791451862-7bd8c1df43a7?auto=format&fit=crop&w=700&q=80" alt="Cliente @camile.trindade.737" data-eid="insta-img-2" data-elabel="Foto Instagram 2">
+                    <div class="card-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);"><span style="font-size: 11px;"><i class="fab fa-instagram"></i> @camile.trindade.737</span></div>
+                </div>
+                <div class="card-body" style="padding: 15px;">
+                    <p style="font-size: 13px; color: var(--muted); line-height: 1.5; font-style: italic;" data-eid="insta-txt-2" data-elabel="Legenda Instagram 2">Momentos especiais garantidos com a melhor assessoria de viagens. #LovisaDestinos</p>
+                    <div style="margin-top: 10px;"><a href="https://www.instagram.com/p/DRzUT9AkcGYimx-ApE4cuf7fHsnx6SAFapWaSI0/" target="_blank" class="btn-arrow" style="font-size: 12px; color: var(--navy); font-weight: 700;">Ver no Instagram <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
+                </div>
+            </div>
+
+            <!-- POST 3 -->
+            <div class="card-link rv">
+                <div class="card-img" style="height: 350px;">
+                    <img src="img-insta-3.jpg" alt="Cliente @ju_sanfitness" data-eid="insta-img-3" data-elabel="Foto Instagram 3">
+                    <div class="card-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);"><span style="font-size: 11px;"><i class="fab fa-instagram"></i> @ju_sanfitness</span></div>
+                </div>
+                <div class="card-body" style="padding: 15px;">
+                    <p style="font-size: 13px; color: var(--muted); line-height: 1.5; font-style: italic;" data-eid="insta-txt-3" data-elabel="Legenda Instagram 3">"O Caribe Brasileiro espera por voc├â┬¬. Maragogi - Alagoas."</p>
+                    <div style="margin-top: 10px;"><a href="https://www.instagram.com/p/DWpO8fEj0bE/?img_index=1" target="_blank" class="btn-arrow" style="font-size: 12px; color: var(--navy); font-weight: 700;">Ver no Instagram <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="clientes.html" class="btn btn-navy">Ver Mais Momentos <i class="fa-solid fa-camera-retro"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É DEPOIMENTOS ├óÔé¼ÔÇØ GOOGLE STYLE ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<section class="section dep-bg" id="depoimentos">
+    <div class="container">
+        <div class="dep-hdr rv">
+            <span class="label" style="color:#1A73E8;">Avalia├â┬º├â┬Áes do Google</span>
+            <h2 class="h2" data-eid="dep-title" data-elabel="T├â┬¡tulo Depoimentos">O que nossos clientes dizem</h2>
+            <p class="lead" data-eid="dep-sub" data-elabel="Subt├â┬¡tulo Depoimentos">Avalia├â┬º├â┬Áes verificadas do Google Maps ├óÔé¼ÔÇØ 5.0 ├ó┬¡┬É com 25 avalia├â┬º├â┬Áes reais</p>
+            <!-- Rating badge Google -->
+            <a href="https://www.google.com/maps/place/Lovisa+Destinos/@-13.3722091,-73.1397804,4z/data=!4m8!3m7!1s0x496312acd36d9057:0xbe12502a7a172777!8m2!3d-14.4095262!4d-51.31668!9m1!1b1!16s%2Fg%2F11wtlj2xps" target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E8EAED;border-radius:50px;padding:10px 22px;margin-top:16px;color:#3C4043;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 1px 4px rgba(0,0,0,.1);transition:box-shadow .2s;"
+               onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,.15)'" onmouseout="this.style.boxShadow='0 1px 4px rgba(0,0,0,.1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/24px-Google_%22G%22_Logo.svg.png" alt="Google" style="width:20px;height:20px;display:inline;">
+                <span style="color:#FBBC04;">├ó╦£ÔÇª├ó╦£ÔÇª├ó╦£ÔÇª├ó╦£ÔÇª├ó╦£ÔÇª</span>
+                <span><strong style="color:#202124;">5,0</strong> ├é┬À 25 avalia├â┬º├â┬Áes no Google Maps</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;color:#1A73E8;"></i>
+            </a>
+        </div>
+        <div class="dep-grid" id="dep-grid">
+
+            <!-- Review 1: Kenia Patricia -->
+            <div class="dep-card rv" data-dep-id="0">
+                <div class="dep-header">
+                    <div class="dep-user">
+                        <div class="dep-av" style="background:#1565C0;">K</div>
+                        <div>
+                            <div class="dep-name" data-eid="dep-1-nome" data-elabel="Nome Depoimento 1">Kenia Patricia</div>
+                            <div class="dep-dest" data-eid="dep-1-dest" data-elabel="Data Depoimento 1">h├â┬í 1 ano</div>
+                        </div>
+                    </div>
+                    <div class="dep-g-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/24px-Google_%22G%22_Logo.svg.png" alt="Google"></div>
+                </div>
+                <div class="dep-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="dep-text" data-eid="dep-1-text" data-elabel="Depoimento 1">"Foi minha primeira experi├â┬¬ncia viajando de avi├â┬úo, nunca tinha entrado no aeroporto, nunca tinha alugado carro nem nada do tipo. Gra├â┬ºas aos servi├â┬ºos oferecidos foi tudo bem f├â┬ícil. Obrigada Lovisa, tive uma ├â┬│tima experi├â┬¬ncia. J├â┬í vou planejar a pr├â┬│xima viagem."</p>
+                <a href="https://www.google.com/maps/place/Lovisa+Destinos" target="_blank" class="dep-link"><i class="fa-brands fa-google" style="font-size:11px;"></i> Ver no Google</a>
+            </div>
+
+            <!-- Review 2: Beatriz Andrade -->
+            <div class="dep-card rv" data-dep-id="1">
+                <div class="dep-header">
+                    <div class="dep-user">
+                        <div class="dep-av" style="background:#EA4335;">B</div>
+                        <div>
+                            <div class="dep-name" data-eid="dep-2-nome" data-elabel="Nome Depoimento 2">Beatriz dos Santos Andrade</div>
+                            <div class="dep-dest" data-eid="dep-2-dest" data-elabel="Data Depoimento 2">5 meses atr├â┬ís</div>
+                        </div>
+                    </div>
+                    <div class="dep-g-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/24px-Google_%22G%22_Logo.svg.png" alt="Google"></div>
+                </div>
+                <div class="dep-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="dep-text" data-eid="dep-2-text" data-elabel="Depoimento 2">"Viagem impec├â┬ível, com tudo organizado pela Lovisa. Desde as passagens, check in, transfer, hotel e passeios. Tudo perfeito!"</p>
+                <a href="https://www.google.com/maps/place/Lovisa+Destinos" target="_blank" class="dep-link"><i class="fa-brands fa-google" style="font-size:11px;"></i> Ver no Google</a>
+            </div>
+
+            <!-- Review 3: Marina Fernandes -->
+            <div class="dep-card rv" data-dep-id="2">
+                <div class="dep-header">
+                    <div class="dep-user">
+                        <div class="dep-av" style="background:#34A853;">M</div>
+                        <div>
+                            <div class="dep-name" data-eid="dep-3-nome" data-elabel="Nome Depoimento 3">Marina Fernandes</div>
+                            <div class="dep-dest" data-eid="dep-3-dest" data-elabel="Data Depoimento 3">2 meses atr├â┬ís</div>
+                        </div>
+                    </div>
+                    <div class="dep-g-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/24px-Google_%22G%22_Logo.svg.png" alt="Google"></div>
+                </div>
+                <div class="dep-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="dep-text" data-eid="dep-3-text" data-elabel="Depoimento 3">"Minha primeira viagem de avi├â┬úo: Piracicaba SP/Porto Seguro BA. Tive uma guia perfeita com a Lovisa ├óÔé¼ÔÇØ foi super atenciosa, prestativa e me orientou em tudo, explicando em detalhes com clareza."</p>
+                <a href="https://www.google.com/maps/place/Lovisa+Destinos" target="_blank" class="dep-link"><i class="fa-brands fa-google" style="font-size:11px;"></i> Ver no Google</a>
+            </div>
+
+            <!-- Review 4: Marisa Weber -->
+            <div class="dep-card rv" data-dep-id="3">
+                <div class="dep-header">
+                    <div class="dep-user">
+                        <div class="dep-av" style="background:#FBBC04;color:#202124;">M</div>
+                        <div>
+                            <div class="dep-name" data-eid="dep-4-nome" data-elabel="Nome Depoimento 4">Marisa Weber</div>
+                            <div class="dep-dest" data-eid="dep-4-dest" data-elabel="Data Depoimento 4">6 meses atr├â┬ís</div>
+                        </div>
+                    </div>
+                    <div class="dep-g-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/24px-Google_%22G%22_Logo.svg.png" alt="Google"></div>
+                </div>
+                <div class="dep-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="dep-text" data-eid="dep-4-text" data-elabel="Depoimento 4">"Fui muito bem atendida, me auxiliaram todo tempo da viagem. Com certeza recomendo e minhas pr├â┬│ximas viagens ser├â┬úo programadas com a Lovisa e minha atendente maravilhosa V├â┬ónia."</p>
+                <a href="https://www.google.com/maps/place/Lovisa+Destinos" target="_blank" class="dep-link"><i class="fa-brands fa-google" style="font-size:11px;"></i> Ver no Google</a>
+            </div>
+
+            <!-- Review 5: Sebasti├â┬úo da Silva -->
+            <div class="dep-card rv" data-dep-id="4">
+                <div class="dep-header">
+                    <div class="dep-user">
+                        <div class="dep-av" style="background:#1565C0;">S</div>
+                        <div>
+                            <div class="dep-name" data-eid="dep-5-nome" data-elabel="Nome Depoimento 5">Sebasti├â┬úo da Silva</div>
+                            <div class="dep-dest" data-eid="dep-5-dest" data-elabel="Data Depoimento 5">6 meses atr├â┬ís</div>
+                        </div>
+                    </div>
+                    <div class="dep-g-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/24px-Google_%22G%22_Logo.svg.png" alt="Google"></div>
+                </div>
+                <div class="dep-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="dep-text" data-eid="dep-5-text" data-elabel="Depoimento 5">"Viagem maravilhosa. Foi top demais, hospedagem top. Recomendo a todos que querem viajar com seguran├â┬ºa e conforto!"</p>
+                <a href="https://www.google.com/maps/place/Lovisa+Destinos" target="_blank" class="dep-link"><i class="fa-brands fa-google" style="font-size:11px;"></i> Ver no Google</a>
+            </div>
+
+            <!-- Review 6: Elias Paixao -->
+            <div class="dep-card rv" data-dep-id="5">
+                <div class="dep-header">
+                    <div class="dep-user">
+                        <div class="dep-av" style="background:#EA4335;">E</div>
+                        <div>
+                            <div class="dep-name" data-eid="dep-6-nome" data-elabel="Nome Depoimento 6">Elias Paixao</div>
+                            <div class="dep-dest" data-eid="dep-6-dest" data-elabel="Data Depoimento 6">11 meses atr├â┬ís</div>
+                        </div>
+                    </div>
+                    <div class="dep-g-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/24px-Google_%22G%22_Logo.svg.png" alt="Google"></div>
+                </div>
+                <div class="dep-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="dep-text" data-eid="dep-6-text" data-elabel="Depoimento 6">"Bom dia. Gostei muito, deu suporte durante toda a viagem. Super indico a Lovisa Destinos para quem quer viajar tranquilo e bem assistido."</p>
+                <a href="https://www.google.com/maps/place/Lovisa+Destinos" target="_blank" class="dep-link"><i class="fa-brands fa-google" style="font-size:11px;"></i> Ver no Google</a>
+            </div>
+
+        </div>
+        <!-- Bot├â┬úo adicionar depoimento (editor only) -->
+        <div id="dep-add-btn" style="display:none;text-align:center;margin-top:28px;">
+            <button onclick="addDepoimento()" style="padding:12px 28px;background:#1A73E8;color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;">+ Adicionar Avalia├â┬º├â┬úo</button>
+        </div>
+    </div>
+</section>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É CONTATO ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<section class="section contact-bg" id="contato">
+    <div class="container">
+        <div class="form-wrap">
+            <div class="form-left rv">
+                <span class="label">Or├â┬ºamento</span>
+                <h2 class="h2" data-eid="contato-title" data-elabel="T├â┬¡tulo Se├â┬º├â┬úo Contato">Fale com um consultor agora</h2>
+                <p data-eid="contato-sub" data-elabel="Subt├â┬¡tulo Se├â┬º├â┬úo Contato">Preencha o formul├â┬írio e nossa equipe entrar├â┬í em contato em at├â┬® 2 horas com uma proposta personalizada.</p>
+                <div class="finfo">
+                    <div class="finfo-row">
+                        <div class="finfo-ico"><i class="fab fa-whatsapp"></i></div>
+                        <div><strong>WhatsApp</strong><span data-eid="info-whats" data-elabel="WhatsApp de Contato">(19) 99539-6281</span></div>
+                    </div>
+                    <div class="finfo-row">
+                        <div class="finfo-ico"><i class="fa-solid fa-envelope"></i></div>
+                        <div><strong>E-mail</strong><span data-eid="info-email" data-elabel="E-mail de Contato">contato@lovisadestinos.com.br</span></div>
+                    </div>
+                    <div class="finfo-row">
+                        <div class="finfo-ico"><i class="fa-solid fa-clock"></i></div>
+                        <div><strong>Atendimento</strong><span data-eid="info-horario" data-elabel="Hor├â┬írio de Atendimento">Seg├óÔé¼ÔÇ£Sex 8h├óÔé¼ÔÇ£20h ├é┬À S├â┬íb 9h├óÔé¼ÔÇ£15h</span></div>
+                    </div>
+                    <div class="finfo-row">
+                        <div class="finfo-ico"><i class="fa-solid fa-location-dot"></i></div>
+                        <div><strong>Localiza├â┬º├â┬úo</strong><span>Brasil</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-card rv">
+                <form id="form-orcamento" onsubmit="submitForm(event)">
+                    <div class="row2">
+                        <div class="ig"><label>Nome Completo</label><input id="f-nome" type="text" placeholder="Ex: Maria Silva" required></div>
+                        <div class="ig"><label>WhatsApp</label><input id="f-whats" type="tel" placeholder="(85) 99999-9999" required></div>
+                    </div>
+                    <div class="ig"><label>E-mail</label><input id="f-email" type="email" placeholder="seu@email.com" required></div>
+                    <div class="row2">
+                        <div class="ig">
+                            <label>Destino</label>
+                            <select id="f-destino" required>
+                                <option value="">Selecione├óÔé¼┬ª</option>
+                                <option>Fernando de Noronha</option>
+                                <option>Maldivas</option>
+                                <option>Paris</option>
+                                <option>Costa Amalfitana</option>
+                                <option>Santorini</option>
+                                <option>Dubai</option>
+                                <option>Outro destino</option>
+                            </select>
+                        </div>
+                        <div class="ig"><label>N├é┬║ de Viajantes (adultos)</label><input id="f-adultos" type="number" min="1" value="2" required></div>
+                    </div>
+                    <div class="ig">
+                        <label>Vai com crian├â┬ºas?</label>
+                        <div style="display:flex;gap:12px;margin-top:4px;">
+                            <label style="display:flex;align-items:center;gap:7px;font-size:14px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text);cursor:pointer;">
+                                <input type="radio" name="criancas" value="sim" onchange="toggleCriancas(this)" style="width:auto;accent-color:var(--accent);"> Sim
+                            </label>
+                            <label style="display:flex;align-items:center;gap:7px;font-size:14px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text);cursor:pointer;">
+                                <input type="radio" name="criancas" value="nao" onchange="toggleCriancas(this)" checked style="width:auto;accent-color:var(--accent);"> N├â┬úo
+                            </label>
+                        </div>
+                    </div>
+                    <div class="ig" id="campo-criancas" style="display:none;">
+                        <label>Idade(s) da(s) crian├â┬ºa(s)</label>
+                        <input type="text" id="input-criancas" placeholder="Ex: 3 anos, 7 anos, 10 anos">
+                        <span style="font-size:11px;color:var(--muted);margin-top:5px;display:block;">Separe por v├â┬¡rgula se houver mais de uma crian├â┬ºa.</span>
+                    </div>
+                    <div class="row2">
+                        <div class="ig"><label>Data de Ida</label><input id="f-ida" type="date" required></div>
+                        <div class="ig"><label>Data de Volta</label><input id="f-volta" type="date"></div>
+                    </div>
+                    <div class="ig"><label>Observa├â┬º├â┬Áes (opcional)</label><textarea id="f-obs" placeholder="Prefer├â┬¬ncias, ocasi├â┬úo especial, or├â┬ºamento├óÔé¼┬ª"></textarea></div>
+                    <button type="submit" class="btn btn-accent btn-block" style="height:50px;font-size:15px;">
+                        <i class="fab fa-whatsapp"></i> Enviar pelo WhatsApp
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É FOOTER ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<footer>
+    <div class="container">
+        <div class="ft-top">
+            <div class="ft-brand">
+                <a href="#home" class="logo">
+                    <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="logo.png" alt="Lovisa Destinos" style="width:48px;height:48px;object-fit:contain;"></div>
+                </a>
+                <p>Consultoria especializada em viagens premium e roteiros personalizados para quem n├â┬úo aceita o comum.</p>
+                <div class="ft-social">
+                    <a href="https://www.instagram.com/lovisadestinos" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/5519995396281" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div>
+                <h5>Destinos</h5>
+                <div class="ft-links">
+                    <a href="pacote.html?id=noronha">Fernando de Noronha</a>
+                    <a href="pacote.html?id=maldivas">Maldivas</a>
+                    <a href="pacote.html?id=paris">Paris</a>
+                    <a href="pacote.html?id=santorini">Santorini</a>
+                    <a href="pacote.html?id=dubai">Dubai</a>
+                </div>
+            </div>
+            <div>
+                <h5>Empresa</h5>
+                <div class="ft-links">
+                    <a href="sobre.html">Sobre N├â┬│s</a>
+                    <a href="#como-funciona">Como Funciona</a>
+                    <a href="#depoimentos">Depoimentos</a>
+                    <a href="#contato">Contato</a>
+                </div>
+            </div>
+            <div>
+                <h5>Contato</h5>
+                <div class="ft-links">
+                    <a href="https://wa.me/5519995396281"><i class="fab fa-whatsapp" style="color:var(--wa);margin-right:7px"></i>(19) 99539-6281</a>
+                    <a href="mailto:contato@lovisadestinos.com.br"><i class="fa-solid fa-envelope" style="color:var(--accent);margin-right:7px"></i>contato@lovisadestinos.com.br</a>
+                    <span><i class="fa-solid fa-location-dot" style="color:var(--accent);margin-right:7px"></i>Brasil</span>
+                    <span><i class="fa-solid fa-clock" style="color:var(--accent);margin-right:7px"></i>Seg├óÔé¼ÔÇ£S├â┬íb 8h├óÔé¼ÔÇ£20h</span>
+                    <a href="https://chat.whatsapp.com/H2DpRM8lAtnGrNjwWWcFVj" target="_blank" style="display:flex;align-items:center;gap:8px;margin-top:10px;background:#25D366;color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;text-decoration:none;font-size:.9rem;">
+                        <i class="fab fa-whatsapp" style="font-size:1.1rem;"></i> Entrar no Grupo VIP de Promo├â┬º├â┬Áes
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="ft-bottom">
+            <span>├é┬® 2025 Lovisa Destinos ├é┬À Todos os direitos reservados</span>
+            <span>Feito com <i class="fa-solid fa-heart" style="color:var(--accent)"></i> para quem ama viajar &nbsp;├é┬À&nbsp; <a href="admin/login.html" style="color:rgba(255,255,255,0.2);font-size:.75rem;text-decoration:none;" title="Admin">├ó┼íÔäó</a></span>
+        </div>
+    </div>
+</footer>
+
+<a href="https://wa.me/5519995396281" class="wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+<script>
+    // ├óÔÇØÔé¼├óÔÇØÔé¼ Header scroll ├óÔÇØÔé¼├óÔÇØÔé¼
+    const hdr = document.getElementById('header');
+    window.addEventListener('scroll', () => hdr.classList.toggle('solid', scrollY > 48), {passive:true});
+
+    // ├óÔÇØÔé¼├óÔÇØÔé¼ Mobile menu ├óÔÇØÔé¼├óÔÇØÔé¼
+    const burger = document.getElementById('burger');
+    const panel  = document.getElementById('mobile-panel');
+    burger.addEventListener('click', () => {
+        burger.classList.toggle('open');
+        panel.classList.toggle('open');
+    });
+    function closePanel() {
+        burger.classList.remove('open');
+        panel.classList.remove('open');
+    }
+
+    // ├óÔÇØÔé¼├óÔÇØÔé¼ Reveal on scroll ├óÔÇØÔé¼├óÔÇØÔé¼
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+                setTimeout(() => e.target.classList.add('on'), i * 70);
+                obs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+    // ├óÔÇØÔé¼├óÔÇØÔé¼ Crian├â┬ºas toggle ├óÔÇØÔé¼├óÔÇØÔé¼
+    window.toggleCriancas = function(radio) {
+        const campo = document.getElementById('campo-criancas');
+        const input = document.getElementById('input-criancas');
+        const show  = radio.value === 'sim';
+        campo.style.display = show ? 'block' : 'none';
+        input.required = show;
+        if (!show) input.value = '';
+    };
+
+    // ├óÔÇØÔé¼├óÔÇØÔé¼ Form ├óÔÇáÔÇÖ WhatsApp ├óÔÇØÔé¼├óÔÇØÔé¼
+    function submitForm(e) {
+        e.preventDefault();
+
+        // Captura valores
+        const nome    = document.getElementById('f-nome').value.trim();
+        const whats   = document.getElementById('f-whats').value.trim();
+        const email   = document.getElementById('f-email').value.trim();
+        const destino = document.getElementById('f-destino').value;
+        const adultos = document.getElementById('f-adultos').value;
+        const ida     = document.getElementById('f-ida').value;
+        const volta   = document.getElementById('f-volta').value;
+        const obs     = document.getElementById('f-obs').value.trim();
+
+        const temCrianca = document.querySelector('input[name="criancas"]:checked').value === 'sim';
+        const idadeCriancas = temCrianca ? document.getElementById('input-criancas').value.trim() : '';
+
+        // Formata datas
+        function fmtData(d) {
+            if (!d) return '├óÔé¼ÔÇØ';
+            const [y, m, dd] = d.split('-');
+            return `${dd}/${m}/${y}`;
+        }
+
+        // Monta grupo de viajantes
+        let viajantes = `${adultos} adulto${adultos > 1 ? 's' : ''}`;
+        if (temCrianca && idadeCriancas) {
+            const ids = idadeCriancas.split(',').map(s => s.trim()).filter(Boolean);
+            viajantes += ` + ${ids.length} crian├â┬ºa${ids.length > 1 ? 's' : ''} (${ids.join(', ')})`;
+        } else if (temCrianca) {
+            viajantes += ' + crian├â┬ºas';
+        }
+
+        // Monta mensagem formatada para WhatsApp
+        const linhas = [
+            `Ola, *Sua Agencia de Viagem!*`,
+            ``,
+            `Quero solicitar uma cotacao para o pacote abaixo:`,
+            ``,
+            `*Destino:* ${destino}`,
+            ``,
+            `├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü`,
+            `*DADOS DO SOLICITANTE*`,
+            `├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü`,
+            `├óÔé¼┬ó *Nome:* ${nome}`,
+            `├óÔé¼┬ó *WhatsApp:* ${whats}`,
+            `├óÔé¼┬ó *E-mail:* ${email}`,
+            ``,
+            `├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü`,
+            `*DETALHES DA VIAGEM*`,
+            `├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü`,
+            `├óÔé¼┬ó *Destino:* ${destino}`,
+            `├óÔé¼┬ó *Viajantes:* ${viajantes}`,
+            `├óÔé¼┬ó *Data de Ida:* ${fmtData(ida)}`,
+            `├óÔé¼┬ó *Data de Volta:* ${volta ? fmtData(volta) : '---'}`,
+            obs ? `├óÔé¼┬ó *Observacoes:* ${obs}` : null,
+            ``,
+            `├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü├óÔÇØ┬ü`,
+            ``,
+            `Gostaria de receber a *cotacao personalizada* com valores, hospedagem e itinerario para essa viagem.`,
+            ``,
+            `Como posso *prosseguir com a reserva*?`
+        ].filter(l => l !== null).join('\n');
+
+        const url = `https://wa.me/5519995396281?text=${encodeURIComponent(linhas)}`;
+
+        // Feedback visual e redireciona
+        const btn = e.target.querySelector('[type=submit]');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Redirecionando para o WhatsApp├óÔé¼┬ª';
+        btn.style.background = '#22c55e';
+        btn.disabled = true;
+
+        setTimeout(() => window.open(url, '_blank'), 600);
+    }
+</script>
+<!-- ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É EDITOR VISUAL LOVISA ├óÔÇó┬É├óÔÇó┬É├óÔÇó┬É -->
+<script src="editor.js"></script>
+</body>
+</html>

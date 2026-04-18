@@ -514,7 +514,7 @@
                 <div class="ld-f"><label>Duração</label><input type="text" id="pkg-dur" placeholder="7 dias / 6 noites"></div>
                 <div class="ld-f"><label>Preço (ex: 4.990,00)</label><input type="text" id="pkg-price" placeholder="4.990,00"></div>
                 <div class="ld-f"><label>Parcelamento (ex: 10x de R$ 499)</label><input type="text" id="pkg-parc" placeholder="10x de R$ 499"></div>
-                <div class="ld-f"><label>URL da foto principal</label><input type="url" id="pkg-img" placeholder="https://images.unsplash.com/..."></div>
+                <div class="ld-f"><label>Galeria de Fotos (Uma URL por linha ou separadas por vírgula)</label><textarea id="pkg-gallery" rows="4" placeholder="https://foto1.jpg&#10;https://foto2.jpg"></textarea></div>
                 <div class="ld-f"><label>Descrição do destino</label><textarea id="pkg-desc" rows="3"></textarea></div>
                 <div class="ld-f"><label>O que está incluso (um por linha)</label><textarea id="pkg-incluso" rows="4" placeholder="Passagem aérea ida e volta&#10;Hospedagem com café da manhã"></textarea></div>
                 <div class="ld-acts">
@@ -532,15 +532,16 @@
                 const dur      = p.querySelector('#pkg-dur').value.trim();
                 const price    = p.querySelector('#pkg-price').value.trim();
                 const parc     = p.querySelector('#pkg-parc').value.trim();
-                const img      = p.querySelector('#pkg-img').value.trim();
-                const desc     = p.querySelector('#pkg-desc').value.trim();
-                const inclusoBruto = p.querySelector('#pkg-incluso').value.trim();
+                const galleryBruto = p.querySelector('#pkg-gallery').value.trim();
+                const gallery = galleryBruto ? galleryBruto.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean) : [];
+                const img = gallery.length > 0 ? gallery[0] : '';
+                
                 if (!id || !title || !price) {
                     this.toast('⚠️ Preencha ID, Título e Preço', 'err'); return;
                 }
                 const incluso = inclusoBruto ? inclusoBruto.split('\n').map(s=>s.trim()).filter(Boolean) : ['Aéreo ida e volta','Hospedagem com café da manhã','Transfer aeroporto-hotel','Guia local'];
                 // Salvar no CMS para publicação
-                const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img, desc, incluso, _new: true };
+                const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img, gallery, desc, incluso, _new: true };
                 if (!this.cms._packages) this.cms._packages = {};
                 this.cms._packages[id] = pkgData;
                 localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
