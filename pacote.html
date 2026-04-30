@@ -329,6 +329,9 @@
         .price-from { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
         .price-num  { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--navy); line-height: 1; margin-bottom: 6px; }
         .price-acc  { font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 28px; }
+        /* Bloco de preço — oculto por padrão, admin pode ativar */
+        .price-block { display: none; }
+        .price-block.visible { display: block; }
         .price-meta { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; padding: 20px; background: var(--bg); border-radius: var(--r); }
         .pm-row     { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text); }
         .pm-row i   { color: var(--accent); width: 16px; text-align: center; flex-shrink: 0; }
@@ -507,9 +510,12 @@
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="price-card">
-                <p class="price-from">A partir de:</p>
-                <div class="price-num" id="price-num" data-eid="pkg-price" data-elabel="Preço">R$ —</div>
-                <p class="price-acc" id="price-parc" data-eid="pkg-parcelas" data-elabel="Parcelamento"></p>
+                <!-- Bloco de preço — oculto por padrão, admin ativa via toggle -->
+                <div class="price-block" id="price-block">
+                    <p class="price-from">A partir de:</p>
+                    <div class="price-num" id="price-num" data-eid="pkg-price" data-elabel="Preço">R$ —</div>
+                    <p class="price-acc" id="price-parc" data-eid="pkg-parcelas" data-elabel="Parcelamento"></p>
+                </div>
                 <div class="price-meta">
                     <div class="pm-row"><i class="fa-solid fa-location-dot"></i><span id="sb-loc" data-eid="pkg-sb-loc" data-elabel="Sidebar Localização">—</span></div>
                     <div class="pm-row"><i class="fa-solid fa-moon"></i><span id="sb-dur" data-eid="pkg-sb-dur" data-elabel="Sidebar Duração">—</span></div>
@@ -517,12 +523,12 @@
                     <div class="pm-row"><i class="fa-solid fa-headset"></i><span>Suporte 24h na Viagem</span></div>
                 </div>
                 <a href="#" id="btn-wa" class="btn btn-wa" style="font-size:15px;height:50px;margin-bottom:10px;">
-                    <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+                    <i class="fab fa-whatsapp"></i> Consultar valor pelo WhatsApp
                 </a>
                 <a href="index.html#contato" class="btn btn-outline">
                     <i class="fa-solid fa-envelope"></i> Falar com Consultor
                 </a>
-                <p class="price-note">*Valores por pessoa, sujeitos à disponibilidade.</p>
+                <p class="price-note" id="price-note" style="display:none">*Valores por pessoa, sujeitos à disponibilidade.</p>
             </div>
         </aside>
 

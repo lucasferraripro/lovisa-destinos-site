@@ -36,8 +36,14 @@
         // Toggle de preço nos pacotes
         if (cms.priceVisible !== undefined) {
             const visible = cms.priceVisible;
+            // index.html — cards
             document.querySelectorAll('.card-price').forEach(el => el.style.display = visible ? '' : 'none');
             document.querySelectorAll('.card-consultar').forEach(el => el.style.display = visible ? 'none' : '');
+            // pacote.html — sidebar
+            const pb = document.getElementById('price-block');
+            if (pb) pb.classList.toggle('visible', visible);
+            const pn = document.getElementById('price-note');
+            if (pn) pn.style.display = visible ? '' : 'none';
         }
         document.querySelectorAll('[data-eid]').forEach(el => {
             const d = cms[el.dataset.eid];
