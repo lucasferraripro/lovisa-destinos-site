@@ -288,10 +288,46 @@
             display: flex; align-items: center; justify-content: space-between;
             padding-top: 14px; border-top: 1px solid var(--border);
         }
+        /* Preço — visível ou oculto via toggle do admin */
         .card-price { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--accent); }
-        .card-price small { font-family: inherit; font-family: -apple-system, sans-serif; font-size: 11px; color: var(--muted); font-weight: 400; }
+        .card-price small { font-family: -apple-system, sans-serif; font-size: 11px; color: var(--muted); font-weight: 400; }
+        .card-price.hidden { display: none; }
+        /* Botão consultar valor */
+        .card-consultar {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--wa); color: #fff;
+            padding: 8px 16px; border-radius: 50px;
+            font-size: 12px; font-weight: 700;
+            transition: filter .2s, transform .2s;
+        }
+        .card-consultar:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .card-consultar.hidden { display: none; }
         .card-arrow { font-size: 13px; color: var(--navy); font-weight: 600; display: flex; align-items: center; gap: 5px; transition: gap .2s, color .2s; }
         .card-link:hover .card-arrow { gap: 10px; color: var(--accent); }
+
+        /* ══════════════════════════════════════
+           CORPORATIVO
+        ══════════════════════════════════════ */
+        .corp-bg { background: var(--navy-dark); }
+        .corp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+        .corp-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--rl); box-shadow: 0 20px 56px rgba(0,0,0,.35); }
+        .corp-text .label { color: var(--accent); }
+        .corp-text .h2 { color: #fff; }
+        .corp-text .lead { color: rgba(255,255,255,.65); margin-bottom: 32px; }
+        .corp-items { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+        .corp-item { display: flex; gap: 14px; align-items: flex-start; }
+        .corp-icon {
+            width: 44px; height: 44px; flex-shrink: 0;
+            background: rgba(249,115,22,.15); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: var(--accent);
+        }
+        .corp-item h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+        .corp-item p  { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; }
+        @media(max-width:768px) {
+            .corp-grid { grid-template-columns: 1fr; gap: 36px; }
+            .corp-img  { aspect-ratio: 16/9; }
+        }
 
         /* ══════════════════════════════════════
            DIFERENCIAIS
@@ -543,6 +579,7 @@
             <nav class="hdr-nav">
                 <a href="#home">Início</a>
                 <a href="#destinos">Destinos</a>
+                <a href="#corporativo">Corporativo</a>
                 <a href="#clientes">Clientes</a>
                 <a href="#diferenciais">Por Que Nós</a>
                 <a href="#contato">Orçamento</a>
@@ -563,6 +600,7 @@
 <nav id="mobile-panel">
     <a href="#home"          onclick="closePanel()">Início</a>
     <a href="#destinos"      onclick="closePanel()">Destinos</a>
+    <a href="#corporativo"   onclick="closePanel()">Corporativo</a>
     <a href="#clientes"      onclick="closePanel()">Clientes</a>
     <a href="#diferenciais"  onclick="closePanel()">Por Que Nós</a>
     <a href="#depoimentos"   onclick="closePanel()">Depoimentos</a>
@@ -652,8 +690,9 @@
                     <div class="card-loc" data-eid="card1-loc" data-elabel="Local Lençóis"><i class="fa-solid fa-location-dot"></i> Maranhão, Brasil</div>
                     <h3 data-eid="card1-title" data-elabel="Título Lençóis">Lençóis Maranhenses</h3>
                     <div class="card-foot">
-                        <div class="card-price" data-eid="card1-price" data-elabel="Preço Lençóis">R$ 3.890 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                        <div class="card-price" data-eid="card1-price" data-elabel="Preço Lençóis" style="display:none">R$ 3.890 <small>/ pessoa</small></div>
+                        <a href="https://wa.me/5519995396281?text=Olá!%20Quero%20saber%20o%20valor%20do%20pacote%20Lençóis%20Maranhenses" class="card-consultar" target="_blank"><i class="fab fa-whatsapp"></i> Consultar valor</a>
+                        <span class="card-arrow">Ver roteiro <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 </div>
             </a>
@@ -668,8 +707,9 @@
                     <div class="card-loc" data-eid="card2-loc" data-elabel="Local Disney"><i class="fa-solid fa-location-dot"></i> Orlando, Florida, EUA</div>
                     <h3 data-eid="card2-title" data-elabel="Título Disney">Disney & Orlando</h3>
                     <div class="card-foot">
-                        <div class="card-price" data-eid="card2-price" data-elabel="Preço Disney">R$ 9.900 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                        <div class="card-price" data-eid="card2-price" data-elabel="Preço Disney" style="display:none">R$ 9.900 <small>/ pessoa</small></div>
+                        <a href="https://wa.me/5519995396281?text=Olá!%20Quero%20saber%20o%20valor%20do%20pacote%20Disney%20%26%20Orlando" class="card-consultar" target="_blank"><i class="fab fa-whatsapp"></i> Consultar valor</a>
+                        <span class="card-arrow">Ver roteiro <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 </div>
             </a>
@@ -684,8 +724,9 @@
                     <div class="card-loc" data-eid="card3-loc" data-elabel="Local Maceió"><i class="fa-solid fa-location-dot"></i> Alagoas, Brasil</div>
                     <h3 data-eid="card3-title" data-elabel="Título Maceió">Maceió & Maragogi</h3>
                     <div class="card-foot">
-                        <div class="card-price" data-eid="card3-price" data-elabel="Preço Maceió">R$ 2.890 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                        <div class="card-price" data-eid="card3-price" data-elabel="Preço Maceió" style="display:none">R$ 2.890 <small>/ pessoa</small></div>
+                        <a href="https://wa.me/5519995396281?text=Olá!%20Quero%20saber%20o%20valor%20do%20pacote%20Maceió%20%26%20Maragogi" class="card-consultar" target="_blank"><i class="fab fa-whatsapp"></i> Consultar valor</a>
+                        <span class="card-arrow">Ver roteiro <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 </div>
             </a>
@@ -700,8 +741,9 @@
                     <div class="card-loc" data-eid="card4-loc" data-elabel="Local Porto de Galinhas"><i class="fa-solid fa-location-dot"></i> Pernambuco, Brasil</div>
                     <h3 data-eid="card4-title" data-elabel="Título Porto de Galinhas">Porto de Galinhas</h3>
                     <div class="card-foot">
-                        <div class="card-price" data-eid="card4-price" data-elabel="Preço Porto de Galinhas">R$ 3.290 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                        <div class="card-price" data-eid="card4-price" data-elabel="Preço Porto de Galinhas" style="display:none">R$ 3.290 <small>/ pessoa</small></div>
+                        <a href="https://wa.me/5519995396281?text=Olá!%20Quero%20saber%20o%20valor%20do%20pacote%20Porto%20de%20Galinhas" class="card-consultar" target="_blank"><i class="fab fa-whatsapp"></i> Consultar valor</a>
+                        <span class="card-arrow">Ver roteiro <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 </div>
             </a>
@@ -716,8 +758,9 @@
                     <div class="card-loc" data-eid="card5-loc" data-elabel="Local Rio de Janeiro"><i class="fa-solid fa-location-dot"></i> Rio de Janeiro, Brasil</div>
                     <h3 data-eid="card5-title" data-elabel="Título Rio de Janeiro">Rio de Janeiro</h3>
                     <div class="card-foot">
-                        <div class="card-price" data-eid="card5-price" data-elabel="Preço Rio de Janeiro">R$ 3.490 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                        <div class="card-price" data-eid="card5-price" data-elabel="Preço Rio de Janeiro" style="display:none">R$ 3.490 <small>/ pessoa</small></div>
+                        <a href="https://wa.me/5519995396281?text=Olá!%20Quero%20saber%20o%20valor%20do%20pacote%20Rio%20de%20Janeiro" class="card-consultar" target="_blank"><i class="fab fa-whatsapp"></i> Consultar valor</a>
+                        <span class="card-arrow">Ver roteiro <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 </div>
             </a>
@@ -732,12 +775,64 @@
                     <div class="card-loc" data-eid="card6-loc" data-elabel="Local João Pessoa"><i class="fa-solid fa-location-dot"></i> Paraíba, Brasil</div>
                     <h3 data-eid="card6-title" data-elabel="Título João Pessoa">João Pessoa</h3>
                     <div class="card-foot">
-                        <div class="card-price" data-eid="card6-price" data-elabel="Preço João Pessoa">R$ 2.490 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                        <div class="card-price" data-eid="card6-price" data-elabel="Preço João Pessoa" style="display:none">R$ 2.490 <small>/ pessoa</small></div>
+                        <a href="https://wa.me/5519995396281?text=Olá!%20Quero%20saber%20o%20valor%20do%20pacote%20João%20Pessoa" class="card-consultar" target="_blank"><i class="fab fa-whatsapp"></i> Consultar valor</a>
+                        <span class="card-arrow">Ver roteiro <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 </div>
             </a>
 
+        </div>
+    </div>
+</section>
+
+<!-- ════════════ CORPORATIVO ════════════ -->
+<section class="section corp-bg" id="corporativo">
+    <div class="container">
+        <div class="corp-grid">
+            <div class="rv">
+                <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=800&q=80"
+                     alt="Viagens Corporativas Lovisa Destinos" class="corp-img" loading="lazy"
+                     data-eid="corp-img" data-elabel="Foto Corporativo">
+            </div>
+            <div class="corp-text rv">
+                <span class="label">Para empresas</span>
+                <h2 class="h2" data-eid="corp-title" data-elabel="Título Corporativo">Viagens corporativas com a gestão que sua empresa merece</h2>
+                <p class="lead" data-eid="corp-sub" data-elabel="Subtítulo Corporativo">Atendemos empresas de todos os portes — de viagens executivas a eventos e incentivos. Cuidamos de tudo para que sua equipe foque no que importa.</p>
+                <div class="corp-items">
+                    <div class="corp-item">
+                        <div class="corp-icon"><i class="fa-solid fa-briefcase"></i></div>
+                        <div>
+                            <h4 data-eid="corp-item1-title" data-elabel="Corp Item 1 Título">Viagens Executivas</h4>
+                            <p data-eid="corp-item1-desc" data-elabel="Corp Item 1 Texto">Passagens, hospedagem e transfer para executivos e equipes de negócios com agilidade e conforto.</p>
+                        </div>
+                    </div>
+                    <div class="corp-item">
+                        <div class="corp-icon"><i class="fa-solid fa-users"></i></div>
+                        <div>
+                            <h4 data-eid="corp-item2-title" data-elabel="Corp Item 2 Título">Grupos e Eventos</h4>
+                            <p data-eid="corp-item2-desc" data-elabel="Corp Item 2 Texto">Organização completa de viagens em grupo, convenções, confraternizações e viagens de incentivo.</p>
+                        </div>
+                    </div>
+                    <div class="corp-item">
+                        <div class="corp-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                        <div>
+                            <h4 data-eid="corp-item3-title" data-elabel="Corp Item 3 Título">Faturamento e NF</h4>
+                            <p data-eid="corp-item3-desc" data-elabel="Corp Item 3 Texto">Emissão de nota fiscal, faturamento direto para a empresa e relatórios de despesas de viagem.</p>
+                        </div>
+                    </div>
+                    <div class="corp-item">
+                        <div class="corp-icon"><i class="fa-solid fa-headset"></i></div>
+                        <div>
+                            <h4 data-eid="corp-item4-title" data-elabel="Corp Item 4 Título">Suporte Dedicado</h4>
+                            <p data-eid="corp-item4-desc" data-elabel="Corp Item 4 Texto">Canal exclusivo para empresas com atendimento prioritário e gestor de viagens dedicado.</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://wa.me/5519995396281?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20viagens%20corporativas" class="btn btn-accent" data-eid="corp-cta" data-elabel="Botão CTA Corporativo" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Falar sobre viagens corporativas
+                </a>
+            </div>
         </div>
     </div>
 </section>

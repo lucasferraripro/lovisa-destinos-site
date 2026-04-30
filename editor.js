@@ -33,6 +33,12 @@
                 a.href = a.href.replace(/wa\.me\/\d+/, 'wa.me/' + cms.whatsapp);
             });
         }
+        // Toggle de preço nos pacotes
+        if (cms.priceVisible !== undefined) {
+            const visible = cms.priceVisible;
+            document.querySelectorAll('.card-price').forEach(el => el.style.display = visible ? '' : 'none');
+            document.querySelectorAll('.card-consultar').forEach(el => el.style.display = visible ? 'none' : '');
+        }
         document.querySelectorAll('[data-eid]').forEach(el => {
             const d = cms[el.dataset.eid];
             if (!d) return;
@@ -184,6 +190,8 @@
             ${lastPub ? `<span class="ld-last-pub">Publicado: ${lastPub}</span><div class="ld-sep"></div>` : ''}
             <button class="ld-btn blue" id="ld-add-pkg">➕ <span class="ld-btn-label">Novo Pacote</span></button>
             <div class="ld-sep"></div>
+            <button class="ld-btn orange" id="ld-toggle-price">💰 <span class="ld-btn-label">Preços</span></button>
+            <div class="ld-sep"></div>
             <button class="ld-btn" id="ld-dep">⭐ <span class="ld-btn-label">Depoimentos</span></button>
             <div class="ld-sep"></div>
             <button class="ld-btn orange" id="ld-colors">🎨 <span class="ld-btn-label">Cores</span></button>
@@ -194,6 +202,7 @@
             <button class="ld-btn red" id="ld-exit">✕ <span class="ld-btn-label">Sair</span></button>`;
             document.body.prepend(bar);
             document.getElementById('ld-add-pkg').onclick  = () => this.pAddPacote();
+            document.getElementById('ld-toggle-price').onclick = () => this.pTogglePrice();
             document.getElementById('ld-dep').onclick       = () => this.pManageDep();
             document.getElementById('ld-colors').onclick = () => this.pColors();
             document.getElementById('ld-pub').onclick    = () => this.publish();
@@ -444,6 +453,68 @@
                 el.innerHTML = origHTML;
                 el.setAttribute('style', origStyle);
                 el.setAttribute('href', origHref);
+                this.closePanel();
+            };
+        },
+
+        /* ── TOGGLE PREÇO NOS PACOTES ── */
+        pTogglePrice() {
+            // Lê estado atual do CMS
+            const priceVisible = this.cms.priceVisible !== false; // default: oculto (false)
+            const p = this.panel_('💰 Exibir Preço nos Pacotes');
+            p.innerHTML += `<div class="ld-pb">
+                <div class="ld-info">Controle se o preço aparece nos cards de pacote. Quando oculto, o visitante vê apenas o botão "Consultar valor" no WhatsApp.</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:#F9FAFB;border-radius:12px;margin-bottom:16px;">
+                    <div>
+                        <div style="font-size:14px;font-weight:700;color:#111827;">Mostrar preço nos cards</div>
+                        <div style="font-size:12px;color:#6B7280;margin-top:2px;">Ativa ou desativa o valor em todos os pacotes</div>
+                    </div>
+                    <label style="position:relative;display:inline-block;width:52px;height:28px;flex-shrink:0;">
+                        <input type="checkbox" id="ld-price-toggle" ${priceVisible ? 'checked' : ''} style="opacity:0;width:0;height:0;">
+                        <span id="ld-price-slider" style="position:absolute;cursor:pointer;inset:0;background:${priceVisible ? '#16A34A' : '#D1D5DB'};border-radius:28px;transition:.3s;">
+                            <span style="position:absolute;content:'';height:20px;width:20px;left:${priceVisible ? '28px' : '4px'};bottom:4px;background:#fff;border-radius:50%;transition:.3s;display:block;" id="ld-price-knob"></span>
+                        </span>
+                    </label>
+                </div>
+                <div id="ld-price-status" style="text-align:center;font-size:13px;font-weight:600;padding:10px;border-radius:8px;background:${priceVisible ? '#F0FDF4' : '#FFF7ED'};color:${priceVisible ? '#16A34A' : '#EA580C'};">
+                    ${priceVisible ? '✅ Preço visível nos cards' : '🔒 Preço oculto — visitante consulta via WhatsApp'}
+                </div>
+                <div class="ld-acts" style="margin-top:16px;">
+                    <button class="ld-ok" id="lda">✓ Salvar configuração</button>
+                    <button class="ld-ko" id="ldc">Cancelar</button>
+                </div>
+            </div>`;
+
+            const toggle = p.querySelector('#ld-price-toggle');
+            const slider = p.querySelector('#ld-price-slider');
+            const knob   = p.querySelector('#ld-price-knob');
+            const status = p.querySelector('#ld-price-status');
+
+            // Aplica visualmente em tempo real
+            const applyVisual = (visible) => {
+                document.querySelectorAll('.card-price').forEach(el => el.style.display = visible ? '' : 'none');
+                document.querySelectorAll('.card-consultar').forEach(el => el.style.display = visible ? 'none' : '');
+                slider.style.background = visible ? '#16A34A' : '#D1D5DB';
+                knob.style.left = visible ? '28px' : '4px';
+                status.style.background = visible ? '#F0FDF4' : '#FFF7ED';
+                status.style.color = visible ? '#16A34A' : '#EA580C';
+                status.textContent = visible ? '✅ Preço visível nos cards' : '🔒 Preço oculto — visitante consulta via WhatsApp';
+            };
+
+            toggle.onchange = () => applyVisual(toggle.checked);
+
+            p.querySelector('#lda').onclick = () => {
+                const visible = toggle.checked;
+                this.cms.priceVisible = visible;
+                // Persiste no CMS
+                this.store('priceVisible', visible);
+                applyVisual(visible);
+                this.closePanel();
+                this.toast(visible ? '✅ Preço ativado nos pacotes' : '🔒 Preço ocultado — só via WhatsApp', 'ok');
+            };
+            p.querySelector('#ldc').onclick = () => {
+                // Reverte visual
+                applyVisual(priceVisible);
                 this.closePanel();
             };
         },
