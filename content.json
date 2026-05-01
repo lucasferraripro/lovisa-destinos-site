@@ -86,13 +86,13 @@
     "html": "<br>"
   },
   "home-stat2-n": {
-    "html": "MUITOS"
+    "html": "Muitos"
   },
   "home-stat3-l": {
     "html": "NACIONAL E INTERNACIONAL"
   },
   "home-stat4-n": {
-    "html": "99%"
+    "html": "100%"
   },
   "card4-price": {
     "html": "R$ 4.200,00<small>/ 02 pessoas</small>"
@@ -183,5 +183,14 @@
   },
   "disney-pkg-rot-0-title": {
     "html": "<br>"
+  },
+  "home-stat2-l": {
+    "html": "Clientes Felizes"
+  },
+  "home-stat3-n": {
+    "html": "Atendemos"
+  },
+  "hero-sub": {
+    "html": "Roteiros exclusivos e sob medida para viajantes que não aceitam o comum. Da primeira reunião ao retorno em casa, cuidamos de cada detalhe."
   }
 }
