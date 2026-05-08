@@ -195,5 +195,45 @@
   },
   "vania-foto": {
     "src": "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1777664566310_img_2346.jpg.jpeg"
-  }
+  },
+  "steps-title": {
+    "html": "Sua viagem dos sonhos em 3 passos",
+    "style": {
+      "color": "#153bf9"
+    }
+  },
+  "step1-title": {
+    "html": "Consulta Personalizada",
+    "style": {
+      "color": "#153bf9"
+    }
+  },
+  "step2-title": {
+    "html": "Curadoria Exclusiva",
+    "style": {
+      "color": "#153bf9"
+    }
+  },
+  "step3-title": {
+    "html": "Embarque Tranquilo",
+    "style": {
+      "color": "#153bf9"
+    }
+  },
+  "corp-item3-desc": {
+    "html": "Emissão de nota fiscal, faturamento direto para a empresa."
+  },
+  "clientes-title": {
+    "html": "Nossos Viajantes pelo Mundo",
+    "style": {
+      "color": "#153bf9"
+    }
+  },
+  "dest-title": {
+    "html": "Experiências que ficam<br>na memória para sempre",
+    "style": {
+      "color": "#2e60ad"
+    }
+  },
+  "priceVisible": true
 }
