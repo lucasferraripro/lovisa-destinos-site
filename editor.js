@@ -555,13 +555,12 @@
         _renderNewPackageCard(pkg) {
             const grid = document.querySelector('.cards-grid');
             if (!grid) return;
-            const cardId = 'card-new-' + pkg.id;
             const wrap = document.createElement('div');
             wrap.style.position = 'relative';
             wrap.className = 'card-link-wrap';
             wrap.innerHTML = `
                 <button class="ld-remove-pkg" data-pkg-id="${pkg.id}" title="Remover pacote">🗑 Remover</button>
-                <a href="pacote.html?id=${pkg.id}" class="card-link rv">
+                <a href="pacote-${pkg.id}.html" class="card-link rv">
                     <div class="card-img">
                         <img src="${pkg.img || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80'}" alt="${pkg.title}" loading="lazy">
                         <div class="card-flag">${pkg.flag || ''}</div>
