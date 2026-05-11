@@ -1,0 +1,222 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "editor.js",
+      "file_type": "code",
+      "source_file": "editor.js",
+      "source_location": "L1",
+      "id": "editor",
+      "community": 0
+    },
+    {
+      "label": "applyContent()",
+      "file_type": "code",
+      "source_file": "editor.js",
+      "source_location": "L20",
+      "id": "editor_applycontent",
+      "community": 0
+    },
+    {
+      "label": "fetchContent()",
+      "file_type": "code",
+      "source_file": "editor.js",
+      "source_location": "L47",
+      "id": "editor_fetchcontent",
+      "community": 0
+    },
+    {
+      "label": "loadAndApply()",
+      "file_type": "code",
+      "source_file": "editor.js",
+      "source_location": "L54",
+      "id": "editor_loadandapply",
+      "community": 0
+    },
+    {
+      "label": "injectCSS()",
+      "file_type": "code",
+      "source_file": "editor.js",
+      "source_location": "L65",
+      "id": "editor_injectcss",
+      "community": 0
+    },
+    {
+      "label": "auth.js",
+      "file_type": "code",
+      "source_file": "api\\auth.js",
+      "source_location": "L1",
+      "id": "auth",
+      "community": 1
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api\\auth.js",
+      "source_location": "L6",
+      "id": "auth_handler",
+      "community": 1
+    },
+    {
+      "label": "content.js",
+      "file_type": "code",
+      "source_file": "api\\content.js",
+      "source_location": "L1",
+      "id": "content",
+      "community": 2
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api\\content.js",
+      "source_location": "L5",
+      "id": "content_handler",
+      "community": 2
+    },
+    {
+      "label": "publish.js",
+      "file_type": "code",
+      "source_file": "api\\publish.js",
+      "source_location": "L1",
+      "id": "publish",
+      "community": 3
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api\\publish.js",
+      "source_location": "L6",
+      "id": "publish_handler",
+      "community": 3
+    },
+    {
+      "label": "upload.js",
+      "file_type": "code",
+      "source_file": "api\\upload.js",
+      "source_location": "L1",
+      "id": "upload",
+      "community": 4
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api\\upload.js",
+      "source_location": "L6",
+      "id": "upload_handler",
+      "community": 4
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "editor.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "editor",
+      "_tgt": "editor_applycontent",
+      "source": "editor",
+      "target": "editor_applycontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "editor.js",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "editor",
+      "_tgt": "editor_fetchcontent",
+      "source": "editor",
+      "target": "editor_fetchcontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "editor.js",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_src": "editor",
+      "_tgt": "editor_loadandapply",
+      "source": "editor",
+      "target": "editor_loadandapply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "editor.js",
+      "source_location": "L65",
+      "weight": 1.0,
+      "_src": "editor",
+      "_tgt": "editor_injectcss",
+      "source": "editor",
+      "target": "editor_injectcss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "editor.js",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_src": "editor_loadandapply",
+      "_tgt": "editor_applycontent",
+      "source": "editor_applycontent",
+      "target": "editor_loadandapply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api\\auth.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "auth",
+      "_tgt": "auth_handler",
+      "source": "auth",
+      "target": "auth_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api\\content.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "content",
+      "_tgt": "content_handler",
+      "source": "content",
+      "target": "content_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api\\publish.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "publish",
+      "_tgt": "publish_handler",
+      "source": "publish",
+      "target": "publish_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api\\upload.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "upload",
+      "_tgt": "upload_handler",
+      "source": "upload",
+      "target": "upload_handler",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": []
+}
