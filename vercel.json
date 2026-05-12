@@ -5,6 +5,12 @@
       "has": [{ "type": "host", "value": "lovisa-destinos.vercel.app" }],
       "dest": "/standby.html"
     },
+    {
+      "src": "/(.*)",
+      "has": [{ "type": "host", "value": "lovisa-destinos-site.vercel.app" }],
+      "dest": "https://www.lovisadestinos.com.br/$1",
+      "status": 308
+    },
     { "handle": "filesystem" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/404.html", "status": 404 }
