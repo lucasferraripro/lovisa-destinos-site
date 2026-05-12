@@ -600,9 +600,12 @@
                     if (!eid) return;
                     document.querySelectorAll(`[data-eid="${CSS.escape(eid)}"]`).forEach(el => {
                         if (el.tagName === 'A' && value.includes('@')) el.href = 'mailto:' + value;
-                        el.innerHTML = value;
+                        const icon = el.querySelector('i');
+                        el.textContent = value;
+                        if (icon) el.prepend(icon.cloneNode(true));
                     });
-                    this.store(eid, { html: value, ...(value.includes('@') ? { href: 'mailto:' + value } : {}) });
+                    const current = document.querySelector(`[data-eid="${CSS.escape(eid)}"]`);
+                    this.store(eid, { html: current ? current.innerHTML : value, ...(value.includes('@') ? { href: 'mailto:' + value } : {}) });
                 });
                 this.closePanel();
                 this.toast('Rodape salvo no rascunho', 'ok');
@@ -662,7 +665,7 @@
         },
 
         /* ── ADICIONAR PACOTE ── */
-        pAddPacote() {
+        pAddPacoteLegacyDraftOnly() {
             const p = this.panel_('➕ Adicionar Novo Pacote');
             p.innerHTML += `<div class="ld-pb">
                 <div class="ld-info">Preencha os dados do novo pacote. Ele aparecerá na grade de destinos.</div>

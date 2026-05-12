@@ -272,7 +272,7 @@ export default async function handler(req, res) {
     const panel = document.getElementById('mobile-panel');
     burger.addEventListener('click', () => { burger.classList.toggle('open'); panel.classList.toggle('open'); });
 </script>
-<script src="editor.js?v=20260512-packages" defer></script>
+<script src="editor.js?v=20260512-standby" defer></script>
 </body>
 </html>`;
                 await commitFile(`pacote-${id}.html`, html, `Novo pacote: ${pkg.title} (${now})`);
