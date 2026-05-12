@@ -235,5 +235,10 @@
       "color": "#2e60ad"
     }
   },
-  "priceVisible": true
+  "priceVisible": true,
+  "ft-phone": {
+    "html": "<i class=\"fab fa-whatsapp\" style=\"color:var(--wa);margin-right:7px\"></i>(19) 9 9539-6281",
+    "href": "https://wa.me/5519995396281",
+    "target": "_self"
+  }
 }
