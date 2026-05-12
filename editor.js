@@ -26,11 +26,10 @@
     function isValidImageSrc(src) {
         const value = String(src || '').trim();
         if (!value) return false;
-        if (/^data:image\//i.test(value)) return false;
         if (/^[a-zA-Z]:\\/.test(value) || value.startsWith('\\\\')) return false;
         if (/instagram\.com\/p\//i.test(value)) return false;
         if (/cdninstagram|fbcdn|instagram\.[^/]+\/v\//i.test(value)) return false;
-        return /^(https?:\/\/|imagens\/|\.\/imagens\/|\/imagens\/)/i.test(value);
+        return /^(data:image\/|https?:\/\/|imagens\/|\.\/imagens\/|\/imagens\/)/i.test(value);
     }
 
     function cleanPackageId(value) {
