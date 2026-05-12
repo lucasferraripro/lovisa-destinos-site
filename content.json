@@ -240,5 +240,29 @@
     "html": "<i class=\"fab fa-whatsapp\" style=\"color:var(--wa);margin-right:7px\"></i>(19) 9 9539-6281",
     "href": "https://wa.me/5519995396281",
     "target": "_self"
+  },
+  "_packages": {
+    "teste": {
+      "id": "teste",
+      "flag": "",
+      "title": "teste",
+      "subtitle": "teste",
+      "location": "teste",
+      "duration": "",
+      "price": "teste",
+      "parcelas": "teste",
+      "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+      "fotos": [
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+      ],
+      "desc": "",
+      "incluso": [
+        "Aereo ida e volta",
+        "Hospedagem com cafe da manha",
+        "Transfer aeroporto-hotel",
+        "Guia local"
+      ],
+      "_new": true
+    }
   }
 }
