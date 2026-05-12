@@ -62,6 +62,52 @@
         return cms;
     }
 
+    const FOOTER_DEFAULTS = {
+        email: 'vendas@lovisadestinos.com.br',
+        infoHours: 'Atendimento das 09h00 às 17h00 seg a sex · Clientes no destino 24hrs',
+        hours: 'Atendimento das 09h00 às 17h00 seg a sex',
+        hours2: 'Atendimento para clientes no destino 24hrs'
+    };
+
+    function htmlToText(value) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = String(value || '');
+        return tmp.textContent.trim();
+    }
+
+    function entryText(cms, key, fallback) {
+        const entry = cms && cms[key];
+        if (!entry || entry.html == null) return fallback;
+        return htmlToText(entry.html) || fallback;
+    }
+
+    function setTextPreserveIcon(el, value) {
+        const icon = el.querySelector('i');
+        el.textContent = value;
+        if (icon) el.prepend(icon.cloneNode(true));
+    }
+
+    function syncContactFooter(cms) {
+        const email = entryText(cms, 'info-email', FOOTER_DEFAULTS.email);
+        const infoHours = entryText(cms, 'info-horario', FOOTER_DEFAULTS.infoHours);
+        const hours = entryText(cms, 'ft-hours', FOOTER_DEFAULTS.hours);
+        const hours2 = entryText(cms, 'ft-hours2', FOOTER_DEFAULTS.hours2);
+
+        ['info-email', 'ft-email', 'ft-email-pacote'].forEach(eid => {
+            document.querySelectorAll(`[data-eid="${eid}"]`).forEach(el => {
+                if (el.tagName === 'A') el.href = 'mailto:' + email;
+                setTextPreserveIcon(el, email);
+            });
+        });
+        document.querySelectorAll('[data-eid="info-horario"]').forEach(el => setTextPreserveIcon(el, infoHours));
+        ['ft-hours', 'ft-hours-pacote'].forEach(eid => {
+            document.querySelectorAll(`[data-eid="${eid}"]`).forEach(el => setTextPreserveIcon(el, hours));
+        });
+        ['ft-hours2', 'ft-hours2-pacote'].forEach(eid => {
+            document.querySelectorAll(`[data-eid="${eid}"]`).forEach(el => setTextPreserveIcon(el, hours2));
+        });
+    }
+
     function renderPackageCard(pkg) {
         const grid = document.querySelector('#destinos .cards-grid');
         if (!grid || !pkg || !pkg.id) return;
@@ -153,6 +199,7 @@
             if (d.target!= null) el.setAttribute('target', d.target);
             if (d.style)         Object.assign(el.style, d.style);
         });
+        syncContactFooter(cms);
         applyPackages(cms);
     }
 
@@ -606,6 +653,18 @@
                     const current = document.querySelector(`[data-eid="${CSS.escape(eid)}"]`);
                     this.store(eid, { html: current ? current.innerHTML : value, ...(value.includes('@') ? { href: 'mailto:' + value } : {}) });
                 });
+                const email = entryText(this.cms, 'info-email', FOOTER_DEFAULTS.email);
+                const infoHours = entryText(this.cms, 'info-horario', FOOTER_DEFAULTS.infoHours);
+                const hours = entryText(this.cms, 'ft-hours', FOOTER_DEFAULTS.hours);
+                const hours2 = entryText(this.cms, 'ft-hours2', FOOTER_DEFAULTS.hours2);
+                ['info-email', 'ft-email', 'ft-email-pacote'].forEach(eid => {
+                    this.cms[eid] = { html: email, href: 'mailto:' + email };
+                });
+                this.cms['info-horario'] = { html: infoHours };
+                ['ft-hours', 'ft-hours-pacote'].forEach(eid => { this.cms[eid] = { html: hours }; });
+                ['ft-hours2', 'ft-hours2-pacote'].forEach(eid => { this.cms[eid] = { html: hours2 }; });
+                syncContactFooter(this.cms);
+                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
                 this.closePanel();
                 this.toast('Rodape salvo no rascunho', 'ok');
             };

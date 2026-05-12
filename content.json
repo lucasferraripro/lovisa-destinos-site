@@ -104,7 +104,7 @@
     "html": "vendas@lovisadestinos.com.br"
   },
   "info-horario": {
-    "html": "Seg–Sex 9h–17h&nbsp;"
+    "html": "Atendimento das 09h00 às 17h00 seg a sex · Clientes no destino 24hrs"
   },
   "dif-sub": {
     "html": "Cada viagem começa com uma conversa real. Nossa equipe de especialistas conhece os destinos de perto, cada detalhe pensado para o seu perfil, seus sonhos e o seu momento.",
@@ -264,5 +264,25 @@
       ],
       "_new": true
     }
+  },
+  "ft-email": {
+    "html": "vendas@lovisadestinos.com.br",
+    "href": "mailto:vendas@lovisadestinos.com.br"
+  },
+  "ft-email-pacote": {
+    "html": "vendas@lovisadestinos.com.br",
+    "href": "mailto:vendas@lovisadestinos.com.br"
+  },
+  "ft-hours": {
+    "html": "Atendimento das 09h00 às 17h00 seg a sex"
+  },
+  "ft-hours-pacote": {
+    "html": "Atendimento das 09h00 às 17h00 seg a sex"
+  },
+  "ft-hours2": {
+    "html": "Atendimento para clientes no destino 24hrs"
+  },
+  "ft-hours2-pacote": {
+    "html": "Atendimento para clientes no destino 24hrs"
   }
 }
