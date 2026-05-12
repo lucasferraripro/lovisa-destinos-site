@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Body inválido' });
     }
 
-    const { content, secret } = body;
+    let { content, secret } = body;
 
     // Verifica senha admin
     const adminSecret = process.env.ADMIN_SECRET || 'Lovisa@2025';
@@ -37,6 +37,9 @@ export default async function handler(req, res) {
     }
 
     const token = process.env.GITHUB_TOKEN;
+    if (!token) {
+        return res.status(500).json({ error: 'GITHUB_TOKEN nao configurado no Vercel' });
+    }
     const owner = 'lucasferraripro';
     const repo  = 'lovisa-destinos-site';
     const headers = {
@@ -44,6 +47,40 @@ export default async function handler(req, res) {
         'Accept': 'application/vnd.github.v3+json',
         'User-Agent': 'lovisa-editor/1.0'
     };
+
+    function isValidImageSrc(src) {
+        const value = String(src || '').trim();
+        if (!value) return false;
+        if (/^data:image\//i.test(value)) return false;
+        if (/^[a-zA-Z]:\\/.test(value) || value.startsWith('\\\\')) return false;
+        if (/instagram\.com\/p\//i.test(value)) return false;
+        if (/cdninstagram|fbcdn|instagram\.[^/]+\/v\//i.test(value)) return false;
+        return /^(https?:\/\/|imagens\/|\.\/imagens\/|\/imagens\/)/i.test(value);
+    }
+
+    function cleanContent(input) {
+        const cms = JSON.parse(JSON.stringify(input || {}));
+        Object.keys(cms).forEach(key => {
+            const entry = cms[key];
+            if (entry && typeof entry === 'object' && typeof entry.src === 'string' && !isValidImageSrc(entry.src)) {
+                delete cms[key];
+            }
+        });
+        if (cms._packages && typeof cms._packages === 'object') {
+            Object.entries(cms._packages).forEach(([id, pkg]) => {
+                if (!pkg || typeof pkg !== 'object') {
+                    delete cms._packages[id];
+                    return;
+                }
+                const fotos = Array.isArray(pkg.fotos) ? pkg.fotos.filter(isValidImageSrc) : [];
+                if (isValidImageSrc(pkg.img)) fotos.unshift(pkg.img);
+                pkg.id = String(pkg.id || id).replace(/[^a-z0-9-]/gi, '').toLowerCase();
+                pkg.fotos = [...new Set(fotos)];
+                pkg.img = pkg.fotos[0] || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80';
+            });
+        }
+        return cms;
+    }
 
     // Helper: commita um arquivo no GitHub
     async function commitFile(filePath, fileContent, message) {
@@ -66,6 +103,7 @@ export default async function handler(req, res) {
 
     try {
         const now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+        content = cleanContent(content);
 
         // 1. Salva content.json
         await commitFile('content.json', JSON.stringify(content, null, 2), `Editor: atualiza conteúdo (${now})`);
@@ -234,7 +272,7 @@ export default async function handler(req, res) {
     const panel = document.getElementById('mobile-panel');
     burger.addEventListener('click', () => { burger.classList.toggle('open'); panel.classList.toggle('open'); });
 </script>
-<script src="editor.js" defer></script>
+<script src="editor.js?v=20260512-packages" defer></script>
 </body>
 </html>`;
                 await commitFile(`pacote-${id}.html`, html, `Novo pacote: ${pkg.title} (${now})`);

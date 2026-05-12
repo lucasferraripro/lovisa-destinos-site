@@ -11,6 +11,7 @@ export default async function handler(req, res) {
     const owner  = 'lucasferraripro';
     const repo   = 'lovisa-destinos-site';
     const adminSecret = process.env.ADMIN_SECRET || 'Lovisa@2025';
+    if (!token) return res.status(500).json({ error: 'GITHUB_TOKEN nao configurado no Vercel' });
 
     let body = '';
     try {
@@ -31,6 +32,9 @@ export default async function handler(req, res) {
 
     // Sanitiza nome do arquivo
     const safe = filename.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
+    if (!/\.(png|jpe?g|webp|gif)$/i.test(safe)) {
+        return res.status(400).json({ error: 'Formato invalido. Use PNG, JPG, WEBP ou GIF.' });
+    }
     const path = `imagens/uploads/${Date.now()}_${safe}`;
 
     try {

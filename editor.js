@@ -15,10 +15,122 @@
     const isAdmin  = auth && auth.expires > Date.now();
     const params   = new URLSearchParams(location.search);
     const editMode = isAdmin && (params.get('editor') === '1' || sessionStorage.getItem('editor_active') === '1');
+    const FALLBACK_PACKAGE_IMG = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80';
+
+    function escapeHTML(value) {
+        return String(value || '').replace(/[&<>"']/g, ch => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[ch]));
+    }
+
+    function isValidImageSrc(src) {
+        const value = String(src || '').trim();
+        if (!value) return false;
+        if (/^data:image\//i.test(value)) return false;
+        if (/^[a-zA-Z]:\\/.test(value) || value.startsWith('\\\\')) return false;
+        if (/instagram\.com\/p\//i.test(value)) return false;
+        if (/cdninstagram|fbcdn|instagram\.[^/]+\/v\//i.test(value)) return false;
+        return /^(https?:\/\/|imagens\/|\.\/imagens\/|\/imagens\/)/i.test(value);
+    }
+
+    function cleanPackageId(value) {
+        return String(value || '')
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase().replace(/[^a-z0-9-]/g, '');
+    }
+
+    function cleanContent(input) {
+        const cms = JSON.parse(JSON.stringify(input || {}));
+        Object.keys(cms).forEach(key => {
+            const entry = cms[key];
+            if (entry && typeof entry === 'object' && typeof entry.src === 'string' && !isValidImageSrc(entry.src)) {
+                delete cms[key];
+            }
+        });
+        if (cms._packages && typeof cms._packages === 'object') {
+            Object.entries(cms._packages).forEach(([id, pkg]) => {
+                if (!pkg || typeof pkg !== 'object') {
+                    delete cms._packages[id];
+                    return;
+                }
+                const fotos = Array.isArray(pkg.fotos) ? pkg.fotos.filter(isValidImageSrc) : [];
+                if (isValidImageSrc(pkg.img)) fotos.unshift(pkg.img);
+                const uniqueFotos = [...new Set(fotos)];
+                pkg.fotos = uniqueFotos.length ? uniqueFotos : [FALLBACK_PACKAGE_IMG];
+                pkg.img = pkg.fotos[0];
+            });
+        }
+        return cms;
+    }
+
+    function renderPackageCard(pkg) {
+        const grid = document.querySelector('#destinos .cards-grid');
+        if (!grid || !pkg || !pkg.id) return;
+        if (grid.querySelector(`[data-dynamic-pkg="${CSS.escape(pkg.id)}"]`)) return;
+        const img = isValidImageSrc(pkg.img) ? pkg.img : FALLBACK_PACKAGE_IMG;
+        const wrap = document.createElement('div');
+        wrap.style.position = 'relative';
+        wrap.className = 'card-link-wrap ld-dynamic-pkg';
+        wrap.dataset.dynamicPkg = pkg.id;
+        wrap.innerHTML = `
+            <a href="pacote-${escapeHTML(pkg.id)}.html" class="card-link rv">
+                <div class="card-img">
+                    <img src="${escapeHTML(img)}" alt="${escapeHTML(pkg.title)}" loading="lazy">
+                    <div class="card-flag">${escapeHTML(pkg.flag || '')}</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(pkg.location || '')}</div>
+                    <h3>${escapeHTML(pkg.title)}</h3>
+                    <div class="card-foot">
+                        <div class="card-price">R$ ${escapeHTML(pkg.price || '')} <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>`;
+        grid.appendChild(wrap);
+    }
+
+    function applyPackages(cms) {
+        document.querySelectorAll('.ld-dynamic-pkg').forEach(el => el.remove());
+        if (!cms || !cms._packages || typeof cms._packages !== 'object') return;
+        const removed = Array.isArray(cms._removedPackages) ? cms._removedPackages : [];
+        Object.entries(cms._packages).forEach(([id, pkg]) => {
+            if (removed.includes(id)) return;
+            renderPackageCard({ ...pkg, id: pkg.id || id });
+        });
+    }
+
+    function fileToDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = ev => resolve(ev.target.result);
+            reader.onerror = () => reject(new Error('Nao foi possivel ler a imagem.'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function uploadImageFile(file) {
+        if (!file) return null;
+        if (!/^image\//i.test(file.type)) throw new Error('Selecione apenas arquivos de imagem.');
+        if (file.size > 3 * 1024 * 1024) throw new Error('Imagem muito grande. Use ate 3MB.');
+        const secret = sessionStorage.getItem('lovisa_secret') || '';
+        const dataUrl = await fileToDataUrl(file);
+        const base64 = dataUrl.split(',')[1];
+        const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file.name, base64, secret })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.url) throw new Error(data.error || 'Erro ao enviar imagem.');
+        return data.url;
+    }
 
     /* ─── APLICAR CONTEÚDO ──────────────────────────────────── */
     function applyContent(cms) {
         if (!cms || !Object.keys(cms).length) return;
+        cms = cleanContent(cms);
         if (cms.colors) {
             // Aliases: index.html/pacote.html usam --navy/--navy-dark/--text
             const aliases = { '--primary': '--navy', '--primary-dark': '--navy-dark', '--text-dark': '--text' };
@@ -42,6 +154,7 @@
             if (d.target!= null) el.setAttribute('target', d.target);
             if (d.style)         Object.assign(el.style, d.style);
         });
+        applyPackages(cms);
     }
 
     async function fetchContent() {
@@ -52,7 +165,8 @@
     }
 
     async function loadAndApply(srv) {
-        let merged = srv || {};
+        let merged = (srv && typeof srv === 'object') ? { ...srv } : {};
+        window.__LOVISA_SRV_CMS = merged;
         if (editMode) {
             const draft = JSON.parse(localStorage.getItem(CMS_KEY) || '{}');
             merged = { ...merged, ...draft };
@@ -193,9 +307,18 @@
             <button class="ld-btn" id="ld-revert" title="Descartar rascunho não publicado">↩ <span class="ld-btn-label">Reverter</span></button>
             <button class="ld-btn red" id="ld-exit">✕ <span class="ld-btn-label">Sair</span></button>`;
             document.body.prepend(bar);
+            const pubBtn = document.getElementById('ld-pub');
+            if (pubBtn) {
+                const footerBtn = document.createElement('button');
+                footerBtn.className = 'ld-btn';
+                footerBtn.id = 'ld-footer';
+                footerBtn.textContent = 'Rodape';
+                pubBtn.before(footerBtn);
+            }
             document.getElementById('ld-add-pkg').onclick  = () => this.pAddPacote();
             document.getElementById('ld-dep').onclick       = () => this.pManageDep();
             document.getElementById('ld-colors').onclick = () => this.pColors();
+            document.getElementById('ld-footer').onclick = () => this.pFooter();
             document.getElementById('ld-pub').onclick    = () => this.publish();
             document.getElementById('ld-revert').onclick = () => this.revert();
             document.getElementById('ld-exit').onclick   = () => this.exit();
@@ -449,6 +572,43 @@
         },
 
         /* ── CORES GLOBAIS ── */
+        pFooter() {
+            const fields = [...document.querySelectorAll('footer [data-eid], [data-eid^="ft-"], [data-eid^="info-email"], [data-eid^="info-horario"]')];
+            const p = this.panel_('Editar Rodape');
+            if (!fields.length) {
+                p.innerHTML += `<div class="ld-pb"><div class="ld-info">Nenhum campo de rodape editavel encontrado nesta pagina.</div></div>`;
+                return;
+            }
+            const rows = fields.map((el, i) => `
+                <div class="ld-f">
+                    <label>${escapeHTML(el.dataset.elabel || el.dataset.eid || ('Campo ' + (i + 1)))}</label>
+                    <textarea rows="2" data-footer-eid="${escapeHTML(el.dataset.eid)}">${escapeHTML(el.textContent.trim())}</textarea>
+                </div>`).join('');
+            p.innerHTML += `<div class="ld-pb">
+                <div class="ld-info">Edite os textos pequenos do rodape e contato sem precisar clicar no rodape.</div>
+                ${rows}
+                <div class="ld-acts">
+                    <button class="ld-ok" id="ld-footer-save">Aplicar</button>
+                    <button class="ld-ko" id="ld-footer-close">Cancelar</button>
+                </div>
+            </div>`;
+            p.querySelector('#ld-footer-close').onclick = () => this.closePanel();
+            p.querySelector('#ld-footer-save').onclick = () => {
+                p.querySelectorAll('[data-footer-eid]').forEach(input => {
+                    const eid = input.dataset.footerEid;
+                    const value = input.value.trim();
+                    if (!eid) return;
+                    document.querySelectorAll(`[data-eid="${CSS.escape(eid)}"]`).forEach(el => {
+                        if (el.tagName === 'A' && value.includes('@')) el.href = 'mailto:' + value;
+                        el.innerHTML = value;
+                    });
+                    this.store(eid, { html: value, ...(value.includes('@') ? { href: 'mailto:' + value } : {}) });
+                });
+                this.closePanel();
+                this.toast('Rodape salvo no rascunho', 'ok');
+            };
+        },
+
         pColors() {
             const root = document.documentElement;
             const g = v => getComputedStyle(root).getPropertyValue(v).trim() || '#000000';
@@ -549,6 +709,87 @@
                 this._renderNewPackageCard(pkgData);
                 this.closePanel();
                 this.toast('✓ Pacote "' + title + '" criado! Publique para salvar.', 'ok');
+            };
+        },
+
+        pAddPacote() {
+            const p = this.panel_('Adicionar Novo Pacote');
+            p.innerHTML += `<div class="ld-pb">
+                <div class="ld-info">Preencha os dados do novo pacote. Ao criar, ele sera publicado no GitHub e aparecera no site.</div>
+                <div class="ld-f"><label>ID unico (ex: cancun, paris, noronha)</label><input type="text" id="pkg-id" placeholder="cancun"></div>
+                <div class="ld-f"><label>Pais / bandeira</label><input type="text" id="pkg-flag" placeholder="Mexico"></div>
+                <div class="ld-f"><label>Titulo do pacote</label><input type="text" id="pkg-title" placeholder="Cancun & Riviera Maya"></div>
+                <div class="ld-f"><label>Subtitulo</label><input type="text" id="pkg-subtitle" placeholder="O Caribe Mexicano te espera"></div>
+                <div class="ld-f"><label>Localizacao</label><input type="text" id="pkg-loc" placeholder="Cancun, Mexico"></div>
+                <div class="ld-f"><label>Duracao</label><input type="text" id="pkg-dur" placeholder="7 dias / 6 noites"></div>
+                <div class="ld-f"><label>Preco (ex: 4.990,00)</label><input type="text" id="pkg-price" placeholder="4.990,00"></div>
+                <div class="ld-f"><label>Parcelamento (ex: 10x de R$ 499)</label><input type="text" id="pkg-parc" placeholder="10x de R$ 499"></div>
+                <div class="ld-f"><label>Fotos do pacote</label>
+                    <button type="button" class="ld-ko" id="pkg-file-btn" style="width:100%;margin-bottom:8px;">Escolher imagens do computador</button>
+                    <input type="file" id="pkg-files" accept="image/*" multiple style="display:none">
+                    <div id="pkg-file-status" class="ld-hint">Ou cole URLs diretas abaixo. Caminho C:\\... nao funciona no navegador.</div>
+                </div>
+                <div class="ld-f"><label>Galeria de fotos (uma URL por linha)</label><textarea id="pkg-imgs" rows="4" placeholder="https://.../foto.webp"></textarea></div>
+                <div class="ld-f"><label>Descricao do destino</label><textarea id="pkg-desc" rows="3"></textarea></div>
+                <div class="ld-f"><label>O que esta incluso (um por linha)</label><textarea id="pkg-incluso" rows="4" placeholder="Passagem aerea ida e volta&#10;Hospedagem com cafe da manha"></textarea></div>
+                <div class="ld-acts">
+                    <button class="ld-ok" id="lda">Criar e publicar pacote</button>
+                    <button class="ld-ko" id="ldc">Cancelar</button>
+                </div>
+            </div>`;
+            p.querySelector('#ldc').onclick = () => this.closePanel();
+            p.querySelector('#pkg-file-btn').onclick = () => p.querySelector('#pkg-files').click();
+            p.querySelector('#pkg-files').onchange = () => {
+                const total = p.querySelector('#pkg-files').files.length;
+                p.querySelector('#pkg-file-status').textContent = total ? `${total} imagem(ns) selecionada(s).` : 'Nenhuma imagem selecionada.';
+            };
+            p.querySelector('#lda').onclick = async () => {
+                const id       = cleanPackageId(p.querySelector('#pkg-id').value);
+                const flag     = p.querySelector('#pkg-flag').value.trim();
+                const title    = p.querySelector('#pkg-title').value.trim();
+                const subtitle = p.querySelector('#pkg-subtitle').value.trim();
+                const loc      = p.querySelector('#pkg-loc').value.trim();
+                const dur      = p.querySelector('#pkg-dur').value.trim();
+                const price    = p.querySelector('#pkg-price').value.trim();
+                const parc     = p.querySelector('#pkg-parc').value.trim();
+                const desc     = p.querySelector('#pkg-desc').value.trim();
+                const inclusoBruto = p.querySelector('#pkg-incluso').value.trim();
+                if (!id || !title || !price) {
+                    this.toast('Preencha ID, titulo e preco', 'err');
+                    return;
+                }
+                const urlLines = p.querySelector('#pkg-imgs').value.split('\n').map(s => s.trim()).filter(Boolean);
+                if (urlLines.some(src => !isValidImageSrc(src))) {
+                    this.toast('Use upload ou URL direta. Caminho local/Instagram nao publica.', 'err');
+                    p.querySelector('#pkg-imgs').focus();
+                    return;
+                }
+                const btn = p.querySelector('#lda');
+                btn.disabled = true;
+                btn.textContent = 'Enviando e publicando...';
+                try {
+                    const uploaded = [];
+                    for (const file of [...p.querySelector('#pkg-files').files]) {
+                        uploaded.push(await uploadImageFile(file));
+                    }
+                    const fotos = [...uploaded, ...urlLines].filter(Boolean);
+                    const incluso = inclusoBruto ? inclusoBruto.split('\n').map(s=>s.trim()).filter(Boolean) : ['Aereo ida e volta','Hospedagem com cafe da manha','Transfer aeroporto-hotel','Guia local'];
+                    const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img: fotos[0] || FALLBACK_PACKAGE_IMG, fotos, desc, incluso, _new: true };
+                    if (!this.cms._packages) this.cms._packages = {};
+                    this.cms._packages[id] = pkgData;
+                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    this.markDirty();
+                    this._renderNewPackageCard(pkgData);
+                    await this.publishNow(sessionStorage.getItem('lovisa_secret') || '');
+                    localStorage.removeItem(CMS_KEY);
+                    document.querySelectorAll('.ld-dirty-dot').forEach(d => d.remove());
+                    this.closePanel();
+                    this.toast('Pacote publicado no site!', 'ok');
+                } catch (err) {
+                    btn.disabled = false;
+                    btn.textContent = 'Criar e publicar pacote';
+                    this.toast(err.message || 'Erro ao publicar pacote', 'err');
+                }
             };
         },
 
@@ -713,6 +954,20 @@
         },
 
         /* ── PUBLICAR ── */
+        async publishNow(secret) {
+            this.cms = cleanContent(this.cms);
+            localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+            if (!secret) throw new Error('Sessao sem senha. Saia e entre novamente no editor.');
+            const res = await fetch('/api/publish', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: this.cms, secret })
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) throw new Error(data.error || 'Erro desconhecido');
+            return data;
+        },
+
         async publish() {
             // Resumo do que será publicado
             const elems   = Object.keys(this.cms).filter(k => k !== 'colors' && k !== 'whatsapp');
@@ -757,13 +1012,8 @@
                 }
                 p.querySelector('.ld-pb').innerHTML = `<div class="ld-loading"><span class="ld-spin">⏳</span>Publicando alterações…</div>`;
                 try {
-                    const res = await fetch('/api/publish', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ content: this.cms, secret })
-                    });
-                    const data = await res.json();
-                    if (res.ok && data.success) {
+                    const data = await this.publishNow(secret);
+                    if (data.success) {
                         localStorage.removeItem(CMS_KEY);
                         const now = new Date().toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
                         localStorage.setItem('lovisa_last_pub', now);
