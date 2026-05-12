@@ -66,7 +66,8 @@
         email: 'vendas@lovisadestinos.com.br',
         infoHours: 'Atendimento das 09h00 às 17h00 seg a sex · Clientes no destino 24hrs',
         hours: 'Atendimento das 09h00 às 17h00 seg a sex',
-        hours2: 'Atendimento para clientes no destino 24hrs'
+        hours2: 'Atendimento para clientes no destino 24hrs',
+        copyright: '© 2026 Lovisa Destinos · Todos os direitos reservados'
     };
 
     function htmlToText(value) {
@@ -92,6 +93,7 @@
         const infoHours = entryText(cms, 'info-horario', FOOTER_DEFAULTS.infoHours);
         const hours = entryText(cms, 'ft-hours', FOOTER_DEFAULTS.hours);
         const hours2 = entryText(cms, 'ft-hours2', FOOTER_DEFAULTS.hours2);
+        const copyright = entryText(cms, 'ft-copyright', FOOTER_DEFAULTS.copyright);
 
         ['info-email', 'ft-email', 'ft-email-pacote'].forEach(eid => {
             document.querySelectorAll(`[data-eid="${eid}"]`).forEach(el => {
@@ -106,6 +108,11 @@
         ['ft-hours2', 'ft-hours2-pacote'].forEach(eid => {
             document.querySelectorAll(`[data-eid="${eid}"]`).forEach(el => setTextPreserveIcon(el, hours2));
         });
+        document.querySelectorAll('[data-eid="ft-copyright"]').forEach(el => setTextPreserveIcon(el, copyright));
+    }
+
+    function packageUrl(pkg) {
+        return `pacote.html?id=${encodeURIComponent(pkg.id)}`;
     }
 
     function renderPackageCard(pkg) {
@@ -118,7 +125,7 @@
         wrap.className = 'card-link-wrap ld-dynamic-pkg';
         wrap.dataset.dynamicPkg = pkg.id;
         wrap.innerHTML = `
-            <a href="pacote-${escapeHTML(pkg.id)}.html" class="card-link rv">
+            <a href="${packageUrl(pkg)}" class="card-link rv">
                 <div class="card-img">
                     <img src="${escapeHTML(img)}" alt="${escapeHTML(pkg.title)}" loading="lazy">
                     <div class="card-flag">${escapeHTML(pkg.flag || '')}</div>
@@ -657,12 +664,14 @@
                 const infoHours = entryText(this.cms, 'info-horario', FOOTER_DEFAULTS.infoHours);
                 const hours = entryText(this.cms, 'ft-hours', FOOTER_DEFAULTS.hours);
                 const hours2 = entryText(this.cms, 'ft-hours2', FOOTER_DEFAULTS.hours2);
+                const copyright = entryText(this.cms, 'ft-copyright', FOOTER_DEFAULTS.copyright);
                 ['info-email', 'ft-email', 'ft-email-pacote'].forEach(eid => {
                     this.cms[eid] = { html: email, href: 'mailto:' + email };
                 });
                 this.cms['info-horario'] = { html: infoHours };
                 ['ft-hours', 'ft-hours-pacote'].forEach(eid => { this.cms[eid] = { html: hours }; });
                 ['ft-hours2', 'ft-hours2-pacote'].forEach(eid => { this.cms[eid] = { html: hours2 }; });
+                this.cms['ft-copyright'] = { html: copyright };
                 syncContactFooter(this.cms);
                 localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
                 this.closePanel();
@@ -835,7 +844,7 @@
                     }
                     const fotos = [...uploaded, ...urlLines].filter(Boolean);
                     const incluso = inclusoBruto ? inclusoBruto.split('\n').map(s=>s.trim()).filter(Boolean) : ['Aereo ida e volta','Hospedagem com cafe da manha','Transfer aeroporto-hotel','Guia local'];
-                    const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img: fotos[0] || FALLBACK_PACKAGE_IMG, fotos, desc, incluso, _new: true };
+                const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img: fotos[0] || FALLBACK_PACKAGE_IMG, fotos, desc, incluso, _new: true };
                     if (!this.cms._packages) this.cms._packages = {};
                     this.cms._packages[id] = pkgData;
                     localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
@@ -862,7 +871,7 @@
             wrap.className = 'card-link-wrap';
             wrap.innerHTML = `
                 <button class="ld-remove-pkg" data-pkg-id="${pkg.id}" title="Remover pacote">🗑 Remover</button>
-                <a href="pacote-${pkg.id}.html" class="card-link rv">
+                <a href="${packageUrl(pkg)}" class="card-link rv">
                     <div class="card-img">
                         <img src="${pkg.img || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80'}" alt="${pkg.title}" loading="lazy">
                         <div class="card-flag">${pkg.flag || ''}</div>
@@ -1178,6 +1187,8 @@
     };
 
     /* ─── BOOT ──────────────────────────────────────────────── */
+    window.__LOVISA_APPLY_CONTENT = applyContent;
+
     document.addEventListener('DOMContentLoaded', async () => {
         const srv = await fetchContent();   // 1 único fetch para toda a sessão
         await loadAndApply(srv);
@@ -1185,6 +1196,11 @@
             await ED.start(srv);            // reutiliza dados já carregados
             setTimeout(() => ED.bindAll(), 500);
         }
+    });
+
+    document.addEventListener('lovisa:package-rendered', () => {
+        if (window.__LOVISA_SRV_CMS) applyContent(window.__LOVISA_SRV_CMS);
+        if (editMode) ED.bindAll();
     });
 
     window._LD = ED;

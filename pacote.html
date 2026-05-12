@@ -563,11 +563,11 @@
             <div>
                 <h5>Destinos</h5>
                 <div class="ft-links">
-                    <a href="pacote.html?id=noronha">Fernando de Noronha</a>
-                    <a href="pacote.html?id=maldivas">Maldivas</a>
-                    <a href="pacote.html?id=paris">Paris</a>
-                    <a href="pacote.html?id=santorini">Santorini</a>
-                    <a href="pacote.html?id=dubai">Dubai</a>
+                    <a href="pacote.html?id=lencois">Lençóis Maranhenses</a>
+                    <a href="pacote.html?id=disney">Disney & Orlando</a>
+                    <a href="pacote.html?id=maceio">Maceió & Maragogi</a>
+                    <a href="pacote.html?id=portogalinhas">Porto de Galinhas</a>
+                    <a href="pacote.html?id=riodejaneiro">Rio de Janeiro</a>
                 </div>
             </div>
             <div>
@@ -591,7 +591,7 @@
             </div>
         </div>
         <div class="ft-bottom">
-            <span>© 2025 Lovisa Destinos · Todos os direitos reservados</span>
+            <span data-eid="ft-copyright" data-elabel="Rodapé — Copyright">© 2026 Lovisa Destinos · Todos os direitos reservados</span>
             <span>Feito com <i class="fa-solid fa-heart" style="color:var(--accent)"></i> para quem ama viajar &nbsp;·&nbsp; <a href="/admin/login.html" style="color:rgba(255,255,255,0.2);font-size:.75rem;text-decoration:none;" title="Admin">⚙</a></span>
         </div>
     </div>
@@ -601,11 +601,48 @@
 
 <!-- ════════════ SCRIPTS ════════════ -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+
+    async function loadDynamicPackages() {
+        try {
+            const res = await fetch('/api/content?_=' + Date.now());
+            if (!res.ok) return null;
+            const cms = await res.json();
+            if (!cms || !cms._packages || typeof cms._packages !== 'object') return cms || null;
+            Object.entries(cms._packages).forEach(([pkgId, raw]) => {
+                if (!raw || typeof raw !== 'object') return;
+                const images = Array.isArray(raw.fotos) && raw.fotos.length
+                    ? raw.fotos
+                    : (raw.img ? [raw.img] : ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80']);
+                DB[pkgId] = {
+                    title: raw.title || pkgId,
+                    subtitle: raw.subtitle || '',
+                    location: raw.location || '',
+                    duration: raw.duration || '',
+                    price: raw.price || '',
+                    parcelas: raw.parcelas || '',
+                    flag: raw.flag || '',
+                    images,
+                    desc: raw.desc || raw.subtitle || '',
+                    incluso: Array.isArray(raw.incluso) && raw.incluso.length ? raw.incluso : ['Aereo ida e volta', 'Hospedagem com cafe da manha', 'Transfer aeroporto-hotel', 'Guia local'],
+                    nao_incluso: Array.isArray(raw.nao_incluso) ? raw.nao_incluso : [],
+                    roteiro: Array.isArray(raw.roteiro) && raw.roteiro.length ? raw.roteiro : []
+                };
+            });
+            return cms;
+        } catch (_) {
+            return null;
+        }
+    }
 
     // ── Obter pacote ──
     const id  = new URLSearchParams(location.search).get('id') || 'noronha';
-    const pkg = DB[id] || DB.noronha;
+    const cms = await loadDynamicPackages();
+    const pkg = DB[id] || DB.lencois || Object.values(DB)[0];
+    if (!pkg) {
+        location.replace('404.html');
+        return;
+    }
 
     // ── Meta ──
     document.title = pkg.title + ' — Lovisa Destinos';
@@ -712,7 +749,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Roteiro ──
     const rotEl = document.getElementById('roteiro-list');
-    pkg.roteiro.forEach((r, i) => {
+    (pkg.roteiro || []).forEach((r, i) => {
         const div = document.createElement('div');
         div.className = 'roteiro-item';
         const h4 = document.createElement('h4');
@@ -760,8 +797,8 @@ document.addEventListener('DOMContentLoaded', () => {
         card.className = 'card-link';
         card.innerHTML = `
             <div class="card-img">
-                <img src="${destImgs[k]}" alt="${p.title}" loading="lazy"${eid ? ` data-eid="${eid}" data-elabel="Foto ${p.title}"` : ''}>
-                <div class="card-flag">${p.flag}</div>
+                <img src="${destImgs[k] || (p.images && p.images[0]) || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80'}" alt="${p.title}" loading="lazy"${eid ? ` data-eid="${eid}" data-elabel="Foto ${p.title}"` : ''}>
+                <div class="card-flag">${p.flag || ''}</div>
             </div>
             <div class="card-body">
                 <div class="card-loc"><i class="fa-solid fa-location-dot"></i> ${p.location}</div>
@@ -773,6 +810,11 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
         cardsEl.appendChild(card);
     });
+
+    if (cms && window.__LOVISA_APPLY_CONTENT) {
+        window.__LOVISA_APPLY_CONTENT(cms);
+    }
+    document.dispatchEvent(new CustomEvent('lovisa:package-rendered'));
 });
 
 // ── Mobile menu ──
@@ -784,6 +826,6 @@ burger.addEventListener('click', () => {
 });
 </script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
-<script src="editor.js?v=20260512-footer-sync"></script>
+<script src="editor.js?v=20260512-package-standard"></script>
 </body>
 </html>
