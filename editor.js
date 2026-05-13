@@ -125,7 +125,8 @@
         wrap.className = 'card-link-wrap ld-dynamic-pkg';
         wrap.dataset.dynamicPkg = pkg.id;
         wrap.innerHTML = `
-            <a href="${packageUrl(pkg)}" class="card-link rv">
+            ${editMode ? `<button class="ld-remove-pkg" data-pkg-id="${escapeHTML(pkg.id)}" title="Remover pacote">Remover</button>` : ''}
+            <a href="${packageUrl(pkg)}" class="card-link rv on">
                 <div class="card-img">
                     <img src="${escapeHTML(img)}" alt="${escapeHTML(pkg.title)}" loading="lazy">
                     <div class="card-flag">${escapeHTML(pkg.flag || '')}</div>
@@ -141,6 +142,16 @@
                 </div>
             </a>`;
         grid.appendChild(wrap);
+        if (editMode) {
+            const btn = wrap.querySelector('.ld-remove-pkg');
+            if (btn && window._LD) {
+                btn.addEventListener('click', e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window._LD._confirmRemovePkg(pkg.id, wrap);
+                });
+            }
+        }
     }
 
     function applyPackages(cms) {
@@ -870,8 +881,8 @@
             wrap.style.position = 'relative';
             wrap.className = 'card-link-wrap';
             wrap.innerHTML = `
-                <button class="ld-remove-pkg" data-pkg-id="${pkg.id}" title="Remover pacote">🗑 Remover</button>
-                <a href="${packageUrl(pkg)}" class="card-link rv">
+                <button class="ld-remove-pkg" data-pkg-id="${pkg.id}" title="Remover pacote">Remover</button>
+                <a href="${packageUrl(pkg)}" class="card-link rv on">
                     <div class="card-img">
                         <img src="${pkg.img || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80'}" alt="${pkg.title}" loading="lazy">
                         <div class="card-flag">${pkg.flag || ''}</div>

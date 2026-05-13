@@ -241,52 +241,7 @@
     "href": "https://wa.me/5519995396281",
     "target": "_self"
   },
-  "_packages": {
-    "teste": {
-      "id": "teste",
-      "flag": "",
-      "title": "teste",
-      "subtitle": "teste",
-      "location": "teste",
-      "duration": "",
-      "price": "teste",
-      "parcelas": "teste",
-      "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
-      "fotos": [
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
-      ],
-      "desc": "",
-      "incluso": [
-        "Aereo ida e volta",
-        "Hospedagem com cafe da manha",
-        "Transfer aeroporto-hotel",
-        "Guia local"
-      ],
-      "_new": true
-    },
-    "testetete": {
-      "id": "testetete",
-      "flag": "teste",
-      "title": "teste",
-      "subtitle": "test",
-      "location": "test",
-      "duration": "teste",
-      "price": "545",
-      "parcelas": "te123412",
-      "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
-      "fotos": [
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
-      ],
-      "desc": "",
-      "incluso": [
-        "Aereo ida e volta",
-        "Hospedagem com cafe da manha",
-        "Transfer aeroporto-hotel",
-        "Guia local"
-      ],
-      "_new": true
-    }
-  },
+  "_packages": {},
   "ft-email": {
     "html": "vendas@lovisadestinos.com.br",
     "href": "mailto:vendas@lovisadestinos.com.br"
