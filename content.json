@@ -287,5 +287,8 @@
   },
   "ft-copyright": {
     "html": "© 2026 Lovisa Destinos · Todos os direitos reservados"
-  }
+  },
+  "_removedPackages": [
+    "tsteteste"
+  ]
 }
