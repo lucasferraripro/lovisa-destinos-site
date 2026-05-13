@@ -10,6 +10,7 @@
   },
   "dif-badge": {
     "html": "<br>",
+    "hidden": true,
     "style": {
       "fontSize": "0px"
     }

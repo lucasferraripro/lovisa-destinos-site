@@ -211,6 +211,15 @@
         document.querySelectorAll('[data-eid]').forEach(el => {
             const d = cms[el.dataset.eid];
             if (!d) return;
+            if (d.hidden === true) {
+                el.style.display = 'none';
+                el.dataset.ldHidden = '1';
+                return;
+            }
+            if (d.hidden === false && el.dataset.ldHidden === '1') {
+                el.style.removeProperty('display');
+                delete el.dataset.ldHidden;
+            }
             if (d.html  != null) el.innerHTML = d.html;
             if (d.src   != null && el.tagName === 'IMG') el.src = d.src;
             if (d.href  != null) el.setAttribute('href', d.href);
@@ -295,6 +304,8 @@
         .ld-ok:hover{background:#0D47A1;}
         .ld-ko{padding:9px 14px;background:#F3F4F6;color:#374151;border:none;border-radius:8px;font-size:13px;cursor:pointer;}
         .ld-ko:hover{background:#E5E7EB;}
+        .ld-danger{width:100%;margin-top:10px;padding:9px 12px;background:#fff;border:1.5px solid #FCA5A5;color:#B91C1C;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+        .ld-danger:hover{background:#FEF2F2;border-color:#EF4444;}
         .ld-hint{font-size:11px;color:#9CA3AF;margin-top:4px;line-height:1.5;}
         .ld-hr{border:none;border-top:1px solid #F3F4F6;margin:12px 0;}
         .ld-g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
@@ -439,6 +450,7 @@
                     <button class="ld-ok" id="lda">✓ Aplicar</button>
                     <button class="ld-ko" id="ldc">Cancelar</button>
                 </div>
+                <button class="ld-danger" id="ldrme" type="button">Remover este item do site</button>
             </div>`;
             const rich = p.querySelector('#ldr');
             const tc   = p.querySelector('#ldtc');
@@ -461,6 +473,7 @@
                 el.setAttribute('style', origStyle);
                 this.closePanel();
             };
+            p.querySelector('#ldrme').onclick = () => this.removeElement(el);
         },
 
         /* ── IMAGEM ── */
@@ -488,6 +501,7 @@
                     <button class="ld-ok" id="lda">✓ Aplicar</button>
                     <button class="ld-ko" id="ldc">Cancelar</button>
                 </div>
+                <button class="ld-danger" id="ldrme" type="button">Remover esta imagem do site</button>
             </div>`;
             const ui     = p.querySelector('#ldiu');
             const pv     = p.querySelector('#ldprev');
@@ -578,6 +592,7 @@
                 el.src = origSrc;
                 this.closePanel();
             };
+            p.querySelector('#ldrme').onclick = () => this.removeElement(el);
         },
 
         /* ── LINK ── */
@@ -605,6 +620,7 @@
                     <button class="ld-ok" id="lda">✓ Aplicar</button>
                     <button class="ld-ko" id="ldc">Cancelar</button>
                 </div>
+                <button class="ld-danger" id="ldrme" type="button">Remover este item do site</button>
             </div>`;
             const bt  = p.querySelector('#ldbt');
             const bh  = p.querySelector('#ldbh');
@@ -633,6 +649,7 @@
                 el.setAttribute('href', origHref);
                 this.closePanel();
             };
+            p.querySelector('#ldrme').onclick = () => this.removeElement(el);
         },
 
         /* ── CORES GLOBAIS ── */
@@ -1167,6 +1184,25 @@
             this.cms[key] = val;
             localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
             this.markDirty();
+        },
+
+        removeElement(el) {
+            const eid = el && el.dataset ? el.dataset.eid : '';
+            const label = (el && el.dataset && (el.dataset.elabel || el.dataset.eid)) || 'este item';
+            if (!eid) {
+                this.toast('Este item nao tem ID editavel para remover.', 'err');
+                return;
+            }
+            if (!confirm(`Remover "${label}" do site?\n\nEle ficara oculto para os visitantes depois de publicar.`)) return;
+            document.querySelectorAll(`[data-eid="${CSS.escape(eid)}"]`).forEach(item => {
+                item.style.display = 'none';
+                item.dataset.ldHidden = '1';
+            });
+            this.cms[eid] = { ...(this.cms[eid] || {}), hidden: true };
+            localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+            this.markDirty();
+            this.closePanel();
+            this.toast('Item removido no rascunho. Clique em Publicar para salvar no site.', 'ok');
         },
 
         markDirty() {
