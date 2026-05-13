@@ -241,7 +241,30 @@
     "href": "https://wa.me/5519995396281",
     "target": "_self"
   },
-  "_packages": {},
+  "_packages": {
+    "tsteteste": {
+      "id": "tsteteste",
+      "flag": "teste",
+      "title": "teste",
+      "subtitle": "",
+      "location": "",
+      "duration": "",
+      "price": "4142134",
+      "parcelas": "",
+      "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+      "fotos": [
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+      ],
+      "desc": "",
+      "incluso": [
+        "Aereo ida e volta",
+        "Hospedagem com cafe da manha",
+        "Transfer aeroporto-hotel",
+        "Guia local"
+      ],
+      "_new": true
+    }
+  },
   "ft-email": {
     "html": "vendas@lovisadestinos.com.br",
     "href": "mailto:vendas@lovisadestinos.com.br"
