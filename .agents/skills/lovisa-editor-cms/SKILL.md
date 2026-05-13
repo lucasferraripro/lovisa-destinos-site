@@ -61,6 +61,17 @@ Nao filtrar `data:image` automaticamente. Algumas imagens da cliente foram recup
 
 Se for otimizar, primeiro migrar a imagem para `imagens/uploads` e atualizar o campo no `content.json`.
 
+## Depoimentos Google
+
+Nos cards de depoimentos/avaliacoes:
+
+- Usar somente fotos reais das avaliacoes do Google Maps da Lovisa.
+- A fonte oficial das avaliacoes e o perfil Google Maps da Lovisa Destinos.
+- Os avatares corretos estao hospedados localmente como `av-1.jpg`, `av-2.jpg`, `av-3.jpg`, `av-4.jpg`, `av-5.jpg`, `av-6.jpg`.
+- Esses arquivos vieram dos links reais do Google e foram salvos localmente para nao quebrar por hotlink/bloqueio.
+- Nunca substituir por fotos de banco, Unsplash, IA ou novas imagens "parecidas".
+- Commits de referencia: `3d15201`, `09d063b`, `18fa128`.
+
 ## Rodape e contato
 
 Campos corretos conhecidos:
@@ -90,4 +101,3 @@ Commit de recuperacao:
 ```text
 4b92bc0 Recupera conteudo salvo pelo painel Lovisa
 ```
-

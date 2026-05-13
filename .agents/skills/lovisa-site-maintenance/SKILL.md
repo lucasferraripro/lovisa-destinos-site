@@ -57,6 +57,22 @@ Nao remover imagens `data:image` do `content.json` sem migrar para arquivo real 
 
 O projeto tem conteudo legado recuperado com `data:image`, inclusive `dif-img`.
 
+## Depoimentos Google
+
+Fonte oficial:
+
+```text
+https://www.google.com/maps/place/Lovisa+Destinos/@-13.3722091,-73.1397804,4z/data=!4m8!3m7!1s0x496312acd36d9057:0xbe12502a7a172777!8m2!3d-14.4095262!4d-51.31668!9m1!1b1!16s%2Fg%2F11wtlj2xps
+```
+
+Regra critica:
+
+- As fotos dos depoimentos devem ser as fotos reais das avaliacoes do Google.
+- Nao trocar por fotos genericas, Unsplash, IA ou banco de imagem.
+- Usar os arquivos locais `av-1.jpg` ate `av-6.jpg`, que foram salvos para evitar bloqueio dos links do Google.
+- Referencias no historico: `3d15201` mostra links originais do Google; `09d063b` salva os avatares localmente; `18fa128` usa `av-1.jpg` a `av-6.jpg`.
+- Se precisar corrigir depoimentos, restaurar essas imagens locais e preservar nomes/textos das avaliacoes.
+
 ## Validacao minima
 
 Apos ajuste, validar:
@@ -71,4 +87,3 @@ Esperado apos recuperacao:
 - `dif-img` presente.
 - WhatsApp presente.
 - Email `vendas@lovisadestinos.com.br`.
-

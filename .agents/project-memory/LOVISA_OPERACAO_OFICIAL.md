@@ -105,6 +105,25 @@ Nao filtrar `data:image` em `/api/content`, senao fotos antigas somem da pagina.
 
 Para novos pacotes, preferir upload por `/api/upload`, que salva em `imagens/uploads`.
 
+## Depoimentos e avaliacoes do Google
+
+Fonte oficial das avaliacoes da Lovisa:
+
+```text
+https://www.google.com/maps/place/Lovisa+Destinos/@-13.3722091,-73.1397804,4z/data=!4m8!3m7!1s0x496312acd36d9057:0xbe12502a7a172777!8m2!3d-14.4095262!4d-51.31668!9m1!1b1!16s%2Fg%2F11wtlj2xps
+```
+
+Regra obrigatoria:
+
+- Nao usar fotos genericas, Unsplash, IA ou banco de imagem nos depoimentos.
+- As fotos corretas dos depoimentos sao as fotos reais das avaliacoes do Google, hospedadas localmente para evitar bloqueio/expiracao dos links do Google.
+- Arquivos corretos no projeto: `av-1.jpg`, `av-2.jpg`, `av-3.jpg`, `av-4.jpg`, `av-5.jpg`, `av-6.jpg`.
+- O commit `09d063b fix: hospedagem local de avatares para evitar bloqueio do Google` adicionou esses arquivos locais.
+- O commit `3d15201 fix: fotos reais nos depoimentos via tags img para maxima compatibilidade` mostra os links originais `lh3.googleusercontent.com`.
+- O commit `18fa128 fix: adiciona foto da Kenia corretamente` ja usava `av-1.jpg` a `av-6.jpg`.
+
+Se as fotos dos depoimentos sumirem ou forem trocadas, restaurar somente para `av-1.jpg` a `av-6.jpg`, mantendo os nomes/textos das avaliacoes reais. Nunca substituir por novas fotos.
+
 ## Pacotes
 
 O pacote Disney usa imagens oficiais restauradas no `pacote.html`.
@@ -156,4 +175,3 @@ Conteudo bom recuperado:
 ```text
 d4b54ee Editor: atualiza conteúdo do site (11/05/2026, 10:20:26)
 ```
-
