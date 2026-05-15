@@ -96,7 +96,7 @@
     "html": "100%"
   },
   "card4-price": {
-    "html": "R$ 4.200,00<small>/ 02 pessoas</small>"
+    "html": "<br>"
   },
   "card3-title": {
     "html": "Maceió"
@@ -312,6 +312,24 @@
     "tsteteste"
   ],
   "cancun-pkg-price": {
-    "html": "R$ 6.675,47"
+    "html": "<br>"
+  },
+  "card1-price": {
+    "html": "<br>"
+  },
+  "card2-price": {
+    "html": "<br>"
+  },
+  "card3-price": {
+    "html": "<br>"
+  },
+  "card5-price": {
+    "html": "<br>"
+  },
+  "card6-price": {
+    "html": "<br>"
+  },
+  "cancun-pkg-parcelas": {
+    "html": "<br>"
   }
 }
