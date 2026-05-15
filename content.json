@@ -264,6 +264,25 @@
         "Guia local"
       ],
       "_new": true
+    },
+    "cancun": {
+      "id": "cancun",
+      "flag": "México",
+      "title": "Cancún",
+      "subtitle": "O caribe mexicano te espera",
+      "location": "Cancún - México",
+      "duration": "Uma semana",
+      "price": "13.350,95",
+      "parcelas": "Até 10X sem juros",
+      "img": "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1778844249644_licensed-image.jpg",
+      "fotos": [
+        "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1778844249644_licensed-image.jpg"
+      ],
+      "desc": "Cancún, uma cidade mexicana situada na Península de Iucatã, na costa do Mar do Caribe, é conhecida por suas praias, seus vários resorts e sua vida noturna",
+      "incluso": [
+        "Aéreo ida e volta + hospedagem All Inclusive"
+      ],
+      "_new": true
     }
   },
   "ft-email": {
