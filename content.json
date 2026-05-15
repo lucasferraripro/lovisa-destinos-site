@@ -283,6 +283,28 @@
         "Aéreo ida e volta + hospedagem All Inclusive"
       ],
       "_new": true
+    },
+    "cancunincrivel": {
+      "id": "cancunincrivel",
+      "flag": "México",
+      "title": "Cancún",
+      "subtitle": "O caribe mexicano te espera",
+      "location": "",
+      "duration": "",
+      "price": "13.350,95/Casal",
+      "parcelas": "Até 10X sem juros",
+      "img": "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1778864047085_licensed-image.jpg",
+      "fotos": [
+        "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1778864047085_licensed-image.jpg"
+      ],
+      "desc": "",
+      "incluso": [
+        "Aereo ida e volta",
+        "Hospedagem com cafe da manha",
+        "Transfer aeroporto-hotel",
+        "Guia local"
+      ],
+      "_new": true
     }
   },
   "ft-email": {
