@@ -310,5 +310,8 @@
   },
   "_removedPackages": [
     "tsteteste"
-  ]
+  ],
+  "cancun-pkg-price": {
+    "html": "R$ 6.675,47"
+  }
 }
