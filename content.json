@@ -324,6 +324,28 @@
         "Passagem aérea, hospedagem, passeios e tudo mais."
       ],
       "_new": true
+    },
+    "montevideo": {
+      "id": "montevideo",
+      "flag": "Uruguai",
+      "title": "Uruguai te espera",
+      "subtitle": "Uruguai te espera",
+      "location": "Uruguai",
+      "duration": "",
+      "price": "3.600,00",
+      "parcelas": "10x de R$ 360,00",
+      "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+      "fotos": [
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+      ],
+      "desc": "Montevidéu é a capital e a maior cidade do Uruguai, concentrando quase metade da população do país em uma metrópole que combina perfeitamente a tranquilidade de uma cidade do interior com uma vida cultural vibrante",
+      "incluso": [
+        "Aereo ida e volta",
+        "Hospedagem com cafe da manha",
+        "Transfer aeroporto-hotel",
+        "Guia local"
+      ],
+      "_new": true
     }
   },
   "ft-email": {
