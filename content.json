@@ -332,7 +332,8 @@
   },
   "_removedPackages": [
     "tsteteste",
-    "cancun"
+    "cancun",
+    "cancunincrivel"
   ],
   "cancun-pkg-price": {
     "html": "<br>"
@@ -354,5 +355,14 @@
   },
   "cancun-pkg-parcelas": {
     "html": "<br>"
+  },
+  "cancunincrivel-pkg-price": {
+    "html": "R$&nbsp;6.675,47"
+  },
+  "cancunincrivel-pkg-incluso-3": {
+    "html": ""
+  },
+  "cancunincrivel-pkg-incluso-1": {
+    "html": "<i class=\"fa-solid fa-circle-check\"></i> Hospedagem com cafe da manha"
   }
 }
