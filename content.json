@@ -408,5 +408,8 @@
   },
   "montevideo-pkg-img-0": {
     "src": "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1782222023579_montevideo.webp"
+  },
+  "gramado-pkg-price": {
+    "html": "R$ 3.500,00"
   }
 }
