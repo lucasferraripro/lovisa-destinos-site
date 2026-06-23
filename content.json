@@ -305,6 +305,25 @@
         "Guia local"
       ],
       "_new": true
+    },
+    "gramado": {
+      "id": "gramado",
+      "flag": "Brasil",
+      "title": "Gramado",
+      "subtitle": "Gramado te espera",
+      "location": "Gramado",
+      "duration": "",
+      "price": "3500",
+      "parcelas": "10x de 350,00",
+      "img": "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1782221548778_gramado.jpg",
+      "fotos": [
+        "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1782221548778_gramado.jpg"
+      ],
+      "desc": "Gramado é o principal destino turístico de inverno do Brasil, localizado na encantadora Serra Gaúcha, no estado do Rio Grande do Sul.",
+      "incluso": [
+        "Passagem aérea, hospedagem, passeios e tudo mais."
+      ],
+      "_new": true
     }
   },
   "ft-email": {
