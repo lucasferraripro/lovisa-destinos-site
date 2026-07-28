@@ -346,6 +346,28 @@
         "Guia local"
       ],
       "_new": true
+    },
+    "reveillon": {
+      "id": "reveillon",
+      "flag": "Brasil",
+      "title": "Reveillon em Porto Seguro/BA",
+      "subtitle": "A Bahia te espera",
+      "location": "Porto Seguro/BA",
+      "duration": "05 dias/06noites",
+      "price": "3.121,45",
+      "parcelas": "Até 10X sem juros",
+      "img": "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1785261210044_whatsapp_image_2026-07-28_at_14.46.00.jpeg",
+      "fotos": [
+        "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1785261210044_whatsapp_image_2026-07-28_at_14.46.00.jpeg"
+      ],
+      "desc": "",
+      "incluso": [
+        "Aereo ida e volta",
+        "Hospedagem com cafe da manha",
+        "Transfer aeroporto-hotel",
+        "Guia local"
+      ],
+      "_new": true
     }
   },
   "ft-email": {
