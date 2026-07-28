@@ -433,5 +433,14 @@
   },
   "gramado-pkg-price": {
     "html": "R$ 3.500,00"
+  },
+  "reveillon-pkg-incluso-3": {
+    "html": ""
+  },
+  "reveillon-pkg-incluso-0": {
+    "html": "<i class=\"fa-solid fa-circle-check\"></i> Aereo ida e volta com embarque no Rio Janeiro"
+  },
+  "reveillon-pkg-img-0": {
+    "src": "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1785261210044_whatsapp_image_2026-07-28_at_14.46.00.jpeg"
   }
 }
