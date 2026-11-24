@@ -533,6 +533,26 @@
             .card-img { height: 200px; }
             .hero-h1 { font-size: 2.1rem; }
         }
+        /* ══════════════════════════════════════
+           PROMO BANNERS CAROUSEL
+        ══════════════════════════════════════ */
+        .promo-banners { padding: 36px 0 8px; background: var(--bg); }
+        .promo-wrap { position: relative; border-radius: var(--r); overflow: hidden; box-shadow: var(--sh-md); background: var(--navy-dark); }
+        .promo-track { display: flex; transition: transform .45s cubic-bezier(.4,0,.2,1); }
+        .promo-slide { min-width: 100%; position: relative; display: block; }
+        .promo-slide img { width: 100%; aspect-ratio: 16 / 5; min-height: 190px; max-height: 440px; object-fit: cover; display: block; }
+        .promo-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; border: none; background: rgba(17,24,39,.55); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: background .2s; z-index: 3; }
+        .promo-nav:hover { background: var(--accent); }
+        .promo-prev { left: 14px; }
+        .promo-next { right: 14px; }
+        .promo-dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 3; }
+        .promo-dot { width: 10px; height: 10px; border-radius: 50%; border: none; background: rgba(255,255,255,.5); cursor: pointer; padding: 0; transition: all .2s; }
+        .promo-dot.active { width: 26px; border-radius: 99px; background: var(--accent); }
+        @media(max-width:768px) {
+            .promo-banners { padding: 24px 0 4px; }
+            .promo-slide img { aspect-ratio: 16 / 7; min-height: 160px; }
+            .promo-nav { width: 34px; height: 34px; font-size: 13px; }
+        }
     </style>
 </head>
 <body>
@@ -553,7 +573,7 @@
                 <a href="sobre.html">Sobre</a>
             </nav>
             <div class="hdr-cta">
-                <a href="https://wa.me/5519995396281" class="btn btn-accent btn-sm">
+                <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" class="btn btn-accent btn-sm">
                     <i class="fab fa-whatsapp"></i> WhatsApp
                 </a>
             </div>
@@ -572,7 +592,7 @@
     <a href="#depoimentos"   onclick="closePanel()">Depoimentos</a>
     <a href="#contato"       onclick="closePanel()">Orçamento</a>
     <a href="sobre.html">Sobre</a>
-    <a href="https://wa.me/5519995396281" class="mpanel-cta">
+    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" class="mpanel-cta">
         <i class="fab fa-whatsapp"></i> Falar no WhatsApp
     </a>
 </nav>
@@ -592,6 +612,18 @@
         </div>
     </div>
     <div class="hero-scroll"><span>Explorar</span><i class="fa-solid fa-chevron-down"></i></div>
+</section>
+
+<!-- ════════════ BANNERS PROMOCIONAIS ════════════ -->
+<section class="promo-banners" id="promo-banners" style="display:none;" aria-label="Banners Promocionais">
+    <div class="container">
+        <div class="promo-wrap" id="promo-wrap">
+            <div class="promo-track" id="promo-track"></div>
+            <button type="button" class="promo-nav promo-prev" id="promo-prev" aria-label="Banner anterior"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="promo-nav promo-next" id="promo-next" aria-label="Próximo banner"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="promo-dots" id="promo-dots"></div>
+        </div>
+    </div>
 </section>
 
 <!-- ════════════ STATS ════════════ -->
@@ -1063,7 +1095,7 @@
                 <p data-eid="ft-desc" data-elabel="Rodapé — Descrição">Consultoria especializada em viagens premium e roteiros personalizados para quem não aceita o comum.</p>
                 <div class="ft-social">
                     <a href="https://www.instagram.com/lovisadestinos" target="_blank" aria-label="Instagram" data-eid="ft-social-instagram" data-elabel="Rodapé — Link Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://wa.me/5519995396281" aria-label="WhatsApp" data-eid="ft-social-whatsapp" data-elabel="Rodapé — Link WhatsApp Social"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" aria-label="WhatsApp" data-eid="ft-social-whatsapp" data-elabel="Rodapé — Link WhatsApp Social"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
             <div>
@@ -1088,7 +1120,7 @@
             <div>
                 <h5 data-eid="ft-col3-title" data-elabel="Rodapé — Título Coluna Contato">Contato</h5>
                 <div class="ft-links">
-                    <a href="https://wa.me/5519995396281" data-eid="ft-phone" data-elabel="Rodapé — Telefone WhatsApp"><i class="fab fa-whatsapp" style="color:var(--wa);margin-right:7px"></i>(19) 99539-6281</a>
+                    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" data-eid="ft-phone" data-elabel="Rodapé — Telefone WhatsApp"><i class="fab fa-whatsapp" style="color:var(--wa);margin-right:7px"></i>(19) 99539-6281</a>
                     <a href="mailto:vendas@lovisadestinos.com.br" data-eid="ft-email" data-elabel="Rodapé — E-mail"><i class="fa-solid fa-envelope" style="color:var(--accent);margin-right:7px"></i>vendas@lovisadestinos.com.br</a>
                     <span data-eid="ft-location" data-elabel="Rodapé — Localização"><i class="fa-solid fa-location-dot" style="color:var(--accent);margin-right:7px"></i>Brasil</span>
                     <span data-eid="ft-hours" data-elabel="Rodapé — Horário de Atendimento"><i class="fa-solid fa-clock" style="color:var(--accent);margin-right:7px"></i>Atendimento das 09h00 às 17h00 seg a sex</span>
@@ -1106,7 +1138,7 @@
     </div>
 </footer>
 
-<a href="https://wa.me/5519995396281" class="wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" class="wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
 <script>
     // ── Header scroll ──
@@ -1181,7 +1213,7 @@
 
         // Monta mensagem formatada para WhatsApp
         const linhas = [
-            `Ola, *Sua Agencia de Viagem!*`,
+            `Olá Lovisa, via *Lovisa Destinos*!`,
             ``,
             `Quero solicitar uma cotacao para o pacote abaixo:`,
             ``,
@@ -1222,6 +1254,6 @@
     }
 </script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
-<script src="editor.js?v=20260513-package-visible"></script>
+<script src="editor.js?v=20261124-checkout-banners"></script>
 </body>
 </html>

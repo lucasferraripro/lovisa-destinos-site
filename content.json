@@ -239,7 +239,7 @@
   "priceVisible": true,
   "ft-phone": {
     "html": "<i class=\"fab fa-whatsapp\" style=\"color:var(--wa);margin-right:7px\"></i>(19) 9 9539-6281",
-    "href": "https://wa.me/5519995396281",
+    "href": "https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!",
     "target": "_self"
   },
   "_packages": {
@@ -263,6 +263,29 @@
         "Transfer aeroporto-hotel",
         "Guia local"
       ],
+      "_new": true
+    },
+    "aracaju": {
+      "id": "aracaju",
+      "flag": "Brasil 🏖️",
+      "title": "Aracaju",
+      "subtitle": "5 dias e 4 noites na orla mais charmosa do Nordeste",
+      "location": "Aracaju, Sergipe",
+      "duration": "5 dias / 4 noites",
+      "price": "Consulte",
+      "parcelas": "Em até 10x sem juros",
+      "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+      "fotos": [
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "desc": "Aproveite 5 dias e 4 noites em Aracaju com saída de São Paulo (03/02/2027 a 07/02/2027). Praias tranquilas, gastronomia nordestina e compra online direta com confirmação imediata pela Lovisa Destinos.",
+      "incluso": [
+        "Passagem aérea ida e volta (São Paulo - Aracaju)",
+        "Hospedagem 4 noites em Aracaju",
+        "Compra online direta com confirmação imediata",
+        "Suporte da equipe Lovisa Destinos"
+      ],
+      "buyUrl": "https://brt.infotravel.com.br/b2c/pt/search/packages/banner/22818?agencyId=71755&goingDate=2027-02-03&returnDate=2027-02-07&occupancy=2&destinyId=317&destinyName=Aracaju+-+05+dias+%2F+04+noites+%28AJU%29+-+Aracaju&destinyType=E%21385&destinyIata=AJU&originId=8620&originName=S%C3%A3o+Paulo%2C+Regi%C3%A3o+Sudeste%2C+Brasil+%28SAO%29&originType=A&originIata=SAO&tab=banner",
       "_new": true
     }
   },
@@ -291,5 +314,6 @@
   },
   "_removedPackages": [
     "tsteteste"
-  ]
+  ],
+  "_banners": []
 }

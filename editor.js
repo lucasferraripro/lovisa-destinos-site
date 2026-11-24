@@ -136,7 +136,7 @@
                     <div class="card-loc"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(pkg.location || '')}</div>
                     <h3>${escapeHTML(pkg.title)}</h3>
                     <div class="card-foot">
-                        <div class="card-price">R$ ${escapeHTML(pkg.price || '')} <small>/ pessoa</small></div>
+                        <div class="card-price">${/^\d/.test(String(pkg.price || '').trim()) ? ('R$ ' + escapeHTML(pkg.price)) : escapeHTML(pkg.price || 'Consulte')} <small>${/^\d/.test(String(pkg.price || '').trim()) ? '/ pessoa' : ''}</small></div>
                         <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 </div>
@@ -162,6 +162,75 @@
             if (removed.includes(id)) return;
             renderPackageCard({ ...pkg, id: pkg.id || id });
         });
+    }
+
+    let _bannerTimer = null;
+    function applyBanners(cms) {
+        const sec   = document.getElementById('promo-banners');
+        const track = document.getElementById('promo-track');
+        const dots  = document.getElementById('promo-dots');
+        const prev  = document.getElementById('promo-prev');
+        const next  = document.getElementById('promo-next');
+        if (!sec || !track) return;
+        if (_bannerTimer) { clearInterval(_bannerTimer); _bannerTimer = null; }
+
+        const list = (Array.isArray(cms && cms._banners) ? cms._banners : [])
+            .filter(b => b && b.active !== false && isValidImageSrc(b.img));
+
+        if (!list.length) {
+            sec.style.display = 'none';
+            track.innerHTML = '';
+            if (dots) dots.innerHTML = '';
+            return;
+        }
+
+        sec.style.display = 'block';
+        track.innerHTML = list.map((b, i) => {
+            const imgTag = `<img src="${escapeHTML(b.img)}" alt="${escapeHTML(b.title || ('Banner ' + (i + 1)))}" loading="${i === 0 ? 'eager' : 'lazy'}">`;
+            const link = (b.link || '').trim();
+            if (link && (/^https?:\/\//i.test(link) || link.startsWith('#') || link.endsWith('.html') || link.includes('pacote.html'))) {
+                const ext = /^https?:\/\//i.test(link) && !link.includes('lovisadestinos.com.br');
+                return `<a class="promo-slide" href="${escapeHTML(link)}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${imgTag}</a>`;
+            }
+            return `<div class="promo-slide">${imgTag}</div>`;
+        }).join('');
+
+        let cur = 0;
+        const go = (idx) => {
+            cur = (idx + list.length) % list.length;
+            track.style.transform = `translateX(-${cur * 100}%)`;
+            if (dots) {
+                dots.querySelectorAll('.promo-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+            }
+        };
+
+        if (dots) {
+            dots.innerHTML = list.length > 1
+                ? list.map((_, i) => `<button type="button" class="promo-dot${i === 0 ? ' active' : ''}" aria-label="Ir para banner ${i + 1}"></button>`).join('')
+                : '';
+            dots.querySelectorAll('.promo-dot').forEach((d, i) => { d.onclick = () => go(i); });
+        }
+        if (prev) {
+            prev.style.display = list.length > 1 ? 'flex' : 'none';
+            prev.onclick = () => go(cur - 1);
+        }
+        if (next) {
+            next.style.display = list.length > 1 ? 'flex' : 'none';
+            next.onclick = () => go(cur + 1);
+        }
+        go(0);
+
+        if (list.length > 1) {
+            const wrap = document.getElementById('promo-wrap');
+            const start = () => { _bannerTimer = setInterval(() => go(cur + 1), 6000); };
+            const stop  = () => { if (_bannerTimer) { clearInterval(_bannerTimer); _bannerTimer = null; } };
+            if (wrap && !wrap._ldBannerHover) {
+                wrap._ldBannerHover = true;
+                wrap.addEventListener('mouseenter', stop);
+                wrap.addEventListener('mouseleave', start);
+            }
+            start();
+        }
     }
 
     function fileToDataUrl(file) {
@@ -228,6 +297,7 @@
         });
         syncContactFooter(cms);
         applyPackages(cms);
+        applyBanners(cms);
     }
 
     async function fetchContent() {
@@ -372,6 +442,8 @@
             <div class="ld-spacer"></div>
             ${lastPub ? `<span class="ld-last-pub">Publicado: ${lastPub}</span><div class="ld-sep"></div>` : ''}
             <button class="ld-btn blue" id="ld-add-pkg">➕ <span class="ld-btn-label">Novo Pacote</span></button>
+            <button class="ld-btn" id="ld-buy-links">🛒 <span class="ld-btn-label">Links Compra</span></button>
+            <button class="ld-btn" id="ld-banners">🖼️ <span class="ld-btn-label">Banners</span></button>
             <div class="ld-sep"></div>
             <button class="ld-btn" id="ld-dep">⭐ <span class="ld-btn-label">Depoimentos</span></button>
             <div class="ld-sep"></div>
@@ -390,7 +462,9 @@
                 footerBtn.textContent = 'Rodape';
                 pubBtn.before(footerBtn);
             }
-            document.getElementById('ld-add-pkg').onclick  = () => this.pAddPacote();
+            document.getElementById('ld-add-pkg').onclick    = () => this.pAddPacote();
+            document.getElementById('ld-buy-links').onclick  = () => this.pManageBuyLinks();
+            document.getElementById('ld-banners').onclick    = () => this.pManageBanners();
             document.getElementById('ld-dep').onclick       = () => this.pManageDep();
             document.getElementById('ld-colors').onclick = () => this.pColors();
             document.getElementById('ld-footer').onclick = () => this.pFooter();
@@ -793,6 +867,7 @@
                 const img      = p.querySelector('#pkg-img').value.trim();
                 const desc     = p.querySelector('#pkg-desc').value.trim();
                 const inclusoBruto = p.querySelector('#pkg-incluso').value.trim();
+                const buyUrl = (p.querySelector('#pkg-buy-url')?.value || '').trim();
                 if (!id || !title || !price) {
                     this.toast('⚠️ Preencha ID, Título e Preço', 'err'); return;
                 }
@@ -830,6 +905,7 @@
                 <div class="ld-f"><label>Galeria de fotos (uma URL por linha)</label><textarea id="pkg-imgs" rows="4" placeholder="https://.../foto.webp"></textarea></div>
                 <div class="ld-f"><label>Descricao do destino</label><textarea id="pkg-desc" rows="3"></textarea></div>
                 <div class="ld-f"><label>O que esta incluso (um por linha)</label><textarea id="pkg-incluso" rows="4" placeholder="Passagem aerea ida e volta&#10;Hospedagem com cafe da manha"></textarea></div>
+                <div class="ld-f"><label>Link de Compra Online (InfoTravel / BRT - opcional)</label><input type="url" id="pkg-buy-url" placeholder="https://brt.infotravel.com.br/..."></div>
                 <div class="ld-acts">
                     <button class="ld-ok" id="lda">Criar e publicar pacote</button>
                     <button class="ld-ko" id="ldc">Cancelar</button>
@@ -872,7 +948,7 @@
                     }
                     const fotos = [...uploaded, ...urlLines].filter(Boolean);
                     const incluso = inclusoBruto ? inclusoBruto.split('\n').map(s=>s.trim()).filter(Boolean) : ['Aereo ida e volta','Hospedagem com cafe da manha','Transfer aeroporto-hotel','Guia local'];
-                const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img: fotos[0] || FALLBACK_PACKAGE_IMG, fotos, desc, incluso, _new: true };
+                const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img: fotos[0] || FALLBACK_PACKAGE_IMG, fotos, desc, incluso, ...(buyUrl ? { buyUrl } : {}), _new: true };
                     if (!this.cms._packages) this.cms._packages = {};
                     this.cms._packages[id] = pkgData;
                     localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
@@ -960,6 +1036,198 @@
             el.style.pointerEvents = 'none';
             el.style.outline = '2px dashed #ef4444';
             this.toast('🗑 Pacote marcado para remover. Publique para confirmar.', 'ok');
+        },
+
+        /* ── GERENCIAR BANNERS ── */
+        pManageBanners() {
+            const p = this.panel_('🖼️ Gerenciar Banners do Topo');
+            if (!Array.isArray(this.cms._banners)) this.cms._banners = [];
+
+            const renderPanel = (editIndex = -1) => {
+                const list = this.cms._banners;
+                const editing = editIndex >= 0 && list[editIndex] ? list[editIndex] : null;
+                p.querySelector('.ld-pb')?.remove();
+                const pb = document.createElement('div');
+                pb.className = 'ld-pb';
+                pb.innerHTML = `
+                    <div class="ld-info">Adicione banners promocionais (recomendado <strong>.webp</strong>, proporção 16:5 ou 1920x600px). Após salvar, clique em <strong>🚀 Publicar</strong>.</div>
+                    <div id="bn-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+                        ${list.length ? list.map((b, i) => `
+                            <div style="display:flex;align-items:center;gap:8px;padding:8px;border:1px solid #e5e7eb;border-radius:8px;background:${b.active === false ? '#f9fafb' : '#fff'};">
+                                <img src="${escapeHTML(b.img)}" style="width:68px;height:32px;object-fit:cover;border-radius:4px;flex-shrink:0;">
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(b.title || ('Banner ' + (i + 1)))}${b.active === false ? ' (Oculto)' : ''}</div>
+                                    <div style="font-size:11px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(b.link || 'Sem link')}</div>
+                                </div>
+                                <button type="button" class="ld-ko" data-bn-up="${i}" title="Subir" style="padding:4px 7px;font-size:11px;">↑</button>
+                                <button type="button" class="ld-ko" data-bn-dn="${i}" title="Descer" style="padding:4px 7px;font-size:11px;">↓</button>
+                                <button type="button" class="ld-ko" data-bn-ed="${i}" title="Editar" style="padding:4px 7px;font-size:11px;">✏️</button>
+                                <button type="button" class="ld-ko" data-bn-del="${i}" title="Remover" style="padding:4px 7px;font-size:11px;color:#dc2626;">✕</button>
+                            </div>
+                        `).join('') : '<div style="font-size:12px;color:#6b7280;">Nenhum banner cadastrado ainda.</div>'}
+                    </div>
+                    <hr class="ld-hr">
+                    <p style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">${editing ? 'Editar Banner #' + (editIndex + 1) : 'Adicionar Novo Banner'}</p>
+                    <div class="ld-f"><label>Título / Descrição (alt)</label><input type="text" id="bn-title" value="${escapeHTML(editing?.title || '')}" placeholder="Ex: Black Friday Lovisa Destinos"></div>
+                    <div class="ld-f"><label>Enviar imagem do computador (.webp, .png, .jpg)</label>
+                        <button type="button" class="ld-ko" id="bn-file-btn" style="width:100%;margin-bottom:6px;">Escolher imagem do computador</button>
+                        <input type="file" id="bn-file" accept="image/*" style="display:none">
+                        <div id="bn-file-status" class="ld-hint">Ou cole a URL da imagem abaixo.</div>
+                    </div>
+                    <div class="ld-f"><label>URL da imagem</label><input type="url" id="bn-img" value="${escapeHTML(editing?.img || '')}" placeholder="https://.../banner.webp"></div>
+                    <div class="ld-f"><label>Link ao clicar (opcional)</label><input type="text" id="bn-link" value="${escapeHTML(editing?.link || '')}" placeholder="https://brt.infotravel.com.br/... ou #destinos"></div>
+                    <div class="ld-f" style="display:flex;align-items:center;gap:8px;">
+                        <input type="checkbox" id="bn-active" ${editing?.active !== false ? 'checked' : ''} style="width:auto;">
+                        <label for="bn-active" style="margin:0;">Exibir banner no site</label>
+                    </div>
+                    <div class="ld-acts">
+                        <button class="ld-ok" id="bn-save">${editing ? '✓ Atualizar Banner' : '+ Adicionar Banner'}</button>
+                        ${editing ? '<button class="ld-ko" id="bn-cancel-ed">Cancelar edição</button>' : '<button class="ld-ko" id="ldc">Fechar</button>'}
+                    </div>
+                `;
+                p.appendChild(pb);
+
+                pb.querySelector('#ldc')?.addEventListener('click', () => this.closePanel());
+                pb.querySelector('#bn-cancel-ed')?.addEventListener('click', () => renderPanel(-1));
+                pb.querySelector('#bn-file-btn').onclick = () => pb.querySelector('#bn-file').click();
+                pb.querySelector('#bn-file').onchange = () => {
+                    const f = pb.querySelector('#bn-file').files[0];
+                    pb.querySelector('#bn-file-status').textContent = f ? `Selecionado: ${f.name}` : 'Nenhuma imagem selecionada.';
+                };
+
+                const saveAndRefresh = (nextEdit) => {
+                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    this.markDirty();
+                    applyBanners(this.cms);
+                    renderPanel(nextEdit);
+                };
+
+                pb.querySelectorAll('[data-bn-up]').forEach(btn => btn.onclick = () => {
+                    const i = +btn.dataset.bnUp;
+                    if (i > 0) { [list[i-1], list[i]] = [list[i], list[i-1]]; saveAndRefresh(-1); }
+                });
+                pb.querySelectorAll('[data-bn-dn]').forEach(btn => btn.onclick = () => {
+                    const i = +btn.dataset.bnDn;
+                    if (i < list.length - 1) { [list[i+1], list[i]] = [list[i], list[i+1]]; saveAndRefresh(-1); }
+                });
+                pb.querySelectorAll('[data-bn-ed]').forEach(btn => btn.onclick = () => renderPanel(+btn.dataset.bnEd));
+                pb.querySelectorAll('[data-bn-del]').forEach(btn => btn.onclick = () => {
+                    const i = +btn.dataset.bnDel;
+                    if (confirm('Remover este banner?')) { list.splice(i, 1); saveAndRefresh(-1); }
+                });
+
+                pb.querySelector('#bn-save').onclick = async () => {
+                    const title  = pb.querySelector('#bn-title').value.trim();
+                    let   img    = pb.querySelector('#bn-img').value.trim();
+                    const link   = pb.querySelector('#bn-link').value.trim();
+                    const active = pb.querySelector('#bn-active').checked;
+                    const file   = pb.querySelector('#bn-file').files[0];
+                    const saveBtn = pb.querySelector('#bn-save');
+
+                    if (!file && !isValidImageSrc(img)) {
+                        this.toast('Envie uma imagem ou cole uma URL válida', 'err');
+                        return;
+                    }
+                    if (file) {
+                        saveBtn.disabled = true;
+                        saveBtn.textContent = 'Enviando imagem...';
+                        try { img = await uploadImageFile(file); }
+                        catch (err) {
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = editing ? '✓ Atualizar Banner' : '+ Adicionar Banner';
+                            this.toast(err.message || 'Erro no upload', 'err');
+                            return;
+                        }
+                    }
+                    const item = { id: editing?.id || ('bn-' + Date.now()), title, img, link, active };
+                    if (editing) list[editIndex] = item;
+                    else list.push(item);
+                    saveAndRefresh(-1);
+                    this.toast('✓ Banner salvo! Clique em Publicar para ir ao ar.', 'ok');
+                };
+            };
+            renderPanel(-1);
+        },
+
+        /* ── GERENCIAR LINKS DE COMPRA ONLINE (INFOTRAVEL/BRT) ── */
+        pManageBuyLinks() {
+            const p = this.panel_('🛒 Links de Compra Online');
+            if (!this.cms._packageBuyUrls || typeof this.cms._packageBuyUrls !== 'object') {
+                this.cms._packageBuyUrls = {};
+            }
+            const basePackages = [
+                { id: 'lencois', title: 'Lençóis Maranhenses' },
+                { id: 'disney', title: 'Disney & Orlando' },
+                { id: 'maceio', title: 'Maceió & Maragogi' },
+                { id: 'portogalinhas', title: 'Porto de Galinhas' },
+                { id: 'riodejaneiro', title: 'Rio de Janeiro' },
+                { id: 'joaopessoa', title: 'João Pessoa' }
+            ];
+            const removed = Array.isArray(this.cms._removedPackages) ? this.cms._removedPackages : [];
+            const dynPkgs = Object.entries(this.cms._packages || {})
+                .filter(([id]) => !removed.includes(id))
+                .map(([id, pkg]) => ({ id, title: pkg.title || id }));
+            const allPkgs = [...basePackages];
+            dynPkgs.forEach(dp => {
+                if (!allPkgs.some(bp => bp.id === dp.id)) allPkgs.push(dp);
+            });
+
+            const curPageId = new URLSearchParams(location.search).get('id');
+            const initialId = (curPageId && allPkgs.some(x => x.id === curPageId)) ? curPageId : (allPkgs[0]?.id || 'aracaju');
+            const getUrl = (pkgId) => this.cms._packageBuyUrls[pkgId] || (this.cms._packages?.[pkgId]?.buyUrl) || '';
+
+            p.innerHTML += `<div class="ld-pb">
+                <div class="ld-info">Cole o link de checkout da <strong>InfoTravel / BRT</strong> para ativar o botão <strong>Comprar Online Agora</strong> no pacote. Deixe vazio para mostrar apenas o WhatsApp.</div>
+                <div class="ld-f"><label>Pacote</label>
+                    <select id="bl-pkg">
+                        ${allPkgs.map(x => `<option value="${escapeHTML(x.id)}" ${x.id === initialId ? 'selected' : ''}>${escapeHTML(x.title)} ${getUrl(x.id) ? '🛒' : ''}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="ld-f"><label>Link de Compra Online (URL)</label>
+                    <input type="url" id="bl-url" value="${escapeHTML(getUrl(initialId))}" placeholder="https://brt.infotravel.com.br/b2c/...">
+                </div>
+                <div class="ld-acts">
+                    <button class="ld-ok" id="bl-save">✓ Salvar Link</button>
+                    <button class="ld-ko" id="bl-clear">Remover Link</button>
+                    <button class="ld-ko" id="ldc">Fechar</button>
+                </div>
+            </div>`;
+
+            const sel = p.querySelector('#bl-pkg');
+            const inp = p.querySelector('#bl-url');
+            sel.onchange = () => { inp.value = getUrl(sel.value); };
+            p.querySelector('#ldc').onclick = () => this.closePanel();
+
+            const saveUrl = (val) => {
+                const pkgId = sel.value;
+                if (val) {
+                    this.cms._packageBuyUrls[pkgId] = val;
+                    if (this.cms._packages?.[pkgId]) this.cms._packages[pkgId].buyUrl = val;
+                } else {
+                    delete this.cms._packageBuyUrls[pkgId];
+                    if (this.cms._packages?.[pkgId]) delete this.cms._packages[pkgId].buyUrl;
+                }
+                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                this.markDirty();
+                const buyBtn = document.getElementById('btn-buy-online');
+                if (buyBtn && curPageId === pkgId) {
+                    if (val) { buyBtn.href = val; buyBtn.style.display = 'inline-flex'; }
+                    else { buyBtn.style.display = 'none'; }
+                }
+                const opt = sel.options[sel.selectedIndex];
+                if (opt) opt.textContent = opt.textContent.replace(/ 🛒$/, '') + (val ? ' 🛒' : '');
+                this.toast(val ? '✓ Link de compra salvo! Clique em Publicar.' : 'Link removido! Clique em Publicar.', 'ok');
+            };
+
+            p.querySelector('#bl-save').onclick = () => {
+                const val = inp.value.trim();
+                if (val && !/^https?:\/\//i.test(val)) {
+                    this.toast('Cole uma URL válida começando com https://', 'err');
+                    return;
+                }
+                saveUrl(val);
+            };
+            p.querySelector('#bl-clear').onclick = () => { inp.value = ''; saveUrl(''); };
         },
 
         /* ── GERENCIAR DEPOIMENTOS ── */

@@ -222,6 +222,8 @@
         }
         .btn-wa    { background: var(--wa); color: #fff; }
         .btn-wa:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(37,211,102,.35); }
+        .btn-buy-online { background: linear-gradient(135deg, var(--accent), var(--accent-d)); color: #fff; justify-content: center; width: 100%; }
+        .btn-buy-online:hover { filter: brightness(1.06); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(232,130,74,.38); }
         .btn-navy  { background: var(--navy); color: #fff; }
         .btn-navy:hover { background: var(--navy-dark); transform: translateY(-2px); }
         .btn-outline { background: transparent; color: var(--navy); border: 1.5px solid var(--navy); }
@@ -427,7 +429,7 @@
                 <a href="sobre.html">Sobre</a>
             </nav>
             <div class="hdr-cta">
-                <a href="https://wa.me/5519995396281" class="btn btn-accent" style="padding:10px 20px;font-size:13px;">
+                <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" class="btn btn-accent" style="padding:10px 20px;font-size:13px;">
                     <i class="fab fa-whatsapp"></i> WhatsApp
                 </a>
             </div>
@@ -516,6 +518,9 @@
                     <div class="pm-row"><i class="fa-solid fa-star"></i><span>Consultoria Personalizada</span></div>
                     <div class="pm-row"><i class="fa-solid fa-headset"></i><span>Suporte 24h na Viagem</span></div>
                 </div>
+                <a href="#" id="btn-buy-online" target="_blank" rel="noopener noreferrer" class="btn btn-buy-online" style="display:none;font-size:15px;height:50px;margin-bottom:10px;">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar Online Agora
+                </a>
                 <a href="#" id="btn-wa" class="btn btn-wa" style="font-size:15px;height:50px;margin-bottom:10px;">
                     <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
                 </a>
@@ -554,7 +559,7 @@
                 <p>Viagens de lazer &amp; corporativas. Parceira oficial CVC com atendimento humanizado.</p>
                 <div class="ft-social">
                     <a href="https://www.instagram.com/lovisadestinos" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://wa.me/5519995396281" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                 </div>
                 <a href="https://chat.whatsapp.com/H2DpRM8lAtnGrNjwWWcFVj" target="_blank" style="display:inline-flex;align-items:center;gap:8px;margin-top:14px;background:#25D366;color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;text-decoration:none;font-size:.85rem;">
                     <i class="fab fa-whatsapp"></i> Grupo VIP de Promoções
@@ -582,7 +587,7 @@
             <div>
                 <h5>Contato</h5>
                 <div class="ft-links">
-                    <a href="https://wa.me/5519995396281"><i class="fab fa-whatsapp" style="color:var(--wa);margin-right:7px"></i>(19) 99539-6281</a>
+                    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!"><i class="fab fa-whatsapp" style="color:var(--wa);margin-right:7px"></i>(19) 99539-6281</a>
                     <a href="mailto:vendas@lovisadestinos.com.br" data-eid="ft-email-pacote" data-elabel="Rodapé — E-mail"><i class="fa-solid fa-envelope" style="color:var(--accent);margin-right:7px"></i>vendas@lovisadestinos.com.br</a>
                     <span><i class="fa-solid fa-location-dot" style="color:var(--accent);margin-right:7px"></i>Brasil, CE</span>
                     <span data-eid="ft-hours-pacote" data-elabel="Rodapé — Horário"><i class="fa-solid fa-clock" style="color:var(--accent);margin-right:7px"></i>Atendimento das 09h00 às 17h00 seg a sex</span>
@@ -597,7 +602,7 @@
     </div>
 </footer>
 
-<a href="https://wa.me/5519995396281" class="wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" class="wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
 <!-- ════════════ SCRIPTS ════════════ -->
 <script>
@@ -626,7 +631,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     desc: raw.desc || raw.subtitle || '',
                     incluso: Array.isArray(raw.incluso) && raw.incluso.length ? raw.incluso : ['Aereo ida e volta', 'Hospedagem com cafe da manha', 'Transfer aeroporto-hotel', 'Guia local'],
                     nao_incluso: Array.isArray(raw.nao_incluso) ? raw.nao_incluso : [],
-                    roteiro: Array.isArray(raw.roteiro) && raw.roteiro.length ? raw.roteiro : []
+                    roteiro: Array.isArray(raw.roteiro) && raw.roteiro.length ? raw.roteiro : [],
+                    buyUrl: raw.buyUrl || ''
                 };
             });
             return cms;
@@ -654,8 +660,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('pkg-desc').textContent         = pkg.desc;
     document.getElementById('sb-loc').textContent           = pkg.location;
     document.getElementById('sb-dur').textContent           = pkg.duration;
-    document.getElementById('price-num').textContent        = 'R$ ' + pkg.price;
-    document.getElementById('price-parc').textContent       = 'ou ' + pkg.parcelas;
+    const priceStr = String(pkg.price || '').trim();
+    document.getElementById('price-num').textContent        = /^\d/.test(priceStr) ? ('R$ ' + priceStr) : (priceStr || 'Consulte');
+    document.getElementById('price-parc').textContent       = pkg.parcelas ? ('ou ' + pkg.parcelas) : '';
+
+    // ── Botão Comprar Online (InfoTravel / BRT) ──
+    const buyUrl = (cms && cms._packageBuyUrls && cms._packageBuyUrls[id]) || pkg.buyUrl || '';
+    const buyBtn = document.getElementById('btn-buy-online');
+    if (buyBtn && buyUrl && /^https?:\/\//i.test(buyUrl)) {
+        buyBtn.href = buyUrl;
+        buyBtn.style.display = 'inline-flex';
+    }
 
     // Prefixar data-eid com o ID do pacote para cada pacote ter seus próprios campos
     const staticEids = ['pkg-title','pkg-subtitle','pkg-loc','pkg-dur','pkg-desc',
@@ -667,7 +682,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ── WhatsApp ──
     const waMsg = encodeURIComponent(
-        `Olá, Lovisa Destinos! Tenho interesse no pacote *${pkg.title}*\n\n` +
+        `Olá Lovisa, via *Lovisa Destinos*! Tenho interesse no pacote *${pkg.title}*\n\n` +
         `📍 Destino: ${pkg.location}\n` +
         `🌙 Período: ${pkg.duration}\n` +
         `👥 Qtd de Pessoas: \n` +
@@ -826,6 +841,6 @@ burger.addEventListener('click', () => {
 });
 </script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
-<script src="editor.js?v=20260513-package-visible"></script>
+<script src="editor.js?v=20261124-checkout-banners"></script>
 </body>
 </html>
