@@ -739,6 +739,19 @@
             .section { padding: 48px 0; }
             .steps-hdr { margin-bottom: 32px; }
         }
+
+        /* ── Banners 3:2 (artes 1536x1024) ── */
+        .promo-wrap { max-width: 1040px; margin: 0 auto; }
+        .promo-slide img { aspect-ratio: 3 / 2; max-height: none; height: auto; }
+        .promo-dots { position: static; transform: none; justify-content: center; margin: 12px auto 0; background: none; padding: 0; backdrop-filter: none; }
+        .promo-dot, .promo-dot.active { background: rgba(11,27,63,.16); }
+        .promo-dot span { background: var(--accent, #153bf9); }
+        .promo-wrap.paused + .promo-dots .promo-dot.active span { animation-play-state: paused; }
+        @media (max-width: 768px) {
+            .promo-nav { display: none !important; }
+            .promo-slide.has-mobile img { aspect-ratio: 3 / 2; }
+            .promo-dots { margin-top: 10px; }
+        }
 </style>
 </head>
 <body>
@@ -816,8 +829,8 @@
             <div class="promo-track" id="promo-track"></div>
             <button type="button" class="promo-nav promo-prev" id="promo-prev" aria-label="Banner anterior"><i class="fa-solid fa-chevron-left"></i></button>
             <button type="button" class="promo-nav promo-next" id="promo-next" aria-label="Próximo banner"><i class="fa-solid fa-chevron-right"></i></button>
-            <div class="promo-dots" id="promo-dots"></div>
         </div>
+        <div class="promo-dots" id="promo-dots"></div>
     </div>
 </section>
 
@@ -1525,6 +1538,6 @@
 </div>
 <script src="site-ui.js?v=20261125b" defer></script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
-<script src="editor.js?v=20261125-v2"></script>
+<script src="editor.js?v=20261125-v3"></script>
 </body>
 </html>

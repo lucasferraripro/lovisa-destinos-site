@@ -1221,7 +1221,7 @@
                 const pb = document.createElement('div');
                 pb.className = 'ld-pb';
                 pb.innerHTML = `
-                    <div class="ld-info">Banners do topo do site (passam sozinhos, com setas e bolinhas). <strong>Computador:</strong> imagem horizontal 1920×960 (2:1). <strong>Celular (opcional):</strong> imagem quadrada 1080×1080. Deixe textos importantes no centro. Depois de salvar, clique em <strong>🚀 Publicar</strong>.</div>
+                    <div class="ld-info">Banners do topo do site (passam sozinhos, com setas e bolinhas). <strong>Tamanho:</strong> imagem horizontal 1536×1024 (formato 3:2), a mesma usada no ChatGPT. <strong>Celular (opcional):</strong> a mesma arte menor (800×533) para carregar mais rápido. Depois de salvar, clique em <strong>🚀 Publicar</strong>.</div>
                     <div class="ld-f" style="display:flex;align-items:center;gap:8px;"><label for="bn-secs" style="margin:0;flex:1;">Tempo de cada banner (segundos)</label><input type="number" id="bn-secs" min="3" max="60" value="${Math.min(60, Math.max(3, parseInt(this.cms._bannerInterval, 10) || 7))}" style="width:80px;"></div>
                     <div id="bn-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
                         ${list.length ? list.map((b, i) => `
@@ -1247,7 +1247,7 @@
                         <div id="bn-file-status" class="ld-hint">Ou cole a URL da imagem abaixo.</div>
                     </div>
                     <div class="ld-f"><label>URL da imagem</label><input type="url" id="bn-img" value="${escapeHTML(editing?.img || '')}" placeholder="https://.../banner.webp"></div>
-                    <div class="ld-f"><label>Imagem para celular (opcional, quadrada)</label>
+                    <div class="ld-f"><label>Imagem para celular (opcional, versão menor da mesma arte)</label>
                         <button type="button" class="ld-ko" id="bn-mfile-btn" style="width:100%;margin-bottom:6px;">Escolher imagem do celular</button>
                         <input type="file" id="bn-mfile" accept="image/*" style="display:none">
                         <input type="url" id="bn-mimg" value="${escapeHTML(editing?.imgMobile || '')}" placeholder="Sem imagem de celular: usa a mesma do computador">

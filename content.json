@@ -445,8 +445,34 @@
   "reveillon-pkg-incluso-0": {
     "html": "<i class=\"fa-solid fa-circle-check\"></i> Aereo ida e volta com embarque no Rio Janeiro"
   },
-  "_banners": [],
+  "_banners": [
+    {
+      "id": "bn-blackfriday",
+      "title": "Black Friday de Viagens Lovisa Destinos - parcele em até 10x",
+      "img": "imagens/banners/black-friday.webp",
+      "imgMobile": "imagens/banners/black-friday-sm.webp",
+      "link": "#contato",
+      "active": true
+    },
+    {
+      "id": "bn-agencia",
+      "title": "Agência Lovisa Destinos - atendimento humano, parcele em até 10x e suporte na viagem",
+      "img": "imagens/banners/agencia-praia.webp",
+      "imgMobile": "imagens/banners/agencia-praia-sm.webp",
+      "link": "#contato",
+      "active": true
+    },
+    {
+      "id": "bn-feriados2027",
+      "title": "Feriados 2027: planeje agora seu Carnaval e feriadões",
+      "img": "imagens/banners/feriados-2027.webp",
+      "imgMobile": "imagens/banners/feriados-2027-sm.webp",
+      "link": "#contato",
+      "active": true
+    }
+  ],
   "dif-img": {
     "src": "imagens/uploads/equipe-lovisa.webp"
-  }
+  },
+  "_bannerInterval": 8
 }
