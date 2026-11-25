@@ -772,6 +772,13 @@
             .promo-wrap { border-radius: 14px; }
             .promo-dots { margin-top: 12px; }
         }
+        /* Banners largos (1920x660): faixa mais baixa e mais larga no computador */
+        @media (min-width: 769px) {
+            .promo-wrap { max-width: 1240px; }
+            .promo-banners { padding: 36px 0 24px; }
+            .promo-nav { opacity: 0; transition: opacity .25s ease; }
+            .promo-wrap:hover .promo-nav, .promo-nav:focus-visible { opacity: 1; }
+        }
 </style>
 </head>
 <body>

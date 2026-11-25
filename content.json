@@ -449,7 +449,7 @@
     {
       "id": "bn-blackfriday",
       "title": "Black Friday de Viagens Lovisa Destinos - parcele em até 10x",
-      "img": "imagens/banners/black-friday.webp",
+      "img": "imagens/banners/black-friday-largo.webp",
       "imgMobile": "imagens/banners/black-friday-sm.webp",
       "link": "#contato",
       "active": true
@@ -457,7 +457,7 @@
     {
       "id": "bn-agencia",
       "title": "Agência Lovisa Destinos - atendimento humano, parcele em até 10x e suporte na viagem",
-      "img": "imagens/banners/agencia-praia.webp",
+      "img": "imagens/banners/agencia-praia-largo.webp",
       "imgMobile": "imagens/banners/agencia-praia-sm.webp",
       "link": "#contato",
       "active": true
@@ -465,7 +465,7 @@
     {
       "id": "bn-feriados2027",
       "title": "Feriados 2027: planeje agora seu Carnaval e feriadões",
-      "img": "imagens/banners/feriados-2027.webp",
+      "img": "imagens/banners/feriados-2027-largo.webp",
       "imgMobile": "imagens/banners/feriados-2027-sm.webp",
       "link": "#contato",
       "active": true
