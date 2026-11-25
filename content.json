@@ -376,6 +376,28 @@
       ],
       "buyUrl": "https://brt.infotravel.com.br/b2c/pt/search/packages/banner/22818?agencyId=71755&goingDate=2027-02-03&returnDate=2027-02-07&occupancy=2&destinyId=317&destinyName=Aracaju+-+05+dias+%2F+04+noites+%28AJU%29+-+Aracaju&destinyType=E%21385&destinyIata=AJU&originId=8620&originName=S%C3%A3o+Paulo%2C+Regi%C3%A3o+Sudeste%2C+Brasil+%28SAO%29&originType=A&originIata=SAO&tab=banner",
       "_new": true
+    },
+    "natal-luz-gramado": {
+      "id": "natal-luz-gramado",
+      "flag": "",
+      "title": "NATAL LUZ - GRAMADO",
+      "subtitle": "O encanto do natal em cada detalhe",
+      "location": "Brasil",
+      "duration": "5 dias/ 4 noites",
+      "price": "4.419,17",
+      "parcelas": "Até 10X sem juros",
+      "img": "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1795646584726_natal_luz_gramado.webp",
+      "fotos": [
+        "https://raw.githubusercontent.com/lucasferraripro/lovisa-destinos-site/master/imagens/uploads/1795646584726_natal_luz_gramado.webp"
+      ],
+      "desc": "Gramado é o principal destino turístico da Serra Gaúcha, localizado a cerca de 115 km de Porto Alegre, famoso pela arquitetura em estilo enxaimel, clima ameno de montanha e forte influência da colonização alemã e italiana.",
+      "incluso": [
+        "Aéreo ida e volta",
+        "Hospedagem  com café da manhã",
+        "COMBO BÁSICO - Transporte Aeroporto POA / Hotéis em Gramado e Canela / Aeroporto POA + Bustour 1 Dia de Uso"
+      ],
+      "buyUrl": "https://brt.infotravel.com.br/b2c/pt/banner/checkout/23167?key=rlf9&agencyId=71755",
+      "_new": true
     }
   },
   "ft-email": {
@@ -474,5 +496,6 @@
   "dif-img": {
     "src": "imagens/uploads/equipe-lovisa.webp"
   },
-  "_bannerInterval": 8
+  "_bannerInterval": 8,
+  "_packageBuyUrls": {}
 }
