@@ -682,14 +682,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ── WhatsApp ──
     const waMsg = encodeURIComponent(
-        `Olá Lovisa, via *Lovisa Destinos*! Tenho interesse no pacote *${pkg.title}*\n\n` +
-        `📍 Destino: ${pkg.location}\n` +
-        `🌙 Período: ${pkg.duration}\n` +
-        `👥 Qtd de Pessoas: \n` +
-        `📅 Data Pretendida: \n\n` +
+        `Olá Lovisa Destinos, quero solicitar o pacote:\n\n` +
+        `*Pacote:* ${pkg.title}\n` +
+        `• *Destino:* ${pkg.location}\n` +
+        `• *Período:* ${pkg.duration}\n` +
+        `• *Qtd de Pessoas:* \n` +
+        `• *Data Pretendida:* \n\n` +
         `Vim pelo site e aguardo retorno!`
     );
-    document.getElementById('btn-wa').href = `https://wa.me/${SITE.whatsapp}?text=${waMsg}`;
+    const waBtnEl = document.getElementById('btn-wa');
+    if (waBtnEl) {
+        waBtnEl.href = `https://wa.me/${SITE.whatsapp}?text=${waMsg}`;
+        waBtnEl.target = '_blank';
+        waBtnEl.rel = 'noopener noreferrer';
+    }
 
     // ── Carrossel ──
     const track = document.getElementById('track');
