@@ -742,14 +742,14 @@
 
         /* ── Banners 3:2 (artes 1536x1024) ── */
         .promo-wrap { max-width: 1040px; margin: 0 auto; }
-        .promo-slide img { aspect-ratio: 3 / 2; max-height: none; height: auto; }
+        .promo-slide img { aspect-ratio: auto; max-height: none; height: auto; }
         .promo-dots { position: static; transform: none; justify-content: center; margin: 12px auto 0; background: none; padding: 0; backdrop-filter: none; }
         .promo-dot, .promo-dot.active { background: rgba(11,27,63,.16); }
         .promo-dot span { background: var(--accent, #153bf9); }
         .promo-wrap.paused + .promo-dots .promo-dot.active span { animation-play-state: paused; }
         @media (max-width: 768px) {
             .promo-nav { display: none !important; }
-            .promo-slide.has-mobile img { aspect-ratio: 3 / 2; }
+            .promo-slide.has-mobile img { aspect-ratio: auto; }
             .promo-dots { margin-top: 10px; }
         }
 
@@ -1558,6 +1558,6 @@
 </div>
 <script src="site-ui.js?v=20261125b" defer></script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
-<script src="editor.js?v=20261125-v4"></script>
+<script src="editor.js?v=20261125-v6"></script>
 </body>
 </html>

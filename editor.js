@@ -321,6 +321,38 @@
         });
     }
 
+    /* Depoimentos adicionados ou removidos pelo painel */
+    function depCardHTML(d, n) {
+        const colors = ['#1565C0', '#F97316', '#16A34A', '#7C3AED', '#EA6C0A'];
+        const nome = escapeHTML(d.nome || '');
+        const initials = escapeHTML(String(d.nome || '?').split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase());
+        return `<div class="dep-header"><div class="dep-user">
+                <div class="dep-av" style="background:${colors[n % colors.length]};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">${initials}</div>
+                <div><div class="dep-name">${nome}</div><div class="dep-dest">${escapeHTML(d.dest || 'via Google')}</div></div>
+            </div><div class="dep-g-logo"><img loading="lazy" decoding="async" src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div></div>
+            <div class="dep-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <p class="dep-text">"${escapeHTML(String(d.texto || '').replace(/^"|"$/g, ''))}"</p>`;
+    }
+    function applyDeps(cms) {
+        const grid = document.getElementById('dep-grid');
+        if (!grid) return;
+        const hidden = Array.isArray(cms && cms._hiddenDeps) ? cms._hiddenDeps.map(String) : [];
+        grid.querySelectorAll('.dep-card[data-dep-id]').forEach(c => {
+            if (!c.dataset.depExtra) c.style.display = hidden.includes(c.dataset.depId) ? 'none' : '';
+        });
+        grid.querySelectorAll('.dep-card[data-dep-extra]').forEach(c => c.remove());
+        const extras = Array.isArray(cms && cms._extraDeps) ? cms._extraDeps : [];
+        extras.forEach((d, i) => {
+            if (!d || !d.nome || !d.texto) return;
+            const card = document.createElement('div');
+            card.className = 'dep-card rv on';
+            card.dataset.depId = d.id;
+            card.dataset.depExtra = '1';
+            card.innerHTML = depCardHTML(d, i + 6);
+            grid.appendChild(card);
+        });
+    }
+
     /* ─── APLICAR CONTEÚDO ──────────────────────────────────── */
     function applyContent(cms) {
         if (!cms || !Object.keys(cms).length) return;
@@ -361,6 +393,7 @@
         applyPackages(cms);
         applyBanners(cms);
         applyHero(cms);
+        applyDeps(cms);
     }
 
     async function fetchContent() {
@@ -508,7 +541,7 @@
             <button class="ld-btn" id="ld-buy-links">🛒 <span class="ld-btn-label">Links Compra</span></button>
             <button class="ld-btn" id="ld-hero">🏞️ <span class="ld-btn-label">Fotos do Topo</span></button>
             <button class="ld-btn" id="ld-banners">🖼️ <span class="ld-btn-label">Banners</span></button>
-            <button class="ld-btn" id="ld-leads" style="background:#059669;color:#fff;font-weight:600;">📋 <span class="ld-btn-label">Solicitações</span> <span class="ld-badge" id="ld-leads-badge" style="background:#fff;color:#059669;padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px;display:none;">0</span></button>
+            <button class="ld-btn" id="ld-leads" style="background:#059669;color:#fff;font-weight:600;">📋 <span class="ld-btn-label">Cotações</span> <span class="ld-badge" id="ld-leads-badge" style="background:#fff;color:#059669;padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px;display:none;">0</span></button>
             <div class="ld-sep"></div>
             <button class="ld-btn" id="ld-dep">⭐ <span class="ld-btn-label">Depoimentos</span></button>
             <div class="ld-sep"></div>
@@ -631,17 +664,17 @@
             p.innerHTML += `<div class="ld-pb">
                 <img class="ld-prev" id="ldprev" src="${origSrc}" style="background:#F3F4F6;">
                 <div class="ld-f">
-                    <label>Enviar do computador</label>
+                    <label>Nova foto</label>
                     <button id="ldbtn" style="width:100%;padding:10px;border:2px dashed #E5E7EB;border-radius:8px;background:#F9FAFB;cursor:pointer;font-size:13px;color:#374151;transition:border .15s;">
-                        📂 Escolher arquivo (JPG, PNG, WEBP)
+                        📂 Escolher foto do computador
                     </button>
                     <input type="file" id="ldfile" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none">
                     <div id="ldupstatus" class="ld-hint" style="margin-top:6px;"></div>
                 </div>
                 <div class="ld-f">
-                    <label>Ou cole uma URL de imagem</label>
+                    <label>Ou cole o endereço de uma foto</label>
                     <input type="url" id="ldiu" value="${origAttr}" placeholder="https://site.com/foto.jpg">
-                    <p class="ld-hint">Cole qualquer URL de imagem da internet (JPG, PNG, WEBP)</p>
+                    <p class="ld-hint">Não precisa preencher se você escolheu a foto acima.</p>
                 </div>
                 <div class="ld-acts">
                     <button class="ld-ok" id="lda">✓ Aplicar</button>
@@ -661,57 +694,35 @@
             btn.onmouseenter = () => btn.style.borderColor = '#1565C0';
             btn.onmouseleave = () => btn.style.borderColor = '#E5E7EB';
 
-            // Upload quando arquivo selecionado
+            // Upload quando arquivo selecionado (o site reduz a foto sozinho)
             file.onchange = async () => {
                 const f = file.files[0];
                 if (!f) return;
-                if (f.size > 3 * 1024 * 1024) {
-                    status.textContent = '❌ Arquivo muito grande (máx 3MB). Comprima a imagem antes.';
+                const tmp = URL.createObjectURL(f);
+                el.src = tmp; pv.src = tmp;
+                btn.textContent = '⏳ Enviando…';
+                btn.disabled = true;
+                status.textContent = 'Enviando a foto, aguarde…';
+                status.style.color = '#6B7280';
+                try {
+                    const url = await uploadImageFile(f, { maxW: 1600, maxH: 1600 });
+                    if (!url) throw new Error('Não foi possível enviar a foto.');
+                    document.querySelectorAll(`[data-eid="${el.dataset.eid}"]`).forEach(e => {
+                        if (e.tagName === 'IMG') e.src = url;
+                    });
+                    pv.src = url;
+                    ui.value = url;
+                    btn.textContent = '✅ Foto enviada!';
+                    status.textContent = 'Agora clique em ✓ Aplicar.';
+                    status.style.color = '#16A34A';
+                } catch (err) {
+                    el.src = origSrc;
+                    pv.src = origSrc;
+                    btn.textContent = '📂 Escolher foto do computador';
+                    btn.disabled = false;
+                    status.textContent = '❌ ' + (err.message || 'Erro no envio');
                     status.style.color = '#DC2626';
-                    return;
                 }
-                // Preview imediato com data URL
-                const reader = new FileReader();
-                reader.onload = async ev => {
-                    const dataUrl = ev.target.result;
-                    el.src = dataUrl;
-                    pv.src = dataUrl;
-                    btn.textContent = '⏳ Enviando…';
-                    btn.disabled = true;
-                    status.textContent = 'Enviando para o servidor…';
-                    status.style.color = '#6B7280';
-                    try {
-                        const b64 = dataUrl.split(',')[1];
-                        const secret = sessionStorage.getItem('lovisa_secret') || '';
-                        const res = await fetch('/api/upload', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ filename: f.name, base64: b64, secret })
-                        });
-                        const data = await res.json();
-                        if (res.ok && data.url) {
-                            // Atualiza slide + miniaturas com mesmo data-eid
-                            document.querySelectorAll(`[data-eid="${el.dataset.eid}"]`).forEach(e => {
-                                if (e.tagName === 'IMG') e.src = data.url;
-                            });
-                            pv.src = data.url;
-                            ui.value = data.url;
-                            btn.textContent = '✅ Imagem enviada!';
-                            status.textContent = 'Clique em ✓ Aplicar para salvar.';
-                            status.style.color = '#16A34A';
-                        } else {
-                            throw new Error(data.error || 'Erro no upload');
-                        }
-                    } catch (err) {
-                        el.src = origSrc;
-                        pv.src = origSrc;
-                        btn.textContent = '📂 Escolher arquivo';
-                        btn.disabled = false;
-                        status.textContent = '❌ ' + err.message;
-                        status.style.color = '#DC2626';
-                    }
-                };
-                reader.readAsDataURL(f);
             };
 
             // Preview por URL digitada
@@ -801,9 +812,9 @@
         /* ── CORES GLOBAIS ── */
         pFooter() {
             const fields = [...document.querySelectorAll('footer [data-eid], [data-eid^="ft-"], [data-eid^="info-email"], [data-eid^="info-horario"]')];
-            const p = this.panel_('Editar Rodape');
+            const p = this.panel_('📝 Editar Rodapé');
             if (!fields.length) {
-                p.innerHTML += `<div class="ld-pb"><div class="ld-info">Nenhum campo de rodape editavel encontrado nesta pagina.</div></div>`;
+                p.innerHTML += `<div class="ld-pb"><div class="ld-info">Nenhum texto do rodapé para editar nesta página.</div></div>`;
                 return;
             }
             const rows = fields.map((el, i) => `
@@ -812,10 +823,10 @@
                     <textarea rows="2" data-footer-eid="${escapeHTML(el.dataset.eid)}">${escapeHTML(el.textContent.trim())}</textarea>
                 </div>`).join('');
             p.innerHTML += `<div class="ld-pb">
-                <div class="ld-info">Edite os textos pequenos do rodape e contato sem precisar clicar no rodape.</div>
+                <div class="ld-info">Aqui você muda e-mail, horário de atendimento e os textos do final do site.</div>
                 ${rows}
                 <div class="ld-acts">
-                    <button class="ld-ok" id="ld-footer-save">Aplicar</button>
+                    <button class="ld-ok" id="ld-footer-save">✓ Salvar</button>
                     <button class="ld-ko" id="ld-footer-close">Cancelar</button>
                 </div>
             </div>`;
@@ -849,16 +860,22 @@
                 syncContactFooter(this.cms);
                 localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
                 this.closePanel();
-                this.toast('Rodape salvo no rascunho', 'ok');
+                this.markDirty();
+                this.toast('✓ Rodapé salvo. Clique em Publicar para ir ao ar.', 'ok');
             };
         },
 
         pColors() {
             const root = document.documentElement;
-            const g = v => getComputedStyle(root).getPropertyValue(v).trim() || '#000000';
+            const alias = { '--primary': '--navy', '--primary-dark': '--navy-dark', '--text-dark': '--text' };
+            const g = v => {
+                const cs = getComputedStyle(root);
+                const val = (cs.getPropertyValue(v).trim() || (alias[v] ? cs.getPropertyValue(alias[v]).trim() : ''));
+                return /^#|^rgb/i.test(val) ? val : '';
+            };
             const p = this.panel_('🎨 Cores Globais do Site');
             p.innerHTML += `<div class="ld-pb">
-                <div class="ld-info">Altera as cores em todo o site de uma vez.</div>
+                <div class="ld-info">Muda as cores do site todo de uma vez. Clique na cor para escolher outra.</div>
                 <div class="ld-cr"><label>🔵 Azul principal</label><input type="color" id="ldg1" value="${this.hex(g('--primary'))||'#1565C0'}"></div>
                 <div class="ld-cr"><label>🔵 Azul escuro</label><input type="color" id="ldg2" value="${this.hex(g('--primary-dark'))||'#0D47A1'}"></div>
                 <div class="ld-cr"><label>🟠 Laranja destaque</label><input type="color" id="ldg3" value="${this.hex(g('--accent'))||'#F97316'}"></div>
@@ -867,18 +884,23 @@
                 <hr class="ld-hr">
                 <div class="ld-f"><label>📱 Número do WhatsApp</label>
                     <input type="text" id="ldgwa" value="${this.cms.whatsapp||''}" placeholder="5511999999999">
-                    <p class="ld-hint">Somente números com código do país (ex: 5511999999999). Atualiza todos os botões do site.</p>
+                    <p class="ld-hint">Só números, começando com 55 e o DDD. Ex: 5579999999999. Muda todos os botões de WhatsApp do site.</p>
                 </div>
                 <div class="ld-acts">
-                    <button class="ld-ok" id="lda">✓ Aplicar cores</button>
+                    <button class="ld-ok" id="lda">✓ Salvar</button>
                     <button class="ld-ko" id="ldc">Cancelar</button>
                 </div>
             </div>`;
             const vars = ['--primary','--primary-dark','--accent','--text-dark','--wa'];
             const inputs = ['ldg1','ldg2','ldg3','ldg4','ldg5'].map(id => p.querySelector('#'+id));
             const waInp = p.querySelector('#ldgwa');
+            const touched = new Set();
             inputs.forEach((inp, i) => {
-                inp.oninput = () => root.style.setProperty(vars[i], inp.value);
+                inp.oninput = () => {
+                    touched.add(i);
+                    root.style.setProperty(vars[i], inp.value);
+                    if (alias[vars[i]]) root.style.setProperty(alias[vars[i]], inp.value);
+                };
             });
             waInp.oninput = () => {
                 const num = waInp.value.replace(/\D/g, '');
@@ -888,7 +910,7 @@
             };
             p.querySelector('#lda').onclick = () => {
                 const colors = {};
-                vars.forEach((v, i) => colors[v] = inputs[i].value);
+                vars.forEach((v, i) => { if (touched.has(i)) colors[v] = inputs[i].value; });
                 this.cms.colors = { ...(this.cms.colors || {}), ...colors };
                 const num = waInp.value.replace(/\D/g, '');
                 if (num) this.cms.whatsapp = num;
@@ -958,28 +980,33 @@
         },
 
         pAddPacote() {
-            const p = this.panel_('Adicionar Novo Pacote');
+            const p = this.panel_('➕ Novo Pacote');
             p.innerHTML += `<div class="ld-pb">
-                <div class="ld-info">Preencha os dados do novo pacote. Ao criar, ele sera publicado no GitHub e aparecera no site.</div>
-                <div class="ld-f"><label>ID unico (ex: cancun, paris, noronha)</label><input type="text" id="pkg-id" placeholder="cancun"></div>
-                <div class="ld-f"><label>Pais / bandeira</label><input type="text" id="pkg-flag" placeholder="Mexico"></div>
-                <div class="ld-f"><label>Titulo do pacote</label><input type="text" id="pkg-title" placeholder="Cancun & Riviera Maya"></div>
-                <div class="ld-f"><label>Subtitulo</label><input type="text" id="pkg-subtitle" placeholder="O Caribe Mexicano te espera"></div>
-                <div class="ld-f"><label>Localizacao</label><input type="text" id="pkg-loc" placeholder="Cancun, Mexico"></div>
-                <div class="ld-f"><label>Duracao</label><input type="text" id="pkg-dur" placeholder="7 dias / 6 noites"></div>
-                <div class="ld-f"><label>Preco (ex: 4.990,00)</label><input type="text" id="pkg-price" placeholder="4.990,00"></div>
-                <div class="ld-f"><label>Parcelamento (ex: 10x de R$ 499)</label><input type="text" id="pkg-parc" placeholder="10x de R$ 499"></div>
-                <div class="ld-f"><label>Fotos do pacote</label>
-                    <button type="button" class="ld-ko" id="pkg-file-btn" style="width:100%;margin-bottom:8px;">Escolher imagens do computador</button>
-                    <input type="file" id="pkg-files" accept="image/*" multiple style="display:none">
-                    <div id="pkg-file-status" class="ld-hint">Ou cole URLs diretas abaixo. Caminho C:\\... nao funciona no navegador.</div>
+                <div class="ld-info">Preencha e clique em <strong>Criar pacote</strong>. Ele aparece na lista de destinos do site. Só <strong>Nome</strong> e <strong>Preço</strong> são obrigatórios.</div>
+                <div class="ld-f"><label>Nome do pacote *</label><input type="text" id="pkg-title" placeholder="Ex: Cancún & Riviera Maya"></div>
+                <div class="ld-f"><label>Frase curta</label><input type="text" id="pkg-subtitle" placeholder="Ex: O Caribe Mexicano te espera"></div>
+                <div class="ld-f"><label>Cidade / país</label><input type="text" id="pkg-loc" placeholder="Ex: Cancún, México"></div>
+                <div class="ld-g2">
+                    <div class="ld-f"><label>Preço por pessoa *</label><input type="text" id="pkg-price" placeholder="4.990,00"></div>
+                    <div class="ld-f"><label>Quantos dias</label><input type="text" id="pkg-dur" placeholder="7 dias / 6 noites"></div>
                 </div>
-                <div class="ld-f"><label>Galeria de fotos (uma URL por linha)</label><textarea id="pkg-imgs" rows="4" placeholder="https://.../foto.webp"></textarea></div>
-                <div class="ld-f"><label>Descricao do destino</label><textarea id="pkg-desc" rows="3"></textarea></div>
-                <div class="ld-f"><label>O que esta incluso (um por linha)</label><textarea id="pkg-incluso" rows="4" placeholder="Passagem aerea ida e volta&#10;Hospedagem com cafe da manha"></textarea></div>
-                <div class="ld-f"><label>Link de Compra Online (InfoTravel / BRT - opcional)</label><input type="url" id="pkg-buy-url" placeholder="https://brt.infotravel.com.br/..."></div>
+                <div class="ld-f"><label>Parcelamento</label><input type="text" id="pkg-parc" placeholder="Ex: 10x de R$ 499"></div>
+                <div class="ld-f"><label>Fotos do pacote</label>
+                    <button type="button" class="ld-ok" id="pkg-file-btn" style="width:100%;margin-bottom:6px;">📷 Escolher fotos do computador</button>
+                    <input type="file" id="pkg-files" accept="image/*" multiple style="display:none">
+                    <div id="pkg-file-status" class="ld-hint">Pode escolher várias de uma vez. A primeira vira a capa.</div>
+                </div>
+                <div class="ld-f"><label>Descrição do destino</label><textarea id="pkg-desc" rows="3" placeholder="Conte um pouco sobre o lugar"></textarea></div>
+                <div class="ld-f"><label>O que está incluso (um item por linha)</label><textarea id="pkg-incluso" rows="4" placeholder="Passagem aérea ida e volta&#10;Hospedagem com café da manhã"></textarea></div>
+                <div class="ld-f"><label>Link de compra online (se tiver)</label><input type="url" id="pkg-buy-url" placeholder="https://..."><p class="ld-hint">Se ficar vazio, o botão leva para o WhatsApp.</p></div>
+                <details style="margin-bottom:10px;font-size:12px;color:#6B7280;">
+                    <summary style="cursor:pointer;">Mais opções (não precisa mexer)</summary>
+                    <div class="ld-f" style="margin-top:8px;"><label>Etiqueta da foto (ex: Internacional)</label><input type="text" id="pkg-flag" placeholder="Nacional"></div>
+                    <div class="ld-f"><label>Endereço do pacote (sem espaço)</label><input type="text" id="pkg-id" placeholder="Vazio = criado pelo nome"></div>
+                    <div class="ld-f"><label>Endereços de fotos (um por linha)</label><textarea id="pkg-imgs" rows="3" placeholder="https://.../foto.webp"></textarea></div>
+                </details>
                 <div class="ld-acts">
-                    <button class="ld-ok" id="lda">Criar e publicar pacote</button>
+                    <button class="ld-ok" id="lda">✓ Criar pacote</button>
                     <button class="ld-ko" id="ldc">Cancelar</button>
                 </div>
             </div>`;
@@ -987,10 +1014,11 @@
             p.querySelector('#pkg-file-btn').onclick = () => p.querySelector('#pkg-files').click();
             p.querySelector('#pkg-files').onchange = () => {
                 const total = p.querySelector('#pkg-files').files.length;
-                p.querySelector('#pkg-file-status').textContent = total ? `${total} imagem(ns) selecionada(s).` : 'Nenhuma imagem selecionada.';
+                p.querySelector('#pkg-file-status').textContent = total ? (total === 1 ? '1 foto escolhida.' : total + ' fotos escolhidas.') : 'Nenhuma foto escolhida.';
             };
             p.querySelector('#lda').onclick = async () => {
-                const id       = cleanPackageId(p.querySelector('#pkg-id').value);
+                let id         = cleanPackageId((p.querySelector('#pkg-id').value || p.querySelector('#pkg-title').value).trim().replace(/\s+/g, '-')).replace(/-+/g, '-').replace(/^-|-$/g, '');
+                if (id && !p.querySelector('#pkg-id').value.trim()) { const base = id; let n = 2; while (document.querySelector('#destinos .card-link[href*="id=' + id + '"]') || (this.cms._packages || {})[id]) id = base + '-' + (n++); }
                 const flag     = p.querySelector('#pkg-flag').value.trim();
                 const title    = p.querySelector('#pkg-title').value.trim();
                 const subtitle = p.querySelector('#pkg-subtitle').value.trim();
@@ -1000,23 +1028,24 @@
                 const parc     = p.querySelector('#pkg-parc').value.trim();
                 const desc     = p.querySelector('#pkg-desc').value.trim();
                 const inclusoBruto = p.querySelector('#pkg-incluso').value.trim();
+                const buyUrl = (p.querySelector('#pkg-buy-url')?.value || '').trim();
                 if (!id || !title || !price) {
-                    this.toast('Preencha ID, titulo e preco', 'err');
+                    this.toast('Preencha o nome e o preço do pacote', 'err');
                     return;
                 }
                 const urlLines = p.querySelector('#pkg-imgs').value.split('\n').map(s => s.trim()).filter(Boolean);
                 if (urlLines.some(src => !isValidImageSrc(src))) {
-                    this.toast('Use upload ou URL direta. Caminho local/Instagram nao publica.', 'err');
+                    this.toast('Um dos endereços de foto não funciona. Use o botão Escolher fotos.', 'err');
                     p.querySelector('#pkg-imgs').focus();
                     return;
                 }
                 const btn = p.querySelector('#lda');
                 btn.disabled = true;
-                btn.textContent = 'Enviando e publicando...';
+                btn.textContent = 'Criando pacote, aguarde...';
                 try {
                     const uploaded = [];
                     for (const file of [...p.querySelector('#pkg-files').files]) {
-                        uploaded.push(await uploadImageFile(file));
+                        uploaded.push(await uploadImageFile(file, { maxW: 1600, maxH: 1600 }));
                     }
                     const fotos = [...uploaded, ...urlLines].filter(Boolean);
                     const incluso = inclusoBruto ? inclusoBruto.split('\n').map(s=>s.trim()).filter(Boolean) : ['Aereo ida e volta','Hospedagem com cafe da manha','Transfer aeroporto-hotel','Guia local'];
@@ -1030,10 +1059,10 @@
                     localStorage.removeItem(CMS_KEY);
                     document.querySelectorAll('.ld-dirty-dot').forEach(d => d.remove());
                     this.closePanel();
-                    this.toast('Pacote publicado no site!', 'ok');
+                    this.toast('✓ Pacote criado e publicado no site!', 'ok');
                 } catch (err) {
                     btn.disabled = false;
-                    btn.textContent = 'Criar e publicar pacote';
+                    btn.textContent = '✓ Criar pacote';
                     this.toast(err.message || 'Erro ao publicar pacote', 'err');
                 }
             };
@@ -1117,7 +1146,7 @@
             const r = await fetch('/api/lead?_=' + Date.now(), { headers: { 'x-admin-secret': secret } });
             if (r.status === 401) throw new Error('Sessão expirada. Saia e entre de novo no painel.');
             const j = await r.json().catch(() => ({}));
-            if (!r.ok) throw new Error(j.error || 'Não foi possível carregar as solicitações.');
+            if (!r.ok) throw new Error(j.error || 'Não foi possível carregar as cotações.');
             this._leads = Array.isArray(j.leads) ? j.leads : [];
             return this._leads;
         },
@@ -1135,7 +1164,7 @@
         },
 
         pManageLeads() {
-            const p = this.panel_('📋 Solicitações de Viagem / Formulário');
+            const p = this.panel_('📋 Cotações recebidas');
             const seenBefore = parseInt(localStorage.getItem('lovisa_leads_seen') || '0', 10);
             let filtro = '';
 
@@ -1152,7 +1181,7 @@
                 const digits = String(lead.whats || '').replace(/\D/g, '');
                 const phone = digits.length >= 12 && digits.startsWith('55') ? digits : (digits ? '55' + digits : '');
                 const primeiro = String(lead.nome || '').split(' ')[0];
-                const msg = 'Olá ' + primeiro + '! Aqui é da Lovisa Destinos. Recebemos sua solicitação para ' + (lead.destino || 'sua viagem') + ' e já estamos preparando sua cotação.';
+                const msg = 'Olá ' + primeiro + '! Aqui é da Lovisa Destinos. Recebemos seu pedido de cotação para ' + (lead.destino || 'sua viagem') + ' e já estamos preparando sua cotação.';
                 const waLink = phone ? 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg) : '';
                 const isNew = (lead.timestamp || 0) > seenBefore;
                 const field = (label, value, extra) => '<div><span style="color:#6B7280;font-size:11px;">' + label + '</span><div style="' + (extra || '') + '">' + escapeHTML(value || '—') + '</div></div>';
@@ -1179,10 +1208,10 @@
                 const q = filtro.trim().toLowerCase();
                 const list = q ? all.filter(l => [l.nome, l.whats, l.email, l.destino, l.obs].join(' ').toLowerCase().includes(q)) : all;
                 const empty = '<div style="text-align:center;padding:30px 10px;color:#6B7280;"><div style="font-size:32px;margin-bottom:8px;">📬</div><strong>'
-                    + (q ? 'Nenhuma solicitação encontrada nessa busca.' : 'Nenhuma solicitação recebida ainda.') + '</strong><p style="font-size:12px;margin-top:4px;">'
+                    + (q ? 'Nenhuma cotação encontrada nessa busca.' : 'Nenhuma cotação recebida ainda.') + '</strong><p style="font-size:12px;margin-top:4px;">'
                     + (q ? 'Tente outro nome ou destino.' : 'Quando um cliente enviar o formulário do site, o pedido aparece aqui com data e hora.') + '</p></div>';
                 const pb = shell(
-                    '<div class="ld-info">Pedidos de cotação enviados pelo formulário do site. Ficam guardados com segurança (só você vê) e não precisam de "Publicar".</div>'
+                    '<div class="ld-info">Cotações enviadas pelo formulário do site. Só você vê. Para responder, clique no botão verde do WhatsApp.</div>'
                     + '<div style="display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap;">'
                     + '<input type="search" id="ld-leads-q" placeholder="Buscar por nome, destino, telefone…" style="flex:1;min-width:180px;padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:14px;">'
                     + '<button type="button" class="ld-btn" id="ld-leads-reload" title="Atualizar lista" style="padding:8px 12px;background:#F3F4F6;color:#111827;border-radius:8px;">↻ Atualizar</button>'
@@ -1213,7 +1242,7 @@
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'lovisa_solicitacoes_' + new Date().toISOString().slice(0, 10) + '.csv';
+                    a.download = 'lovisa_cotacoes_' + new Date().toISOString().slice(0, 10) + '.csv';
                     a.click();
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
                 };
@@ -1221,7 +1250,7 @@
                 pb.querySelectorAll('[data-lead-del]').forEach(btn => {
                     btn.onclick = async () => {
                         const lead = all.find(l => l.id === btn.dataset.leadDel);
-                        if (!lead || !confirm('Excluir a solicitação de ' + lead.nome + '? Isso não pode ser desfeito.')) return;
+                        if (!lead || !confirm('Excluir a cotação de ' + lead.nome + '? Isso não pode ser desfeito.')) return;
                         btn.disabled = true; btn.textContent = 'Excluindo…';
                         try {
                             const r = await fetch('/api/lead?id=' + encodeURIComponent(lead.id), {
@@ -1231,7 +1260,7 @@
                             const j = await r.json().catch(() => ({}));
                             if (!r.ok) throw new Error(j.error || 'Erro ao excluir');
                             this._leads = Array.isArray(j.leads) ? j.leads : all.filter(l => l.id !== lead.id);
-                            this.toast('Solicitação excluída.', 'ok');
+                            this.toast('Cotação excluída.', 'ok');
                             render();
                             this.updateLeadsBadge();
                         } catch (e) {
@@ -1243,7 +1272,7 @@
             };
 
             const load = async () => {
-                shell('<div style="padding:30px;text-align:center;color:#6B7280;">Carregando solicitações…</div>');
+                shell('<div style="padding:30px;text-align:center;color:#6B7280;">Carregando cotações…</div>');
                 try {
                     await this.fetchLeads();
                     render();
@@ -1318,79 +1347,148 @@
         },
 
         pManageBanners() {
-            const p = this.panel_('🖼️ Gerenciar Banners do Topo');
+            const p = this.panel_('🖼️ Banners');
+            if (window.innerWidth > 768) p.style.width = '380px';
             if (!Array.isArray(this.cms._banners)) this.cms._banners = [];
+
+            const waNumber = () => {
+                const n = String(this.cms.whatsapp || '').replace(/\D/g, '');
+                if (n) return n;
+                const a = document.querySelector('a[href*="wa.me/"]');
+                const m = a && a.getAttribute('href').match(/wa\.me\/(\d+)/);
+                return m ? m[1] : '';
+            };
+            const linkOptions = () => {
+                const opts = [
+                    ['#contato', 'Formulário de pedir cotação'],
+                    ['wa', 'Conversar no WhatsApp'],
+                    ['#destinos', 'Lista de destinos'],
+                ];
+                document.querySelectorAll('#destinos .card-link').forEach(a => {
+                    const href = a.getAttribute('href') || '';
+                    const name = ((a.querySelector('h3') || {}).textContent || '').trim();
+                    if (href && name) opts.push([href, 'Pacote: ' + name]);
+                });
+                opts.push(['', 'Não levar para lugar nenhum'], ['outro', 'Outro link (colar endereço)']);
+                return opts;
+            };
+            const linkToChoice = (link) => {
+                if (!link) return '';
+                if (/wa\.me\//.test(link)) return 'wa';
+                return linkOptions().some(o => o[0] === link) ? link : 'outro';
+            };
+            const btnStyle = 'padding:6px 9px;font-size:12px;';
 
             const renderPanel = (editIndex = -1) => {
                 const list = this.cms._banners;
                 const editing = editIndex >= 0 && list[editIndex] ? list[editIndex] : null;
+                const secs = Math.min(60, Math.max(3, parseInt(this.cms._bannerInterval, 10) || 7));
+                const secOpts = [...new Set([5, 7, 8, 10, 12, 15, secs])].sort((a, b) => a - b);
+                const choice = linkToChoice(editing ? (editing.link || '') : '#contato');
                 p.querySelector('.ld-pb')?.remove();
                 const pb = document.createElement('div');
                 pb.className = 'ld-pb';
-                pb.innerHTML = `
-                    <div class="ld-info">Banners do topo do site (passam sozinhos, com setas e bolinhas). <strong>Tamanho:</strong> imagem horizontal 1536×1024 (formato 3:2), a mesma usada no ChatGPT. <strong>Celular (opcional):</strong> a mesma arte menor (800×533) para carregar mais rápido. Depois de salvar, clique em <strong>🚀 Publicar</strong>.</div>
-                    <div class="ld-f" style="display:flex;align-items:center;gap:8px;"><label for="bn-secs" style="margin:0;flex:1;">Tempo de cada banner (segundos)</label><input type="number" id="bn-secs" min="3" max="60" value="${Math.min(60, Math.max(3, parseInt(this.cms._bannerInterval, 10) || 7))}" style="width:80px;"></div>
-                    <div id="bn-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+
+                const listHTML = `
+                    <div id="bn-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
                         ${list.length ? list.map((b, i) => `
-                            <div style="display:flex;align-items:center;gap:8px;padding:8px;border:1px solid #e5e7eb;border-radius:8px;background:${b.active === false ? '#f9fafb' : '#fff'};">
-                                <img src="${escapeHTML(b.img)}" style="width:68px;height:32px;object-fit:cover;border-radius:4px;flex-shrink:0;">
-                                <div style="flex:1;min-width:0;">
-                                    <div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(b.title || ('Banner ' + (i + 1)))}${b.active === false ? ' (Oculto)' : ''}</div>
-                                    <div style="font-size:11px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(b.link || 'Sem link')}</div>
+                            <div style="padding:8px;border:1.5px solid ${i === editIndex ? '#2563EB' : '#E5E7EB'};border-radius:10px;background:${b.active === false ? '#F9FAFB' : '#fff'};">
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:7px;">
+                                    <img src="${escapeHTML(b.img)}" alt="" style="width:96px;height:40px;object-fit:cover;border-radius:6px;flex-shrink:0;${b.active === false ? 'opacity:.45;' : ''}">
+                                    <div style="flex:1;min-width:0;">
+                                        <div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(b.title || ('Banner ' + (i + 1)))}</div>
+                                        <div style="font-size:11px;font-weight:600;color:${b.active === false ? '#9CA3AF' : '#16A34A'};">${b.active === false ? 'Escondido' : 'Aparecendo no site'}</div>
+                                    </div>
                                 </div>
-                                <button type="button" class="ld-ko" data-bn-up="${i}" title="Subir" style="padding:4px 7px;font-size:11px;">↑</button>
-                                <button type="button" class="ld-ko" data-bn-dn="${i}" title="Descer" style="padding:4px 7px;font-size:11px;">↓</button>
-                                <button type="button" class="ld-ko" data-bn-ed="${i}" title="Editar" style="padding:4px 7px;font-size:11px;">✏️</button>
-                                <button type="button" class="ld-ko" data-bn-del="${i}" title="Remover" style="padding:4px 7px;font-size:11px;color:#dc2626;">✕</button>
+                                <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                                    <button type="button" class="ld-ko" data-bn-ed="${i}" style="${btnStyle}flex:1;font-weight:700;">✏️ Editar</button>
+                                    <button type="button" class="ld-ko" data-bn-hide="${i}" style="${btnStyle}">${b.active === false ? '👁 Mostrar' : '🙈 Esconder'}</button>
+                                    <button type="button" class="ld-ko" data-bn-up="${i}" title="Passar antes" style="${btnStyle}" ${i === 0 ? 'disabled' : ''}>↑</button>
+                                    <button type="button" class="ld-ko" data-bn-dn="${i}" title="Passar depois" style="${btnStyle}" ${i === list.length - 1 ? 'disabled' : ''}>↓</button>
+                                    <button type="button" class="ld-ko" data-bn-del="${i}" title="Apagar" style="${btnStyle}color:#DC2626;">🗑</button>
+                                </div>
+                            </div>`).join('') : '<div style="font-size:13px;color:#6B7280;padding:6px 0;">Nenhum banner ainda. Adicione o primeiro abaixo.</div>'}
+                    </div>`;
+
+                const formHTML = `
+                    <div id="bn-form" style="border:1.5px solid ${editing ? '#2563EB' : '#E5E7EB'};border-radius:12px;padding:12px;background:${editing ? '#EFF6FF' : '#F9FAFB'};margin-bottom:12px;">
+                        <p style="font-size:14px;font-weight:800;color:#111827;margin:0 0 10px;">${editing ? '✏️ Editando: ' + escapeHTML(editing.title || ('Banner ' + (editIndex + 1))) : '➕ Novo banner'}</p>
+                        <div class="ld-f"><label>Foto do banner</label>
+                            <div id="bn-prev-box" style="border-radius:8px;overflow:hidden;background:#E5E7EB;margin-bottom:6px;min-height:60px;display:flex;align-items:center;justify-content:center;color:#6B7280;font-size:12px;">
+                                ${editing && isValidImageSrc(editing.img) ? `<img id="bn-prev" src="${escapeHTML(editing.img)}" alt="" style="width:100%;display:block;">` : '<span>Nenhuma foto escolhida</span>'}
                             </div>
-                        `).join('') : '<div style="font-size:12px;color:#6b7280;">Nenhum banner cadastrado ainda.</div>'}
-                    </div>
-                    <hr class="ld-hr">
-                    <p style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">${editing ? 'Editar Banner #' + (editIndex + 1) : 'Adicionar Novo Banner'}</p>
-                    <div class="ld-f"><label>Título / Descrição (alt)</label><input type="text" id="bn-title" value="${escapeHTML(editing?.title || '')}" placeholder="Ex: Black Friday Lovisa Destinos"></div>
-                    <div class="ld-f"><label>Enviar imagem do computador (.webp, .png, .jpg)</label>
-                        <button type="button" class="ld-ko" id="bn-file-btn" style="width:100%;margin-bottom:6px;">Escolher imagem do computador</button>
-                        <input type="file" id="bn-file" accept="image/*" style="display:none">
-                        <div id="bn-file-status" class="ld-hint">Ou cole a URL da imagem abaixo.</div>
-                    </div>
-                    <div class="ld-f"><label>URL da imagem</label><input type="url" id="bn-img" value="${escapeHTML(editing?.img || '')}" placeholder="https://.../banner.webp"></div>
-                    <div class="ld-f"><label>Imagem para celular (opcional, versão menor da mesma arte)</label>
-                        <button type="button" class="ld-ko" id="bn-mfile-btn" style="width:100%;margin-bottom:6px;">Escolher imagem do celular</button>
-                        <input type="file" id="bn-mfile" accept="image/*" style="display:none">
-                        <input type="url" id="bn-mimg" value="${escapeHTML(editing?.imgMobile || '')}" placeholder="Sem imagem de celular: usa a mesma do computador">
-                    </div>
-                    <div class="ld-f"><label>Link ao clicar (opcional)</label><input type="text" id="bn-link" list="bn-link-opts" value="${escapeHTML(editing?.link || '')}" placeholder="Escolha um pacote ou cole um link"><datalist id="bn-link-opts"><option value="#contato">Formulário de cotação</option><option value="#destinos">Lista de destinos</option>${Array.from(document.querySelectorAll('#destinos .card-link')).map(a => `<option value="${escapeHTML(a.getAttribute('href') || '')}">${escapeHTML((a.querySelector('h3') || {}).textContent || '')}</option>`).join('')}</datalist><div class="ld-hint">Para onde o cliente vai ao clicar no banner.</div></div>
+                            <button type="button" class="ld-ok" id="bn-file-btn" style="width:100%;">${editing ? '📷 Trocar foto' : '📷 Escolher foto do computador'}</button>
+                            <input type="file" id="bn-file" accept="image/*" style="display:none">
+                            <p class="ld-hint">Tamanho ideal: foto deitada e bem larga, <strong>1920 × 640</strong>. Pode ser JPG, PNG ou WEBP.</p>
+                        </div>
+                        <div class="ld-f"><label>Nome do banner <span style="font-weight:400;color:#6B7280;">(só para você se organizar)</span></label><input type="text" id="bn-title" value="${escapeHTML(editing?.title || '')}" placeholder="Ex: Black Friday"></div>
+                        <div class="ld-f"><label>Quando o cliente clicar, levar para:</label>
+                            <select id="bn-link-sel">${linkOptions().map(([v, t]) => `<option value="${escapeHTML(v)}" ${v === choice ? 'selected' : ''}>${escapeHTML(t)}</option>`).join('')}</select>
+                            <input type="text" id="bn-link-other" value="${choice === 'outro' ? escapeHTML(editing?.link || '') : ''}" placeholder="Cole o endereço, ex: https://..." style="margin-top:6px;${choice === 'outro' ? '' : 'display:none;'}">
+                        </div>
+                        <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin:4px 0 10px;cursor:pointer;">
+                            <input type="checkbox" id="bn-active" ${editing?.active !== false ? 'checked' : ''} style="width:18px;height:18px;"> Mostrar no site
+                        </label>
+                        <details style="margin-bottom:10px;font-size:12px;color:#6B7280;">
+                            <summary style="cursor:pointer;">Mais opções (não precisa mexer)</summary>
+                            <div class="ld-f" style="margin-top:8px;"><label>Endereço da foto</label><input type="url" id="bn-img" value="${escapeHTML(editing?.img || '')}" placeholder="https://.../banner.webp"></div>
+                            <div class="ld-f"><label>Foto diferente para celular</label>
+                                <button type="button" class="ld-ko" id="bn-mfile-btn" style="width:100%;margin-bottom:6px;">Escolher foto do celular</button>
+                                <input type="file" id="bn-mfile" accept="image/*" style="display:none">
+                                <input type="url" id="bn-mimg" value="${escapeHTML(editing?.imgMobile || '')}" placeholder="Vazio = o site cria sozinho">
+                                <p class="ld-hint">Se você não escolher, o site usa a mesma foto, menor.</p>
+                            </div>
+                        </details>
+                        <div class="ld-acts">
+                            <button class="ld-ok" id="bn-save">${editing ? '✓ Salvar alterações' : '+ Adicionar banner'}</button>
+                            ${editing ? '<button class="ld-ko" id="bn-cancel-ed">Cancelar</button>' : ''}
+                        </div>
+                    </div>`;
+
+                pb.innerHTML = `
+                    <div class="ld-info">Os banners aparecem logo abaixo da foto do topo e passam sozinhos. Depois de mudar, clique em <strong>🚀 Publicar</strong> para ir ao ar.</div>
+                    ${editing ? formHTML + listHTML : listHTML + formHTML}
                     <div class="ld-f" style="display:flex;align-items:center;gap:8px;">
-                        <input type="checkbox" id="bn-active" ${editing?.active !== false ? 'checked' : ''} style="width:auto;">
-                        <label for="bn-active" style="margin:0;">Exibir banner no site</label>
+                        <label for="bn-secs" style="margin:0;flex:1;">Cada banner fica na tela por</label>
+                        <select id="bn-secs" style="width:auto;">${secOpts.map(v => `<option value="${v}" ${v === secs ? 'selected' : ''}>${v} segundos</option>`).join('')}</select>
                     </div>
-                    <div class="ld-acts">
-                        <button class="ld-ok" id="bn-save">${editing ? '✓ Atualizar Banner' : '+ Adicionar Banner'}</button>
-                        ${editing ? '<button class="ld-ko" id="bn-cancel-ed">Cancelar edição</button>' : '<button class="ld-ko" id="ldc">Fechar</button>'}
-                    </div>
+                    ${editing ? '' : '<div class="ld-acts"><button class="ld-ko" id="ldc" style="flex:1;">Fechar</button></div>'}
                 `;
                 p.appendChild(pb);
+                pb.scrollTop = 0;
+                p.scrollTop = 0;
 
-                pb.querySelector('#ldc')?.addEventListener('click', () => this.closePanel());
-                pb.querySelector('#bn-cancel-ed')?.addEventListener('click', () => renderPanel(-1));
-                pb.querySelector('#bn-file-btn').onclick = () => pb.querySelector('#bn-file').click();
-                pb.querySelector('#bn-mfile-btn').onclick = () => pb.querySelector('#bn-mfile').click();
-                pb.querySelector('#bn-mfile').onchange = () => {
-                    const f = pb.querySelector('#bn-mfile').files[0];
-                    if (f) pb.querySelector('#bn-mfile-btn').textContent = 'Selecionado: ' + f.name;
+                const $ = sel => pb.querySelector(sel);
+                $('#ldc')?.addEventListener('click', () => this.closePanel());
+                $('#bn-cancel-ed')?.addEventListener('click', () => renderPanel(-1));
+
+                let previewUrl = null;
+                $('#bn-file-btn').onclick = () => $('#bn-file').click();
+                $('#bn-file').onchange = () => {
+                    const f = $('#bn-file').files[0];
+                    if (!f) return;
+                    if (previewUrl) URL.revokeObjectURL(previewUrl);
+                    previewUrl = URL.createObjectURL(f);
+                    $('#bn-prev-box').innerHTML = `<img id="bn-prev" src="${previewUrl}" alt="" style="width:100%;display:block;">`;
+                    $('#bn-file-btn').textContent = '📷 Trocar foto';
+                    if (!$('#bn-title').value.trim()) $('#bn-title').value = f.name.replace(/\.[a-z0-9]+$/i, '').replace(/[-_]+/g, ' ');
                 };
-                pb.querySelector('#bn-secs').onchange = () => {
-                    const v = Math.min(60, Math.max(3, parseInt(pb.querySelector('#bn-secs').value, 10) || 7));
-                    pb.querySelector('#bn-secs').value = v;
-                    this.cms._bannerInterval = v;
+                $('#bn-mfile-btn').onclick = () => $('#bn-mfile').click();
+                $('#bn-mfile').onchange = () => {
+                    const f = $('#bn-mfile').files[0];
+                    if (f) $('#bn-mfile-btn').textContent = 'Escolhida: ' + f.name;
+                };
+                $('#bn-link-sel').onchange = () => {
+                    const other = $('#bn-link-sel').value === 'outro';
+                    $('#bn-link-other').style.display = other ? '' : 'none';
+                    if (other) $('#bn-link-other').focus();
+                };
+                $('#bn-secs').onchange = () => {
+                    this.cms._bannerInterval = parseInt($('#bn-secs').value, 10) || 7;
                     localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
                     this.markDirty();
                     applyBanners(this.cms);
                     this.toast('✓ Tempo salvo. Clique em Publicar para ir ao ar.', 'ok');
-                };
-                pb.querySelector('#bn-file').onchange = () => {
-                    const f = pb.querySelector('#bn-file').files[0];
-                    pb.querySelector('#bn-file-status').textContent = f ? `Selecionado: ${f.name}` : 'Nenhuma imagem selecionada.';
                 };
 
                 const saveAndRefresh = (nextEdit) => {
@@ -1408,60 +1506,61 @@
                     const i = +btn.dataset.bnDn;
                     if (i < list.length - 1) { [list[i+1], list[i]] = [list[i], list[i+1]]; saveAndRefresh(-1); }
                 });
+                pb.querySelectorAll('[data-bn-hide]').forEach(btn => btn.onclick = () => {
+                    const b = list[+btn.dataset.bnHide];
+                    b.active = b.active === false;
+                    saveAndRefresh(-1);
+                    this.toast(b.active ? '✓ Banner vai aparecer no site' : '✓ Banner escondido', 'ok');
+                });
                 pb.querySelectorAll('[data-bn-ed]').forEach(btn => btn.onclick = () => renderPanel(+btn.dataset.bnEd));
                 pb.querySelectorAll('[data-bn-del]').forEach(btn => btn.onclick = () => {
                     const i = +btn.dataset.bnDel;
-                    if (confirm('Remover este banner?')) { list.splice(i, 1); saveAndRefresh(-1); }
+                    if (confirm('Apagar o banner "' + (list[i].title || ('Banner ' + (i + 1))) + '"?')) { list.splice(i, 1); saveAndRefresh(-1); }
                 });
 
-                pb.querySelector('#bn-save').onclick = async () => {
-                    const title  = pb.querySelector('#bn-title').value.trim();
-                    let   img    = pb.querySelector('#bn-img').value.trim();
-                    const link   = pb.querySelector('#bn-link').value.trim();
-                    const active = pb.querySelector('#bn-active').checked;
-                    const file   = pb.querySelector('#bn-file').files[0];
-                    const saveBtn = pb.querySelector('#bn-save');
-
+                $('#bn-save').onclick = async () => {
+                    const saveBtn = $('#bn-save');
+                    const label = saveBtn.textContent;
+                    const file  = $('#bn-file').files[0];
+                    const mfile = $('#bn-mfile').files[0];
+                    let img = $('#bn-img').value.trim();
+                    let imgMobile = $('#bn-mimg').value.trim();
+                    const sel = $('#bn-link-sel').value;
+                    let link = sel === 'outro' ? $('#bn-link-other').value.trim() : sel;
+                    if (sel === 'wa') {
+                        const n = waNumber();
+                        link = n ? 'https://wa.me/' + n : '#contato';
+                    }
+                    if (sel === 'outro' && link && !/^(https?:\/\/|#)/i.test(link)) link = 'https://' + link;
                     if (!file && !isValidImageSrc(img)) {
-                        this.toast('Envie uma imagem ou cole uma URL válida', 'err');
+                        this.toast('Escolha a foto do banner', 'err');
                         return;
                     }
-                    let imgMobile = pb.querySelector('#bn-mimg').value.trim();
-                    const mfile = pb.querySelector('#bn-mfile').files[0];
-                    if (mfile) {
-                        saveBtn.disabled = true;
-                        saveBtn.textContent = 'Enviando imagem do celular...';
-                        try { imgMobile = await uploadImageFile(mfile); }
-                        catch (err) {
-                            saveBtn.disabled = false;
-                            saveBtn.textContent = editing ? '✓ Atualizar Banner' : '+ Adicionar Banner';
-                            this.toast(err.message || 'Erro no upload', 'err');
-                            return;
+                    saveBtn.disabled = true;
+                    try {
+                        if (file) {
+                            saveBtn.textContent = 'Enviando foto...';
+                            img = await uploadImageFile(file, { maxW: 1920 });
                         }
+                        if (mfile) {
+                            saveBtn.textContent = 'Enviando foto do celular...';
+                            imgMobile = await uploadImageFile(mfile, { maxW: 900, quality: 0.8 });
+                        } else if (file && (!editing || imgMobile === (editing.imgMobile || ''))) {
+                            saveBtn.textContent = 'Preparando versão do celular...';
+                            imgMobile = await uploadImageFile(file, { maxW: 900, quality: 0.8 }).catch(() => '');
+                        }
+                    } catch (err) {
+                        saveBtn.disabled = false;
+                        saveBtn.textContent = label;
+                        this.toast('❌ ' + (err.message || 'Erro ao enviar a foto'), 'err');
+                        return;
                     }
                     if (imgMobile && !isValidImageSrc(imgMobile)) imgMobile = '';
-                    if (file) {
-                        saveBtn.disabled = true;
-                        saveBtn.textContent = 'Enviando imagem...';
-                        try {
-                            img = await uploadImageFile(file, { maxW: 1600 });
-                            if (!imgMobile) {
-                                saveBtn.textContent = 'Criando versão para celular...';
-                                imgMobile = await uploadImageFile(file, { maxW: 800, quality: 0.8 }).catch(() => '');
-                            }
-                        }
-                        catch (err) {
-                            saveBtn.disabled = false;
-                            saveBtn.textContent = editing ? '✓ Atualizar Banner' : '+ Adicionar Banner';
-                            this.toast(err.message || 'Erro no upload', 'err');
-                            return;
-                        }
-                    }
-                    const item = { id: editing?.id || ('bn-' + Date.now()), title, img, imgMobile, link, active };
+                    const item = { id: editing?.id || ('bn-' + Date.now()), title: $('#bn-title').value.trim(), img, imgMobile, link, active: $('#bn-active').checked };
                     if (editing) list[editIndex] = item;
                     else list.push(item);
                     saveAndRefresh(-1);
-                    this.toast('✓ Banner salvo! Clique em Publicar para ir ao ar.', 'ok');
+                    this.toast('✓ Banner salvo! Clique em 🚀 Publicar para ir ao ar.', 'ok');
                 };
             };
             renderPanel(-1);
@@ -1551,16 +1650,15 @@
         /* ── GERENCIAR DEPOIMENTOS ── */
         pManageDep() {
             const grid = document.getElementById('dep-grid');
-            if (!grid) { this.toast('Seção de depoimentos não encontrada', 'err'); return; }
-            const count = grid.querySelectorAll('.dep-card').length;
-            const p = this.panel_('⭐ Gerenciar Depoimentos');
+            if (!grid) { this.toast('Os depoimentos ficam na página inicial', 'err'); return; }
+            const count = [...grid.querySelectorAll('.dep-card')].filter(c => c.style.display !== 'none').length;
+            const p = this.panel_('⭐ Depoimentos');
             p.innerHTML += `<div class="ld-pb">
-                <div class="ld-info">Você tem <strong>${count} depoimento(s)</strong>. Clique nos cards do site para editar o texto. Use os botões vermelhos para remover.</div>
-                <hr class="ld-hr">
-                <p style="font-size:13px;font-weight:700;color:#374151;margin-bottom:12px;">Adicionar novo depoimento:</p>
-                <div class="ld-f"><label>Nome</label><input type="text" id="dep-nome" placeholder="João Silva"></div>
-                <div class="ld-f"><label>Origem (ex: via Google · há 1 mês)</label><input type="text" id="dep-dest" placeholder="via Google · há 1 mês"></div>
-                <div class="ld-f"><label>Texto do depoimento</label><textarea id="dep-texto" rows="3" placeholder="Viagem perfeita, te qualidade..."></textarea></div>
+                <div class="ld-info">Você tem <strong>${count} depoimento(s)</strong> no site. Para mudar um texto, clique nele no site. Para apagar, use o <strong>✕</strong> vermelho no canto do depoimento.</div>
+                <p style="font-size:14px;font-weight:800;color:#111827;margin:12px 0 10px;">➕ Novo depoimento</p>
+                <div class="ld-f"><label>Nome do cliente</label><input type="text" id="dep-nome" placeholder="Ex: Maria Souza"></div>
+                <div class="ld-f"><label>Quando / onde (opcional)</label><input type="text" id="dep-dest" placeholder="Ex: há 1 mês"></div>
+                <div class="ld-f"><label>O que o cliente disse</label><textarea id="dep-texto" rows="4" placeholder="Cole aqui a avaliação do cliente"></textarea></div>
                 <div class="ld-acts">
                     <button class="ld-ok" id="lda">+ Adicionar</button>
                     <button class="ld-ko" id="ldc">Fechar</button>
@@ -1571,57 +1669,44 @@
                 const nome  = p.querySelector('#dep-nome').value.trim();
                 const dest  = p.querySelector('#dep-dest').value.trim();
                 const texto = p.querySelector('#dep-texto').value.trim();
-                if (!nome || !texto) { this.toast('Preencha nome e texto', 'err'); return; }
-                const idx = grid.querySelectorAll('.dep-card').length;
-                const eid_n = `dep-${idx+1}-nome`;
-                const eid_t = `dep-${idx+1}-text`;
-                const eid_d = `dep-${idx+1}-dest`;
-                const eid_f = `dep-${idx+1}-foto`;
-                const card = document.createElement('div');
-                card.className = 'dep-card rv';
-                card.dataset.depId = idx;
-                const initials = nome.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-                const colors = ['1565C0','F97316','16A34A','7C3AED','EA6C0A'];
-                const bg = colors[idx % colors.length];
-                card.innerHTML = `
-                    <button class="ld-remove-card" title="Remover">✕</button>
-                    <div class="dep-stars" data-eid="${eid_n}-stars">★★★★★</div>
-                    <p class="dep-text" data-eid="${eid_t}" data-elabel="Depoimento ${idx+1}">${texto}</p>
-                    <div class="dep-author">
-                        <div class="dep-av"><img src="https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=${bg}&color=fff&size=80" alt="${nome}" data-eid="${eid_f}" data-elabel="Foto Depoimento ${idx+1}"></div>
-                        <div>
-                            <div class="dep-name" data-eid="${eid_n}" data-elabel="Nome Depoimento ${idx+1}">${nome}</div>
-                            <div class="dep-dest" data-eid="${eid_d}" data-elabel="Destino Depoimento ${idx+1}">${dest || 'via Google'}</div>
-                        </div>
-                    </div>`;
-                grid.appendChild(card);
-                // Salvar no CMS
-                this.store(eid_t, { html: texto });
-                this.store(eid_n, { html: nome });
-                this.store(eid_d, { html: dest || 'via Google' });
-                // Bind do botão de remover
-                card.querySelector('.ld-remove-card').addEventListener('click', e => {
-                    e.stopPropagation();
-                    if (confirm('Remover este depoimento?')) { card.remove(); this.markDirty(); }
-                });
-                // Bind de clique para editar
-                this.bindAll();
+                if (!nome || !texto) { this.toast('Preencha o nome e o que o cliente disse', 'err'); return; }
+                if (!Array.isArray(this.cms._extraDeps)) this.cms._extraDeps = [];
+                this.cms._extraDeps.push({ id: 'x' + Date.now(), nome, dest, texto });
+                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                this.markDirty();
+                applyDeps(this.cms);
+                this.bindDepRemoveButtons();
                 this.closePanel();
-                this.toast('✓ Depoimento adicionado!', 'ok');
+                const last = grid.lastElementChild;
+                if (last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                this.toast('✓ Depoimento adicionado! Clique em Publicar para ir ao ar.', 'ok');
             };
         },
 
         bindDepRemoveButtons() {
-            document.querySelectorAll('.dep-card').forEach(card => {
+            document.querySelectorAll('#dep-grid .dep-card').forEach(card => {
                 if (card.querySelector('.ld-remove-card')) return;
                 const btn = document.createElement('button');
                 btn.className = 'ld-remove-card';
-                btn.title = 'Remover depoimento';
+                btn.title = 'Apagar depoimento';
                 btn.innerHTML = '✕';
                 card.appendChild(btn);
                 btn.addEventListener('click', e => {
+                    e.preventDefault();
                     e.stopPropagation();
-                    if (confirm('Remover este depoimento?')) { card.remove(); this.markDirty(); this.toast('Depoimento removido', 'ok'); }
+                    if (!confirm('Apagar este depoimento do site?')) return;
+                    const id = String(card.dataset.depId || '');
+                    if (card.dataset.depExtra) {
+                        this.cms._extraDeps = (this.cms._extraDeps || []).filter(d => String(d.id) !== id);
+                    } else {
+                        if (!Array.isArray(this.cms._hiddenDeps)) this.cms._hiddenDeps = [];
+                        if (!this.cms._hiddenDeps.map(String).includes(id)) this.cms._hiddenDeps.push(id);
+                    }
+                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    this.markDirty();
+                    applyDeps(this.cms);
+                    this.bindDepRemoveButtons();
+                    this.toast('✓ Depoimento apagado. Clique em Publicar para ir ao ar.', 'ok');
                 });
             });
         },
