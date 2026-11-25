@@ -16,13 +16,13 @@
     }
   },
   "lencois-pkg-sb-dur": {
-    "html": "07/08 a 13/08/2026"
+    "html": "05 a 11/03/2027"
   },
   "lencois-pkg-sb-loc": {
     "html": "Aéreo + hospedagem com café da manhã"
   },
   "lencois-pkg-price": {
-    "html": "R$&nbsp;<span style=\"color: rgb(36, 36, 36); font-family: &quot;Titillium Web&quot;; font-weight: 600; background-color: rgb(245, 245, 245);\">3.199,53</span>"
+    "html": "R$<span style=\"color: rgb(36, 36, 36); font-family: &quot;Titillium Web&quot;; font-weight: 600; background-color: rgb(245, 245, 245);\">2.915,73</span>"
   },
   "lencois-pkg-parcelas": {
     "html": "Até 10X sem juros"
@@ -129,7 +129,7 @@
     "html": "<i class=\"fa-solid fa-circle-check\"></i> Transfer aeroporto-hotel em Barrerinhas"
   },
   "lencois-pkg-incluso-5": {
-    "html": "<i class=\"fa-solid fa-circle-check\"></i>&nbsp;<span style=\"color: rgb(36, 36, 36); font-family: &quot;Titillium Web&quot;; font-weight: 700; white-space: break-spaces;\">CIRCUITO GRANDES LENÇÓIS (Lagoa Azul ou lagoa da estação)</span>"
+    "html": ""
   },
   "lencois-pkg-rot-1-desc": {
     "html": "<br>"
@@ -497,5 +497,13 @@
     "src": "imagens/uploads/equipe-lovisa.webp"
   },
   "_bannerInterval": 8,
-  "_packageBuyUrls": {}
+  "_packageBuyUrls": {
+    "lencois": "https://brt.infotravel.com.br/b2c/pt/banner/checkout/23168?key=4osz&agencyId=71755"
+  },
+  "lencois-pkg-incluso-7": {
+    "html": ""
+  },
+  "lencois-pkg-incluso-3": {
+    "html": "<i class=\"fa-solid fa-circle-check\"></i> Hospedagem café da manhã"
+  }
 }
