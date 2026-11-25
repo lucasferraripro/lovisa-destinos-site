@@ -18,7 +18,7 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"></noscript>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="favicon.png" type="image/png">
     <style>
         /* ── RESET ── */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -597,6 +597,8 @@
         .hero-trust i { color: #8FB3FF; font-size: 13px; }
         .hero-scroll { z-index: 2; }
         @media (prefers-reduced-motion: reduce) { .hero-slide { animation: none !important; } }
+        /* só baixa as fotos 2 e 3 do topo depois que a página carregou */
+        .hero-bg:not(.ready) .hs-2, .hero-bg:not(.ready) .hs-3 { background-image: none !important; }
 
         /* STATS — faixa com degradê */
         .stats-bar { background: var(--grad-deep); border-bottom: 0; }
@@ -718,7 +720,26 @@
             .promo-nav { width: 36px; height: 36px; font-size: 13px; }
             .promo-prev { left: 8px; } .promo-next { right: 8px; }
         }
-    </style>
+    
+        /* ── V3: visual mais limpo e leve ── */
+        .section { padding: 72px 0; }
+        .rv { transform: translateY(14px); transition: opacity .35s ease, transform .35s ease; }
+        #como-funciona { background: radial-gradient(120% 90% at 100% 0%, rgba(21,59,249,.55) 0%, rgba(21,59,249,0) 55%), linear-gradient(165deg, #0B1B3F 0%, #0F2257 100%); position: relative; overflow: hidden; }
+        #como-funciona .label { color: #9DB3FF; }
+        #como-funciona .h2 { color: #fff !important; -webkit-text-fill-color: #fff; background: none; }
+        #como-funciona .lead { color: rgba(255,255,255,.78); }
+        #como-funciona .step { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); backdrop-filter: blur(6px); }
+        #como-funciona .step h3 { color: #fff !important; -webkit-text-fill-color: #fff; }
+        #como-funciona .step p { color: rgba(255,255,255,.75); }
+        #como-funciona .step:hover { border-color: rgba(157,179,255,.6); box-shadow: 0 18px 40px -18px rgba(0,0,0,.6); }
+        #como-funciona .steps-row::before { background: linear-gradient(90deg, transparent, rgba(157,179,255,.5), transparent) !important; }
+        .card { transition: transform .25s ease, box-shadow .25s ease; }
+        .card:hover { transform: translateY(-4px); }
+        @media (max-width: 768px) {
+            .section { padding: 48px 0; }
+            .steps-hdr { margin-bottom: 32px; }
+        }
+</style>
 </head>
 <body>
 
@@ -727,7 +748,7 @@
     <div class="container">
         <div class="hdr-inner">
             <a href="#home" class="logo">
-                <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid rgba(255,255,255,0.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="logo.png" alt="Lovisa Destinos" style="width:48px;height:48px;object-fit:contain;"></div>
+                <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid rgba(255,255,255,0.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="logo.webp" width="48" height="41" alt="Lovisa Destinos" style="width:48px;height:48px;object-fit:contain;"></div>
             </a>
             <nav class="hdr-nav">
                 <a href="#home">Início</a>
@@ -812,6 +833,118 @@
     </div>
 </div>
 
+<!-- ════════════ DESTINOS ════════════ -->
+<section class="section dest-bg" id="destinos">
+    <div class="container">
+        <div class="dest-hdr rv">
+            <div>
+                <span class="label">Destinos</span>
+                <h2 class="h2" data-eid="dest-title" data-elabel="Título Destinos">Experiências que ficam<br>na memória para sempre</h2>
+            </div>
+            <a href="#contato" class="btn btn-navy dest-cta" style="flex-shrink:0">Não achou seu destino? Peça uma cotação <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="cards-grid m-carousel" id="dest-grid">
+
+            <a href="pacote.html?id=lencois" class="card-link rv">
+                <div class="card-img">
+                    <img loading="lazy" decoding="async" src="imagens/destinos/lencois-1-sm.webp" width="760" height="507" data-elabel="Foto Lençóis">
+                    <div class="card-flag" data-eid="card1-flag" data-elabel="País Lençóis">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card1-loc" data-elabel="Local Lençóis"><i class="fa-solid fa-location-dot"></i> Maranhão, Brasil</div>
+                    <h3 data-eid="card1-title" data-elabel="Título Lençóis">Lençóis Maranhenses</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card1-price" data-elabel="Preço Lençóis">R$ 3.890 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=disney" class="card-link rv">
+                <div class="card-img">
+                    <img loading="lazy" decoding="async" src="imagens/destinos/disney-1-sm.webp" width="760" height="507" data-elabel="Foto Disney">
+                    <div class="card-flag" data-eid="card2-flag" data-elabel="País Disney">EUA</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card2-loc" data-elabel="Local Disney"><i class="fa-solid fa-location-dot"></i> Orlando, Florida, EUA</div>
+                    <h3 data-eid="card2-title" data-elabel="Título Disney">Disney & Orlando</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card2-price" data-elabel="Preço Disney">R$ 9.900 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=maceio" class="card-link rv">
+                <div class="card-img">
+                    <img loading="lazy" decoding="async" src="imagens/destinos/maceio-p1-sm.webp" width="760" height="507" data-elabel="Foto Maceió">
+                    <div class="card-flag" data-eid="card3-flag" data-elabel="País Maceió">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card3-loc" data-elabel="Local Maceió"><i class="fa-solid fa-location-dot"></i> Alagoas, Brasil</div>
+                    <h3 data-eid="card3-title" data-elabel="Título Maceió">Maceió & Maragogi</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card3-price" data-elabel="Preço Maceió">R$ 2.890 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=portogalinhas" class="card-link rv">
+                <div class="card-img">
+                    <img loading="lazy" decoding="async" src="imagens/destinos/portogalinhas-p1-sm.webp" width="760" height="507" data-elabel="Foto Porto de Galinhas">
+                    <div class="card-flag" data-eid="card4-flag" data-elabel="País Porto de Galinhas">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card4-loc" data-elabel="Local Porto de Galinhas"><i class="fa-solid fa-location-dot"></i> Pernambuco, Brasil</div>
+                    <h3 data-eid="card4-title" data-elabel="Título Porto de Galinhas">Porto de Galinhas</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card4-price" data-elabel="Preço Porto de Galinhas">R$ 3.290 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=riodejaneiro" class="card-link rv">
+                <div class="card-img">
+                    <img loading="lazy" decoding="async" src="imagens/destinos/rio-1-sm.webp" width="760" height="507" data-elabel="Foto Rio de Janeiro">
+                    <div class="card-flag" data-eid="card5-flag" data-elabel="País Rio de Janeiro">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card5-loc" data-elabel="Local Rio de Janeiro"><i class="fa-solid fa-location-dot"></i> Rio de Janeiro, Brasil</div>
+                    <h3 data-eid="card5-title" data-elabel="Título Rio de Janeiro">Rio de Janeiro</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card5-price" data-elabel="Preço Rio de Janeiro">R$ 3.490 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="pacote.html?id=joaopessoa" class="card-link rv">
+                <div class="card-img">
+                    <img loading="lazy" decoding="async" src="imagens/destinos/joaopessoa-1-sm.webp" width="760" height="507" data-elabel="Foto João Pessoa">
+                    <div class="card-flag" data-eid="card6-flag" data-elabel="País João Pessoa">Brasil</div>
+                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-loc" data-eid="card6-loc" data-elabel="Local João Pessoa"><i class="fa-solid fa-location-dot"></i> Paraíba, Brasil</div>
+                    <h3 data-eid="card6-title" data-elabel="Título João Pessoa">João Pessoa</h3>
+                    <div class="card-foot">
+                        <div class="card-price" data-eid="card6-price" data-elabel="Preço João Pessoa">R$ 2.490 <small>/ pessoa</small></div>
+                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
 <!-- ════════════ COMO FUNCIONA ════════════ -->
 <section class="section" id="como-funciona">
     <div class="container">
@@ -836,118 +969,6 @@
                 <h3 data-eid="step3-title" data-elabel="Passo 3 Título">Embarque Tranquilo</h3>
                 <p data-eid="step3-desc" data-elabel="Passo 3 Texto">Cuidamos de passagens, hospedagem, transfers e suporte 24h durante toda a sua viagem.</p>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- ════════════ DESTINOS ════════════ -->
-<section class="section dest-bg" id="destinos">
-    <div class="container">
-        <div class="dest-hdr rv">
-            <div>
-                <span class="label">Destinos</span>
-                <h2 class="h2" data-eid="dest-title" data-elabel="Título Destinos">Experiências que ficam<br>na memória para sempre</h2>
-            </div>
-            <a href="#contato" class="btn btn-navy dest-cta" style="flex-shrink:0">Não achou seu destino? Peça uma cotação <i class="fa-solid fa-arrow-right"></i></a>
-        </div>
-        <div class="cards-grid m-carousel" id="dest-grid">
-
-            <a href="pacote.html?id=lencois" class="card-link rv">
-                <div class="card-img">
-                    <img src="imagens/destinos/lencois-1-sm.webp" width="760" height="507" data-elabel="Foto Lençóis">
-                    <div class="card-flag" data-eid="card1-flag" data-elabel="País Lençóis">Brasil</div>
-                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
-                </div>
-                <div class="card-body">
-                    <div class="card-loc" data-eid="card1-loc" data-elabel="Local Lençóis"><i class="fa-solid fa-location-dot"></i> Maranhão, Brasil</div>
-                    <h3 data-eid="card1-title" data-elabel="Título Lençóis">Lençóis Maranhenses</h3>
-                    <div class="card-foot">
-                        <div class="card-price" data-eid="card1-price" data-elabel="Preço Lençóis">R$ 3.890 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="pacote.html?id=disney" class="card-link rv">
-                <div class="card-img">
-                    <img src="imagens/destinos/disney-1-sm.webp" width="760" height="507" data-elabel="Foto Disney">
-                    <div class="card-flag" data-eid="card2-flag" data-elabel="País Disney">EUA</div>
-                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
-                </div>
-                <div class="card-body">
-                    <div class="card-loc" data-eid="card2-loc" data-elabel="Local Disney"><i class="fa-solid fa-location-dot"></i> Orlando, Florida, EUA</div>
-                    <h3 data-eid="card2-title" data-elabel="Título Disney">Disney & Orlando</h3>
-                    <div class="card-foot">
-                        <div class="card-price" data-eid="card2-price" data-elabel="Preço Disney">R$ 9.900 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="pacote.html?id=maceio" class="card-link rv">
-                <div class="card-img">
-                    <img src="imagens/destinos/maceio-p1-sm.webp" width="760" height="507" data-elabel="Foto Maceió">
-                    <div class="card-flag" data-eid="card3-flag" data-elabel="País Maceió">Brasil</div>
-                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
-                </div>
-                <div class="card-body">
-                    <div class="card-loc" data-eid="card3-loc" data-elabel="Local Maceió"><i class="fa-solid fa-location-dot"></i> Alagoas, Brasil</div>
-                    <h3 data-eid="card3-title" data-elabel="Título Maceió">Maceió & Maragogi</h3>
-                    <div class="card-foot">
-                        <div class="card-price" data-eid="card3-price" data-elabel="Preço Maceió">R$ 2.890 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="pacote.html?id=portogalinhas" class="card-link rv">
-                <div class="card-img">
-                    <img src="imagens/destinos/portogalinhas-p1-sm.webp" width="760" height="507" data-elabel="Foto Porto de Galinhas">
-                    <div class="card-flag" data-eid="card4-flag" data-elabel="País Porto de Galinhas">Brasil</div>
-                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
-                </div>
-                <div class="card-body">
-                    <div class="card-loc" data-eid="card4-loc" data-elabel="Local Porto de Galinhas"><i class="fa-solid fa-location-dot"></i> Pernambuco, Brasil</div>
-                    <h3 data-eid="card4-title" data-elabel="Título Porto de Galinhas">Porto de Galinhas</h3>
-                    <div class="card-foot">
-                        <div class="card-price" data-eid="card4-price" data-elabel="Preço Porto de Galinhas">R$ 3.290 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="pacote.html?id=riodejaneiro" class="card-link rv">
-                <div class="card-img">
-                    <img src="imagens/destinos/rio-1-sm.webp" width="760" height="507" data-elabel="Foto Rio de Janeiro">
-                    <div class="card-flag" data-eid="card5-flag" data-elabel="País Rio de Janeiro">Brasil</div>
-                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
-                </div>
-                <div class="card-body">
-                    <div class="card-loc" data-eid="card5-loc" data-elabel="Local Rio de Janeiro"><i class="fa-solid fa-location-dot"></i> Rio de Janeiro, Brasil</div>
-                    <h3 data-eid="card5-title" data-elabel="Título Rio de Janeiro">Rio de Janeiro</h3>
-                    <div class="card-foot">
-                        <div class="card-price" data-eid="card5-price" data-elabel="Preço Rio de Janeiro">R$ 3.490 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="pacote.html?id=joaopessoa" class="card-link rv">
-                <div class="card-img">
-                    <img src="imagens/destinos/joaopessoa-1-sm.webp" width="760" height="507" data-elabel="Foto João Pessoa">
-                    <div class="card-flag" data-eid="card6-flag" data-elabel="País João Pessoa">Brasil</div>
-                    <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
-                </div>
-                <div class="card-body">
-                    <div class="card-loc" data-eid="card6-loc" data-elabel="Local João Pessoa"><i class="fa-solid fa-location-dot"></i> Paraíba, Brasil</div>
-                    <h3 data-eid="card6-title" data-elabel="Título João Pessoa">João Pessoa</h3>
-                    <div class="card-foot">
-                        <div class="card-price" data-eid="card6-price" data-elabel="Preço João Pessoa">R$ 2.490 <small>/ pessoa</small></div>
-                        <span class="card-arrow">Saiba mais <i class="fa-solid fa-arrow-right"></i></span>
-                    </div>
-                </div>
-            </a>
-
         </div>
     </div>
 </section>
@@ -1004,7 +1025,7 @@
             <!-- POST 1 -->
             <div class="card-link rv">
                 <div class="card-img" style="height: 350px;">
-                    <img src="img-insta-1.jpg" alt="Cliente @esthereesthefany" data-eid="insta-img-1" data-elabel="Foto Instagram 1">
+                    <img src="img-insta-1.webp" loading="lazy" decoding="async" alt="Cliente @esthereesthefany" data-eid="insta-img-1" data-elabel="Foto Instagram 1">
                     <div class="card-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);"><span style="font-size: 11px;"><i class="fab fa-instagram"></i> @esthereesthefany</span></div>
                 </div>
                 <div class="card-body" style="padding: 15px;">
@@ -1016,7 +1037,7 @@
             <!-- POST 2 -->
             <div class="card-link rv">
                 <div class="card-img" style="height: 350px;">
-                    <img src="img-insta-2.jpg" alt="Cliente @camile.trindade.737" data-eid="insta-img-2" data-elabel="Foto Instagram 2">
+                    <img src="img-insta-2.webp" loading="lazy" decoding="async" alt="Cliente @camile.trindade.737" data-eid="insta-img-2" data-elabel="Foto Instagram 2">
                     <div class="card-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);"><span style="font-size: 11px;"><i class="fab fa-instagram"></i> @camile.trindade.737</span></div>
                 </div>
                 <div class="card-body" style="padding: 15px;">
@@ -1028,7 +1049,7 @@
             <!-- POST 3 -->
             <div class="card-link rv">
                 <div class="card-img" style="height: 350px;">
-                    <img src="img-insta-3.jpg" alt="Cliente @ju_sanfitness" data-eid="insta-img-3" data-elabel="Foto Instagram 3">
+                    <img src="img-insta-3.webp" loading="lazy" decoding="async" alt="Cliente @ju_sanfitness" data-eid="insta-img-3" data-elabel="Foto Instagram 3">
                     <div class="card-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);"><span style="font-size: 11px;"><i class="fab fa-instagram"></i> @ju_sanfitness</span></div>
                 </div>
                 <div class="card-body" style="padding: 15px;">
@@ -1055,7 +1076,7 @@
             <a href="https://www.google.com/maps/place/Lovisa+Destinos/@-13.3722091,-73.1397804,4z/data=!4m8!3m7!1s0x496312acd36d9057:0xbe12502a7a172777!8m2!3d-14.4095262!4d-51.31668!9m1!1b1!16s%2Fg%2F11wtlj2xps" target="_blank" rel="noopener"
                style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E8EAED;border-radius:50px;padding:10px 22px;margin-top:16px;color:#3C4043;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 1px 4px rgba(0,0,0,.1);transition:box-shadow .2s;"
                onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,.15)'" onmouseout="this.style.boxShadow='0 1px 4px rgba(0,0,0,.1)'">
-                <img src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google" style="width:20px;height:20px;display:inline;">
+                <img loading="lazy" decoding="async" src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google" style="width:20px;height:20px;display:inline;">
                 <span style="color:#FBBC04;">★★★★★</span>
                 <span><strong style="color:#202124;">5,0</strong> · 25 avaliações no Google Maps</span>
                 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;color:#1A73E8;"></i>
@@ -1066,13 +1087,13 @@
             <div class="dep-card rv" data-dep-id="0">
                 <div class="dep-header">
                     <div class="dep-user">
-                        <div class="dep-av" style="background:#1565C0;"><img src="av-1.jpg" alt="Kenia Patricia" data-eid="dep-1-foto" data-elabel="Foto Depoimento 1"></div>
+                        <div class="dep-av" style="background:#1565C0;"><img loading="lazy" decoding="async" src="av-1.jpg" alt="Kenia Patricia" data-eid="dep-1-foto" data-elabel="Foto Depoimento 1"></div>
                         <div>
                             <div class="dep-name" data-eid="dep-1-nome" data-elabel="Nome Depoimento 1">Kenia Patricia</div>
                             <div class="dep-dest" data-eid="dep-1-dest" data-elabel="Data Depoimento 1">há 1 ano</div>
                         </div>
                     </div>
-                    <div class="dep-g-logo"><img src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
+                    <div class="dep-g-logo"><img loading="lazy" decoding="async" src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
                 </div>
                 <div class="dep-stars">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
@@ -1084,13 +1105,13 @@
             <div class="dep-card rv" data-dep-id="1">
                 <div class="dep-header">
                     <div class="dep-user">
-                        <div class="dep-av" style="background:#EA4335;"><img src="av-2.jpg" alt="Beatriz dos Santos Andrade" data-eid="dep-2-foto" data-elabel="Foto Depoimento 2"></div>
+                        <div class="dep-av" style="background:#EA4335;"><img loading="lazy" decoding="async" src="av-2.jpg" alt="Beatriz dos Santos Andrade" data-eid="dep-2-foto" data-elabel="Foto Depoimento 2"></div>
                         <div>
                             <div class="dep-name" data-eid="dep-2-nome" data-elabel="Nome Depoimento 2">Beatriz dos Santos Andrade</div>
                             <div class="dep-dest" data-eid="dep-2-dest" data-elabel="Data Depoimento 2">5 meses atrás</div>
                         </div>
                     </div>
-                    <div class="dep-g-logo"><img src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
+                    <div class="dep-g-logo"><img loading="lazy" decoding="async" src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
                 </div>
                 <div class="dep-stars">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
@@ -1102,13 +1123,13 @@
             <div class="dep-card rv" data-dep-id="2">
                 <div class="dep-header">
                     <div class="dep-user">
-                        <div class="dep-av" style="background:#34A853;"><img src="av-3.jpg" alt="Marina Fernandes" data-eid="dep-3-foto" data-elabel="Foto Depoimento 3"></div>
+                        <div class="dep-av" style="background:#34A853;"><img loading="lazy" decoding="async" src="av-3.jpg" alt="Marina Fernandes" data-eid="dep-3-foto" data-elabel="Foto Depoimento 3"></div>
                         <div>
                             <div class="dep-name" data-eid="dep-3-nome" data-elabel="Nome Depoimento 3">Marina Fernandes</div>
                             <div class="dep-dest" data-eid="dep-3-dest" data-elabel="Data Depoimento 3">2 meses atrás</div>
                         </div>
                     </div>
-                    <div class="dep-g-logo"><img src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
+                    <div class="dep-g-logo"><img loading="lazy" decoding="async" src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
                 </div>
                 <div class="dep-stars">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
@@ -1120,13 +1141,13 @@
             <div class="dep-card rv" data-dep-id="3">
                 <div class="dep-header">
                     <div class="dep-user">
-                        <div class="dep-av" style="background:#FBBC04;color:#202124;"><img src="av-5.jpg" alt="Marisa Weber" data-eid="dep-4-foto" data-elabel="Foto Depoimento 4"></div>
+                        <div class="dep-av" style="background:#FBBC04;color:#202124;"><img loading="lazy" decoding="async" src="av-5.jpg" alt="Marisa Weber" data-eid="dep-4-foto" data-elabel="Foto Depoimento 4"></div>
                         <div>
                             <div class="dep-name" data-eid="dep-4-nome" data-elabel="Nome Depoimento 4">Marisa Weber</div>
                             <div class="dep-dest" data-eid="dep-4-dest" data-elabel="Data Depoimento 4">6 meses atrás</div>
                         </div>
                     </div>
-                    <div class="dep-g-logo"><img src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
+                    <div class="dep-g-logo"><img loading="lazy" decoding="async" src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
                 </div>
                 <div class="dep-stars">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
@@ -1138,13 +1159,13 @@
             <div class="dep-card rv" data-dep-id="4">
                 <div class="dep-header">
                     <div class="dep-user">
-                        <div class="dep-av" style="background:#1565C0;"><img src="av-4.jpg" alt="Sebastião da Silva" data-eid="dep-5-foto" data-elabel="Foto Depoimento 5"></div>
+                        <div class="dep-av" style="background:#1565C0;"><img loading="lazy" decoding="async" src="av-4.jpg" alt="Sebastião da Silva" data-eid="dep-5-foto" data-elabel="Foto Depoimento 5"></div>
                         <div>
                             <div class="dep-name" data-eid="dep-5-nome" data-elabel="Nome Depoimento 5">Sebastião da Silva</div>
                             <div class="dep-dest" data-eid="dep-5-dest" data-elabel="Data Depoimento 5">6 meses atrás</div>
                         </div>
                     </div>
-                    <div class="dep-g-logo"><img src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
+                    <div class="dep-g-logo"><img loading="lazy" decoding="async" src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
                 </div>
                 <div class="dep-stars">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
@@ -1156,13 +1177,13 @@
             <div class="dep-card rv" data-dep-id="5">
                 <div class="dep-header">
                     <div class="dep-user">
-                        <div class="dep-av" style="background:#EA4335;"><img src="av-6.jpg" alt="Elias Paixao" data-eid="dep-6-foto" data-elabel="Foto Depoimento 6"></div>
+                        <div class="dep-av" style="background:#EA4335;"><img loading="lazy" decoding="async" src="av-6.jpg" alt="Elias Paixao" data-eid="dep-6-foto" data-elabel="Foto Depoimento 6"></div>
                         <div>
                             <div class="dep-name" data-eid="dep-6-nome" data-elabel="Nome Depoimento 6">Elias Paixao</div>
                             <div class="dep-dest" data-eid="dep-6-dest" data-elabel="Data Depoimento 6">11 meses atrás</div>
                         </div>
                     </div>
-                    <div class="dep-g-logo"><img src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
+                    <div class="dep-g-logo"><img loading="lazy" decoding="async" src="https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png" alt="Google"></div>
                 </div>
                 <div class="dep-stars">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
@@ -1260,7 +1281,7 @@
         <div class="ft-top">
             <div class="ft-brand">
                 <a href="#home" class="logo">
-                    <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="logo.png" alt="Lovisa Destinos" style="width:48px;height:48px;object-fit:contain;"></div>
+                    <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><img src="logo.webp" width="48" height="41" alt="Lovisa Destinos" style="width:48px;height:48px;object-fit:contain;"></div>
                 </a>
                 <p data-eid="ft-desc" data-elabel="Rodapé — Descrição">Consultoria especializada em viagens premium e roteiros personalizados para quem não aceita o comum.</p>
                 <div class="ft-social">
@@ -1502,7 +1523,7 @@
     <a href="#contato" class="m-cta-main"><i class="fa-solid fa-paper-plane"></i> Pedir cotação grátis</a>
     <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%20Destinos%2C%20quero%20solicitar%20informa%C3%A7%C3%B5es%20sobre%20as%20viagens!" target="_blank" rel="noopener noreferrer" class="m-cta-wa" aria-label="Falar no WhatsApp"><i class="fab fa-whatsapp"></i></a>
 </div>
-<script src="site-ui.js?v=20261125" defer></script>
+<script src="site-ui.js?v=20261125b" defer></script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
 <script src="editor.js?v=20261125-v2"></script>
 </body>

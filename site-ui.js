@@ -109,3 +109,10 @@
         if (pre) setTimeout(function () { sel.value = pre; }, 600);
     }
 })();
+
+/* Fotos 2 e 3 do topo: só depois que a página terminou de carregar (site mais leve) */
+(function () {
+    function ready() { var h = document.querySelector('.hero-bg'); if (h) h.classList.add('ready'); }
+    if (document.readyState === 'complete') setTimeout(ready, 1200);
+    else window.addEventListener('load', function () { setTimeout(ready, 1200); });
+})();
