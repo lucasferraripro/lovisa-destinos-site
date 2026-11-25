@@ -396,6 +396,47 @@
         applyDeps(cms);
     }
 
+    /* ─── RASCUNHO ────────────────────────────────────────────
+       Guarda só as alterações feitas no painel (não uma cópia do site).
+       Assim, o que for publicado depois (em outro computador ou por nós)
+       nunca é sobrescrito por um rascunho velho. */
+    const DRAFT_VER = 2;
+    function draftDiff(cms, base) {
+        const diff = {};
+        const b = base || {};
+        Object.keys(cms || {}).forEach(k => {
+            if (JSON.stringify(cms[k]) !== JSON.stringify(b[k])) diff[k] = cms[k];
+        });
+        Object.keys(b).forEach(k => { if (!(k in (cms || {}))) diff[k] = null; });
+        return diff;
+    }
+    function applyDiff(base, diff) {
+        const out = JSON.parse(JSON.stringify(base || {}));
+        Object.entries(diff || {}).forEach(([k, v]) => {
+            if (v === null) delete out[k]; else out[k] = v;
+        });
+        return out;
+    }
+    function readDraft() {
+        try {
+            const raw = JSON.parse(localStorage.getItem(CMS_KEY) || 'null');
+            if (raw && raw.__v === DRAFT_VER && raw.diff && typeof raw.diff === 'object') return raw.diff;
+            if (raw && Object.keys(raw).length) {
+                // rascunho antigo (cópia do site inteiro): descarta para não voltar conteúdo velho
+                localStorage.removeItem(CMS_KEY);
+                window.__LOVISA_OLD_DRAFT_DROPPED = true;
+            }
+        } catch (_) { localStorage.removeItem(CMS_KEY); }
+        return {};
+    }
+    function saveDraft(cms) {
+        const diff = draftDiff(cms, window.__LOVISA_SRV_CMS || {});
+        if (Object.keys(diff).length) localStorage.setItem(CMS_KEY, JSON.stringify({ __v: DRAFT_VER, diff }));
+        else localStorage.removeItem(CMS_KEY);
+        return diff;
+    }
+    function hasDraft() { return Object.keys(readDraft()).length > 0; }
+
     async function fetchContent() {
         try {
             const r = await fetch(CONTENT_URL + '?_=' + Date.now());
@@ -406,10 +447,7 @@
     async function loadAndApply(srv) {
         let merged = (srv && typeof srv === 'object') ? { ...srv } : {};
         window.__LOVISA_SRV_CMS = merged;
-        if (editMode) {
-            const draft = JSON.parse(localStorage.getItem(CMS_KEY) || '{}');
-            merged = { ...merged, ...draft };
-        }
+        if (editMode) merged = applyDiff(merged, readDraft());
         applyContent(merged);
         return merged;
     }
@@ -515,17 +553,15 @@
         async start(srv) {
             injectCSS();
             // Reutiliza conteúdo já carregado pelo loadAndApply (sem fetch extra)
-            const draft = JSON.parse(localStorage.getItem(CMS_KEY) || '{}');
-            this.cms = { ...(srv || {}), ...draft };
+            this.cms = applyDiff(window.__LOVISA_SRV_CMS || srv || {}, readDraft());
 
             document.body.classList.add('ld-on');
             sessionStorage.setItem('editor_active', '1');
             this.buildBar();
             this.bindAll();
             // Se há rascunho não publicado, mostrar indicador
-            if (Object.keys(JSON.parse(localStorage.getItem(CMS_KEY) || '{}')).length > 0) {
-                this.markDirty();
-            }
+            if (hasDraft()) this.markDirty();
+            if (window.__LOVISA_OLD_DRAFT_DROPPED) setTimeout(() => this.toast('Painel atualizado com o conteúdo publicado do site.', 'ok'), 800);
         },
 
         buildBar() {
@@ -858,7 +894,7 @@
                 ['ft-hours2', 'ft-hours2-pacote'].forEach(eid => { this.cms[eid] = { html: hours2 }; });
                 this.cms['ft-copyright'] = { html: copyright };
                 syncContactFooter(this.cms);
-                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                saveDraft(this.cms);
                 this.closePanel();
                 this.markDirty();
                 this.toast('✓ Rodapé salvo. Clique em Publicar para ir ao ar.', 'ok');
@@ -914,7 +950,7 @@
                 this.cms.colors = { ...(this.cms.colors || {}), ...colors };
                 const num = waInp.value.replace(/\D/g, '');
                 if (num) this.cms.whatsapp = num;
-                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                saveDraft(this.cms);
                 this.markDirty();
                 this.closePanel();
                 this.toast('✓ Cores salvas no rascunho', 'ok');
@@ -970,7 +1006,7 @@
                 const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img, desc, incluso, _new: true };
                 if (!this.cms._packages) this.cms._packages = {};
                 this.cms._packages[id] = pkgData;
-                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                saveDraft(this.cms);
                 this.markDirty();
                 // Renderizar card na home
                 this._renderNewPackageCard(pkgData);
@@ -1052,7 +1088,7 @@
                 const pkgData = { id, flag, title, subtitle, location: loc, duration: dur, price, parcelas: parc, img: fotos[0] || FALLBACK_PACKAGE_IMG, fotos, desc, incluso, ...(buyUrl ? { buyUrl } : {}), _new: true };
                     if (!this.cms._packages) this.cms._packages = {};
                     this.cms._packages[id] = pkgData;
-                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    saveDraft(this.cms);
                     this.markDirty();
                     this._renderNewPackageCard(pkgData);
                     await this.publishNow(sessionStorage.getItem('lovisa_secret') || '');
@@ -1131,7 +1167,7 @@
             if (!confirm(`Remover o pacote "${pkgId}" do site?\n\nEsta ação será aplicada ao publicar.`)) return;
             if (!this.cms._removedPackages) this.cms._removedPackages = [];
             if (!this.cms._removedPackages.includes(pkgId)) this.cms._removedPackages.push(pkgId);
-            localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+            saveDraft(this.cms);
             this.markDirty();
             el.style.opacity = '0.3';
             el.style.pointerEvents = 'none';
@@ -1310,7 +1346,7 @@
                 pb.querySelector('#ldc').onclick = () => this.closePanel();
                 const save = (list) => {
                     this.cms._heroSlides = list;
-                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    saveDraft(this.cms);
                     this.markDirty();
                     applyHero(this.cms);
                     render();
@@ -1485,14 +1521,14 @@
                 };
                 $('#bn-secs').onchange = () => {
                     this.cms._bannerInterval = parseInt($('#bn-secs').value, 10) || 7;
-                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    saveDraft(this.cms);
                     this.markDirty();
                     applyBanners(this.cms);
                     this.toast('✓ Tempo salvo. Clique em Publicar para ir ao ar.', 'ok');
                 };
 
                 const saveAndRefresh = (nextEdit) => {
-                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    saveDraft(this.cms);
                     this.markDirty();
                     applyBanners(this.cms);
                     renderPanel(nextEdit);
@@ -1624,7 +1660,7 @@
                     delete this.cms._packageBuyUrls[pkgId];
                     if (this.cms._packages?.[pkgId]) delete this.cms._packages[pkgId].buyUrl;
                 }
-                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                saveDraft(this.cms);
                 this.markDirty();
                 const buyBtn = document.getElementById('btn-buy-online');
                 if (buyBtn && curPageId === pkgId) {
@@ -1672,7 +1708,7 @@
                 if (!nome || !texto) { this.toast('Preencha o nome e o que o cliente disse', 'err'); return; }
                 if (!Array.isArray(this.cms._extraDeps)) this.cms._extraDeps = [];
                 this.cms._extraDeps.push({ id: 'x' + Date.now(), nome, dest, texto });
-                localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                saveDraft(this.cms);
                 this.markDirty();
                 applyDeps(this.cms);
                 this.bindDepRemoveButtons();
@@ -1702,7 +1738,7 @@
                         if (!Array.isArray(this.cms._hiddenDeps)) this.cms._hiddenDeps = [];
                         if (!this.cms._hiddenDeps.map(String).includes(id)) this.cms._hiddenDeps.push(id);
                     }
-                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    saveDraft(this.cms);
                     this.markDirty();
                     applyDeps(this.cms);
                     this.bindDepRemoveButtons();
@@ -1713,7 +1749,7 @@
 
         /* ── REVERTER ── */
         revert() {
-            const hasDraft = Object.keys(JSON.parse(localStorage.getItem(CMS_KEY) || '{}')).length > 0;
+            const hasDraft = hasDraft();
             if (!hasDraft) { this.toast('Não há rascunho para descartar', ''); return; }
             if (!confirm('Descartar todas as alterações não publicadas? O site voltará ao conteúdo que está publicado.')) return;
             localStorage.removeItem(CMS_KEY);
@@ -1724,8 +1760,9 @@
 
         /* ── PUBLICAR ── */
         async publishNow(secret) {
-            this.cms = cleanContent(this.cms);
-            localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+            const diff = draftDiff(this.cms, window.__LOVISA_SRV_CMS || {});
+            const latest = await fetchContent();
+            this.cms = cleanContent(applyDiff(latest && Object.keys(latest).length ? latest : (window.__LOVISA_SRV_CMS || {}), diff));
             if (!secret) throw new Error('Sessao sem senha. Saia e entre novamente no editor.');
             const res = await fetch('/api/publish', {
                 method: 'POST',
@@ -1734,14 +1771,17 @@
             });
             const data = await res.json();
             if (!res.ok || !data.success) throw new Error(data.error || 'Erro desconhecido');
+            window.__LOVISA_SRV_CMS = JSON.parse(JSON.stringify(this.cms));
+            localStorage.removeItem(CMS_KEY);
             return data;
         },
 
         async publish() {
             // Resumo do que será publicado
-            const elems   = Object.keys(this.cms).filter(k => k !== 'colors' && k !== 'whatsapp');
-            const hasCols = this.cms.colors && Object.keys(this.cms.colors).length > 0;
-            const hasWA   = !!this.cms.whatsapp;
+            const changed = draftDiff(this.cms, window.__LOVISA_SRV_CMS || {});
+            const elems   = Object.keys(changed).filter(k => k !== 'colors' && k !== 'whatsapp');
+            const hasCols = 'colors' in changed;
+            const hasWA   = 'whatsapp' in changed;
             const total   = elems.length + (hasCols ? 1 : 0) + (hasWA ? 1 : 0);
 
             if (total === 0) {
@@ -1750,7 +1790,11 @@
             }
 
             let items = '';
-            if (elems.length) items += `<li>${elems.length} elemento(s) de texto/imagem editados</li>`;
+            const names = { _banners: 'Banners', _bannerInterval: 'Tempo dos banners', _heroSlides: 'Fotos do topo', _packages: 'Pacotes', _removedPackages: 'Pacotes removidos', _packageBuyUrls: 'Links de compra', _extraDeps: 'Depoimentos', _hiddenDeps: 'Depoimentos' };
+            const special = [...new Set(elems.filter(k => names[k]).map(k => names[k]))];
+            const others = elems.filter(k => !names[k]).length;
+            special.forEach(t => { items += `<li>${t}</li>`; });
+            if (others) items += `<li>${others === 1 ? '1 texto ou foto alterado' : others + ' textos ou fotos alterados'}</li>`;
             if (hasCols) items += `<li>Cores globais do site</li>`;
             if (hasWA)   items += `<li>Número do WhatsApp: ${this.cms.whatsapp}</li>`;
 
@@ -1815,7 +1859,7 @@
 
         /* ── SAIR ── */
         exit() {
-            const hasDraft = Object.keys(JSON.parse(localStorage.getItem(CMS_KEY) || '{}')).length > 0;
+            const hasDraft = hasDraft();
             if (hasDraft && !confirm('Sair do editor? Você tem alterações não publicadas (rascunho salvo).')) return;
             sessionStorage.removeItem('editor_active');
             const u = new URL(location.href);
@@ -1853,7 +1897,7 @@
 
         store(key, val) {
             this.cms[key] = val;
-            localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+            saveDraft(this.cms);
             this.markDirty();
         },
 
@@ -1870,7 +1914,7 @@
                 item.dataset.ldHidden = '1';
             });
             this.cms[eid] = { ...(this.cms[eid] || {}), hidden: true };
-            localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+            saveDraft(this.cms);
             this.markDirty();
             this.closePanel();
             this.toast('Item removido no rascunho. Clique em Publicar para salvar no site.', 'ok');
