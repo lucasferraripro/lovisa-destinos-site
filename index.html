@@ -2,8 +2,15 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Lovisa Destinos — Viagens de Lazer & Corporativas</title>
+    <meta name="theme-color" content="#0B1B3F">
+    <meta property="og:title" content="Lovisa Destinos — Viagens de Lazer & Corporativas">
+    <meta property="og:description" content="Pacotes nacionais e internacionais com atendimento humano do início ao fim. Parcelamento em até 10x.">
+    <meta property="og:image" content="https://www.lovisadestinos.com.br/imagens/destinos/hero-maragogi.webp">
+    <meta property="og:type" content="website">
+    <link rel="preload" as="image" href="imagens/destinos/hero-maragogi-sm.webp" media="(max-width: 768px)">
+    <link rel="preload" as="image" href="imagens/destinos/hero-maragogi.webp" media="(min-width: 769px)">
     <meta name="description" content="Roteiros exclusivos e personalizados para viajantes que não aceitam o comum. Parceira CVC com atendimento humanizado e personalizado.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -553,6 +560,164 @@
             .promo-slide img { aspect-ratio: 16 / 7; min-height: 160px; }
             .promo-nav { width: 34px; height: 34px; font-size: 13px; }
         }
+
+        /* ══════════════════════════════════════
+           V2 — VISUAL REFRESH (nov/2026)
+        ══════════════════════════════════════ */
+        :root {
+            --ink: #0B1B3F;
+            --grad: linear-gradient(120deg, var(--accent) 0%, #1E9BD7 100%);
+            --grad-deep: linear-gradient(135deg, #0B1B3F 0%, #12306E 55%, #1E9BD7 130%);
+            --shadow-soft: 0 18px 40px -18px rgba(11,27,63,.28);
+        }
+        .btn-accent { background: var(--grad); box-shadow: 0 10px 24px -10px rgba(21,59,249,.55); }
+        .btn-accent:hover { background: var(--grad); filter: brightness(1.06); box-shadow: 0 14px 28px -10px rgba(21,59,249,.6); }
+        .btn:active { transform: scale(.98); }
+        .btn-navy { background: var(--ink); }
+        .btn:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid #7DA2FF; outline-offset: 3px; }
+
+        /* HERO — fotos reais em transição suave */
+        #home { min-height: min(820px, 100svh); height: auto; padding: 120px 0 96px; }
+        .hero-bg { background: #0B1B3F; }
+        .hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; animation: heroFade 21s infinite; will-change: opacity, transform; }
+        .hs-1 { background-image: url('imagens/destinos/hero-maragogi.webp'); animation-delay: 0s; opacity: 1; }
+        .hs-2 { background-image: url('imagens/destinos/lencois-1.webp'); animation-delay: 7s; }
+        .hs-3 { background-image: url('imagens/destinos/rio-1.webp'); animation-delay: 14s; }
+        @keyframes heroFade { 0% { opacity: 0; transform: scale(1.06); } 5% { opacity: 1; } 33% { opacity: 1; } 40% { opacity: 0; transform: scale(1); } 100% { opacity: 0; } }
+        .hs-1 { animation-name: heroFadeFirst; }
+        @keyframes heroFadeFirst { 0% { opacity: 1; transform: scale(1.03); } 33% { opacity: 1; } 40% { opacity: 0; transform: scale(1); } 95% { opacity: 0; } 100% { opacity: 1; transform: scale(1.03); } }
+        .hero-bg::after { z-index: 1; background: linear-gradient(100deg, rgba(8,20,48,.92) 0%, rgba(8,20,48,.72) 38%, rgba(8,20,48,.18) 75%, rgba(8,20,48,.05) 100%), linear-gradient(to top, rgba(8,20,48,.55), transparent 40%); }
+        .hero-body { z-index: 2; }
+        .hero-h1 { font-size: clamp(2.3rem, 5.6vw, 4.2rem); letter-spacing: -.01em; text-wrap: balance; }
+        .hero-h1 em { color: #8FB3FF; }
+        .hero-badge i { color: #8FB3FF; }
+        .hero-p { color: rgba(255,255,255,.86); }
+        .hero-trust { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 30px; }
+        .hero-trust li { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,.88); font-weight: 500; }
+        .hero-trust i { color: #8FB3FF; font-size: 13px; }
+        .hero-scroll { z-index: 2; }
+        @media (prefers-reduced-motion: reduce) { .hero-slide { animation: none !important; } }
+
+        /* STATS — faixa com degradê */
+        .stats-bar { background: var(--grad-deep); border-bottom: 0; }
+        .stat-n { color: #fff; }
+        .stat-l { color: rgba(255,255,255,.72); }
+
+        /* PASSOS */
+        .step-num { background: var(--grad); box-shadow: 0 8px 20px -8px rgba(21,59,249,.6); }
+        .steps-row::before { background: linear-gradient(90deg, transparent, var(--accent), #1E9BD7, transparent); }
+        .step:hover { border-color: rgba(21,59,249,.35); box-shadow: var(--shadow-soft); }
+
+        /* CARDS DE DESTINO */
+        .card-link { border: 1px solid rgba(11,27,63,.06); box-shadow: 0 10px 30px -18px rgba(11,27,63,.35); height: 100%; display: flex; flex-direction: column; }
+        .card-link-wrap { height: 100%; }
+        .card-body { flex: 1; display: flex; flex-direction: column; }
+        .card-foot { margin-top: auto; }
+        .card-img { height: 240px; flex-shrink: 0; background: #dfe6f3; }
+        .card-img::after { content: ''; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, rgba(8,20,48,.35), transparent); pointer-events: none; }
+        .card-flag { z-index: 2; color: var(--ink); }
+        .card-overlay { z-index: 2; }
+        .card-arrow { color: var(--ink); }
+
+        /* DIFERENCIAIS */
+        .dif-icon { background: linear-gradient(135deg, rgba(21,59,249,.12), rgba(30,155,215,.14)); color: var(--accent); }
+        .dif-badge { background: var(--grad-deep); }
+        .dif-badge strong { color: #fff; }
+
+        /* RODAPÉ E FORM */
+        footer { background: linear-gradient(180deg, #0B1B3F 0%, #081430 100%); }
+        .form-card { border: 1px solid rgba(11,27,63,.06); }
+        .ig input:focus, .ig select:focus, .ig textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(21,59,249,.14); }
+
+        /* Carrossel (só no celular) e barra fixa */
+        .mc-dots, .mc-hint, .m-cta { display: none; }
+
+        @media (max-width: 768px) {
+            #home { min-height: 92svh; padding: 104px 0 56px; align-items: flex-end; }
+            .hs-1 { background-image: url('imagens/destinos/hero-maragogi-sm.webp'); }
+            .hs-2 { background-image: url('imagens/destinos/lencois-1-sm.webp'); }
+            .hs-3 { background-image: url('imagens/destinos/rio-1-sm.webp'); }
+            .hero-bg::after { background: linear-gradient(to top, rgba(8,20,48,.95) 0%, rgba(8,20,48,.78) 45%, rgba(8,20,48,.25) 80%, rgba(8,20,48,.4) 100%); }
+            .hero-h1 { font-size: clamp(2rem, 9vw, 2.5rem); }
+            .hero-trust { gap: 8px 16px; margin-top: 22px; }
+            .hero-trust li { font-size: 12.5px; }
+            .hero-scroll { display: none; }
+
+            .stats-grid { grid-template-columns: repeat(2, 1fr); padding: 0; }
+            .stat { padding: 22px 8px; border-bottom: 1px solid rgba(255,255,255,.08); }
+            .stat:nth-child(2n) { border-right: none; }
+            .stat-n { font-size: 1.6rem; }
+            .stat-l { font-size: 11px; letter-spacing: .04em; }
+            .stats-odd .stat:not([style*="none"]):last-child { grid-column: 1 / -1; border-right: none; }
+
+            /* listas viram carrossel de deslizar com o dedo */
+            .m-carousel {
+                display: grid !important; grid-auto-flow: column; grid-template-columns: none !important;
+                grid-auto-columns: 84%; gap: 14px !important; overflow-x: auto; overscroll-behavior-x: contain;
+                scroll-snap-type: x mandatory; scroll-padding: 0 16px; padding: 6px 16px 14px; margin: 0 -16px;
+                max-width: none !important; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+            }
+            .m-carousel::-webkit-scrollbar { display: none; }
+            .m-carousel > * { scroll-snap-align: start; min-width: 0; }
+            .m-carousel .rv { opacity: 1; transform: none; }
+            .insta-grid .card-img { height: 300px !important; }
+            .mc-dots { display: flex; justify-content: center; align-items: center; gap: 2px; margin-top: 2px; }
+            .mc-dots button { width: 22px; height: 22px; border: 0; padding: 0; background: none; display: flex; align-items: center; justify-content: center; }
+            .mc-dots button::before { content: ''; width: 7px; height: 7px; border-radius: 99px; background: rgba(11,27,63,.22); transition: width .25s, background .25s; }
+            .mc-dots button.on::before { width: 20px; background: var(--accent); }
+            .mc-hint { display: block; text-align: center; font-size: 12px; color: var(--muted); margin-top: 4px; }
+            .dest-cta { width: 100%; justify-content: center; white-space: normal; text-align: center; }
+            .card-link:hover { transform: none; }
+
+            .dif-img-wrap { display: block; max-width: 420px; margin: 0 auto 8px; }
+            .dif-img { aspect-ratio: 4/4.4; }
+            .dif-badge { right: 10px; bottom: -14px; padding: 14px 18px; }
+
+            .ig input, .ig select, .ig textarea { font-size: 16px; }
+            #mobile-panel a { min-height: 48px; display: flex; align-items: center; }
+            #mobile-panel a.mpanel-cta { justify-content: center; }
+
+            .wa { display: none; }
+            .m-cta {
+                display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 890; gap: 10px;
+                padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+                background: rgba(255,255,255,.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+                border-top: 1px solid rgba(11,27,63,.08); box-shadow: 0 -8px 24px -12px rgba(11,27,63,.25);
+                transform: translateY(110%); transition: transform .3s ease;
+            }
+            .m-cta.show { transform: none; }
+            .m-cta a { flex: 1; min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; font-weight: 700; font-size: 15px; }
+            .m-cta .m-cta-main { background: var(--grad); color: #fff; }
+            .m-cta .m-cta-wa { background: #25D366; color: #fff; flex: 0 0 auto; padding: 0 18px; }
+            body { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+            body.ld-on .m-cta { display: none; }
+        }
+
+        /* ── BANNERS PROMOCIONAIS (estilo CVC/Decolar) ── */
+        body.has-banners #home { min-height: min(640px, 78svh); padding-bottom: 120px; }
+        body.has-banners .hero-scroll { display: none; }
+        .promo-banners { position: relative; z-index: 3; padding: 0 0 8px; background: transparent; }
+        body.has-banners .promo-banners { margin-top: -88px; }
+        .promo-wrap { border-radius: 22px; box-shadow: 0 30px 60px -30px rgba(8,20,48,.55); outline: none; }
+        .promo-slide picture, .promo-slide img { display: block; width: 100%; }
+        .promo-slide img { aspect-ratio: 2 / 1; min-height: 0; max-height: 560px; object-fit: cover; user-select: none; }
+        .promo-nav { width: 46px; height: 46px; background: rgba(255,255,255,.92); color: var(--ink, #0B1B3F); box-shadow: 0 6px 18px rgba(0,0,0,.18); opacity: .9; }
+        .promo-nav:hover { background: #fff; color: var(--accent); opacity: 1; }
+        .promo-dots { bottom: 12px; gap: 6px; background: rgba(8,20,48,.35); padding: 6px 10px; border-radius: 99px; backdrop-filter: blur(6px); }
+        .promo-dot { width: 22px; height: 6px; border-radius: 99px; background: rgba(255,255,255,.45); overflow: hidden; position: relative; }
+        .promo-dot span { position: absolute; inset: 0; width: 0; background: #fff; border-radius: inherit; }
+        .promo-dot.active { width: 40px; background: rgba(255,255,255,.45); }
+        .promo-dot.active span { animation: bnProgress var(--bn-secs, 7s) linear forwards; }
+        .promo-wrap.paused .promo-dot.active span { animation-play-state: paused; }
+        @keyframes bnProgress { from { width: 0; } to { width: 100%; } }
+        @media (max-width: 768px) {
+            body.has-banners #home { min-height: 74svh; padding-bottom: 84px; }
+            body.has-banners .promo-banners { margin-top: -56px; }
+            .promo-wrap { border-radius: 16px; }
+            .promo-slide.has-mobile img { aspect-ratio: 1 / 1; max-height: none; }
+            .promo-nav { width: 36px; height: 36px; font-size: 13px; }
+            .promo-prev { left: 8px; } .promo-next { right: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -573,7 +738,7 @@
                 <a href="sobre.html">Sobre</a>
             </nav>
             <div class="hdr-cta">
-                <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" class="btn btn-accent btn-sm">
+                <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" target="_blank" rel="noopener noreferrer" class="btn btn-accent btn-sm">
                     <i class="fab fa-whatsapp"></i> WhatsApp
                 </a>
             </div>
@@ -592,23 +757,32 @@
     <a href="#depoimentos"   onclick="closePanel()">Depoimentos</a>
     <a href="#contato"       onclick="closePanel()">Orçamento</a>
     <a href="sobre.html">Sobre</a>
-    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" class="mpanel-cta">
+    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" target="_blank" rel="noopener noreferrer" class="mpanel-cta">
         <i class="fab fa-whatsapp"></i> Falar no WhatsApp
     </a>
 </nav>
 
 <!-- ════════════ HERO ════════════ -->
 <section id="home">
-    <div class="hero-bg"></div>
+    <div class="hero-bg" aria-hidden="true">
+        <div class="hero-slide hs-1"></div>
+        <div class="hero-slide hs-2"></div>
+        <div class="hero-slide hs-3"></div>
+    </div>
     <div class="container">
         <div class="hero-body">
-            <div class="hero-badge" data-eid="hero-badge" data-elabel="Badge Hero"><i class="fa-solid fa-star"></i> Consultoria Premium de Viagens</div>
-            <h1 class="hero-h1" data-eid="hero-title" data-elabel="Título Principal">Viagens que <em>transformam</em> para sempre</h1>
-            <p class="hero-p" data-eid="hero-sub" data-elabel="Subtítulo Hero">Roteiros exclusivos e sob medida para viajantes que não aceitam o comum. Da primeira reunião ao retorno em casa — cuidamos de cada detalhe.</p>
+            <div class="hero-badge" data-eid="hero-badge" data-elabel="Badge Hero"><i class="fa-solid fa-star"></i>&nbsp;sua viagem começa aqui!</div>
+            <h1 class="hero-h1" data-eid="hero-title" data-elabel="Título Principal">Viajar bem&nbsp;<em>começa</em>&nbsp;com a escolha certa</h1>
+            <p class="hero-p" data-eid="hero-sub" data-elabel="Subtítulo Hero">Roteiros exclusivos e sob medida para viajantes que não aceitam o comum. Da primeira reunião ao retorno em casa, cuidamos de cada detalhe.</p>
             <div class="hero-btns">
                 <a href="#contato" class="btn btn-accent">Solicitar Meu Roteiro <i class="fa-solid fa-arrow-right"></i></a>
                 <a href="#destinos" class="btn btn-ghost">Ver Destinos</a>
             </div>
+            <ul class="hero-trust">
+                <li><i class="fa-solid fa-user-check"></i> Atendimento humano</li>
+                <li><i class="fa-solid fa-credit-card"></i> Parcele em até 10x</li>
+                <li><i class="fa-solid fa-headset"></i> Suporte durante a viagem</li>
+            </ul>
         </div>
     </div>
     <div class="hero-scroll"><span>Explorar</span><i class="fa-solid fa-chevron-down"></i></div>
@@ -617,7 +791,7 @@
 <!-- ════════════ BANNERS PROMOCIONAIS ════════════ -->
 <section class="promo-banners" id="promo-banners" style="display:none;" aria-label="Banners Promocionais">
     <div class="container">
-        <div class="promo-wrap" id="promo-wrap">
+        <div class="promo-wrap" id="promo-wrap" tabindex="0" aria-roledescription="carrossel" aria-label="Promoções">
             <div class="promo-track" id="promo-track"></div>
             <button type="button" class="promo-nav promo-prev" id="promo-prev" aria-label="Banner anterior"><i class="fa-solid fa-chevron-left"></i></button>
             <button type="button" class="promo-nav promo-next" id="promo-next" aria-label="Próximo banner"><i class="fa-solid fa-chevron-right"></i></button>
@@ -630,10 +804,10 @@
 <div class="stats-bar">
     <div class="container">
         <div class="stats-grid">
-            <div class="stat rv"><div class="stat-n" data-eid="home-stat1-n" data-elabel="Stat 1 Número">12+</div><div class="stat-l" data-eid="home-stat1-l" data-elabel="Stat 1 Texto">Anos de Experiência</div></div>
-            <div class="stat rv"><div class="stat-n" data-eid="home-stat2-n" data-elabel="Stat 2 Número">15k+</div><div class="stat-l" data-eid="home-stat2-l" data-elabel="Stat 2 Texto">Viajantes Felizes</div></div>
-            <div class="stat rv"><div class="stat-n" data-eid="home-stat3-n" data-elabel="Stat 3 Número">25</div><div class="stat-l" data-eid="home-stat3-l" data-elabel="Stat 3 Texto">Países Atendidos</div></div>
-            <div class="stat rv"><div class="stat-n" data-eid="home-stat4-n" data-elabel="Stat 4 Número">99%</div><div class="stat-l" data-eid="home-stat4-l" data-elabel="Stat 4 Texto">Satisfação</div></div>
+            <div class="stat rv"><div class="stat-n" data-eid="home-stat1-n" data-elabel="Stat 1 Número"><br></div><div class="stat-l" data-eid="home-stat1-l" data-elabel="Stat 1 Texto"><br></div></div>
+            <div class="stat rv"><div class="stat-n" data-eid="home-stat2-n" data-elabel="Stat 2 Número">Muitos</div><div class="stat-l" data-eid="home-stat2-l" data-elabel="Stat 2 Texto">Clientes Felizes</div></div>
+            <div class="stat rv"><div class="stat-n" data-eid="home-stat3-n" data-elabel="Stat 3 Número">Atendemos</div><div class="stat-l" data-eid="home-stat3-l" data-elabel="Stat 3 Texto">NACIONAL E INTERNACIONAL</div></div>
+            <div class="stat rv"><div class="stat-n" data-eid="home-stat4-n" data-elabel="Stat 4 Número">100%</div><div class="stat-l" data-eid="home-stat4-l" data-elabel="Stat 4 Texto">Satisfação</div></div>
         </div>
     </div>
 </div>
@@ -674,13 +848,13 @@
                 <span class="label">Destinos</span>
                 <h2 class="h2" data-eid="dest-title" data-elabel="Título Destinos">Experiências que ficam<br>na memória para sempre</h2>
             </div>
-            <a href="#contato" class="btn btn-navy" style="flex-shrink:0">Ver Todos <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="#contato" class="btn btn-navy dest-cta" style="flex-shrink:0">Não achou seu destino? Peça uma cotação <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <div class="cards-grid">
+        <div class="cards-grid m-carousel" id="dest-grid">
 
             <a href="pacote.html?id=lencois" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=700&q=80" alt="Lençóis Maranhenses" loading="lazy" decoding="async" data-eid="card1-img" data-elabel="Foto Lençóis">
+                    <img src="imagens/destinos/lencois-1-sm.webp" width="760" height="507" data-elabel="Foto Lençóis">
                     <div class="card-flag" data-eid="card1-flag" data-elabel="País Lençóis">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -696,7 +870,7 @@
 
             <a href="pacote.html?id=disney" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1568092816214-02404ef89f59?auto=format&fit=crop&w=700&q=80" alt="Disney Orlando" loading="lazy" decoding="async" data-eid="card2-img" data-elabel="Foto Disney">
+                    <img src="imagens/destinos/disney-1-sm.webp" width="760" height="507" data-elabel="Foto Disney">
                     <div class="card-flag" data-eid="card2-flag" data-elabel="País Disney">EUA</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -712,7 +886,7 @@
 
             <a href="pacote.html?id=maceio" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1564939558297-fc396f18e5c7?auto=format&fit=crop&w=700&q=80" alt="Maceió" loading="lazy" decoding="async" data-eid="card3-img" data-elabel="Foto Maceió">
+                    <img src="imagens/destinos/maceio-p1-sm.webp" width="760" height="507" data-elabel="Foto Maceió">
                     <div class="card-flag" data-eid="card3-flag" data-elabel="País Maceió">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -728,7 +902,7 @@
 
             <a href="pacote.html?id=portogalinhas" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=700&q=80" alt="Porto de Galinhas" loading="lazy" decoding="async" data-eid="card4-img" data-elabel="Foto Porto de Galinhas">
+                    <img src="imagens/destinos/portogalinhas-p1-sm.webp" width="760" height="507" data-elabel="Foto Porto de Galinhas">
                     <div class="card-flag" data-eid="card4-flag" data-elabel="País Porto de Galinhas">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -744,7 +918,7 @@
 
             <a href="pacote.html?id=riodejaneiro" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=700&q=80" alt="Rio de Janeiro" loading="lazy" decoding="async" data-eid="card5-img" data-elabel="Foto Rio de Janeiro">
+                    <img src="imagens/destinos/rio-1-sm.webp" width="760" height="507" data-elabel="Foto Rio de Janeiro">
                     <div class="card-flag" data-eid="card5-flag" data-elabel="País Rio de Janeiro">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -760,7 +934,7 @@
 
             <a href="pacote.html?id=joaopessoa" class="card-link rv">
                 <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80" alt="João Pessoa" loading="lazy" decoding="async" data-eid="card6-img" data-elabel="Foto João Pessoa">
+                    <img src="imagens/destinos/joaopessoa-1-sm.webp" width="760" height="507" data-elabel="Foto João Pessoa">
                     <div class="card-flag" data-eid="card6-flag" data-elabel="País João Pessoa">Brasil</div>
                     <div class="card-overlay"><span>Ver pacote <i class="fa-solid fa-arrow-right"></i></span></div>
                 </div>
@@ -783,7 +957,7 @@
     <div class="container">
         <div class="dif-grid">
             <div class="dif-img-wrap rv">
-                <img src="https://sonhoreal.tur.br/wp-content/uploads/2025/10/Como-escolher-a-agencia-de-turismo-ideal-para-uma-viagem.webp" alt="Equipe Lovisa Destinos" class="dif-img" loading="lazy" data-eid="dif-img" data-elabel="Foto Equipe">
+                <img src="imagens/uploads/equipe-lovisa.webp" alt="Equipe Lovisa Destinos" class="dif-img" loading="lazy" data-eid="dif-img" data-elabel="Foto Equipe">
                 <div class="dif-badge" data-eid="dif-badge" data-elabel="Badge Clientes"><strong>+15k</strong><small>Clientes Satisfeitos</small></div>
             </div>
             <div class="rv">
@@ -825,7 +999,7 @@
             <p class="lead">Veja os momentos inesquecíveis compartilhados por quem viaja com a Lovisa Destinos.</p>
         </div>
         
-        <div class="cards-grid" style="grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="cards-grid insta-grid m-carousel">
             
             <!-- POST 1 -->
             <div class="card-link rv">
@@ -887,7 +1061,7 @@
                 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;color:#1A73E8;"></i>
             </a>
         </div>
-        <div class="dep-grid" id="dep-grid">
+        <div class="dep-grid m-carousel" id="dep-grid">
 
             <div class="dep-card rv" data-dep-id="0">
                 <div class="dep-header">
@@ -1033,22 +1207,17 @@
             </div>
             <div class="form-card rv">
                 <form id="form-orcamento" onsubmit="submitForm(event)">
+                    <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
                     <div class="row2">
-                        <div class="ig"><label>Nome Completo</label><input id="f-nome" type="text" placeholder="Ex: Maria Silva" required></div>
-                        <div class="ig"><label>WhatsApp</label><input id="f-whats" type="tel" placeholder="(85) 99999-9999" required></div>
+                        <div class="ig"><label>Nome Completo</label><input id="f-nome" type="text" autocomplete="name" placeholder="Ex: Maria Silva" required></div>
+                        <div class="ig"><label>WhatsApp</label><input id="f-whats" type="tel" inputmode="tel" autocomplete="tel" placeholder="(85) 99999-9999" required></div>
                     </div>
-                    <div class="ig"><label>E-mail</label><input id="f-email" type="email" placeholder="seu@email.com" required></div>
+                    <div class="ig"><label>E-mail</label><input id="f-email" type="email" autocomplete="email" placeholder="seu@email.com" required></div>
                     <div class="row2">
                         <div class="ig">
                             <label>Destino</label>
                             <select id="f-destino" required>
                                 <option value="">Selecione…</option>
-                                <option>Fernando de Noronha</option>
-                                <option>Maldivas</option>
-                                <option>Paris</option>
-                                <option>Costa Amalfitana</option>
-                                <option>Santorini</option>
-                                <option>Dubai</option>
                                 <option>Outro destino</option>
                             </select>
                         </div>
@@ -1096,7 +1265,7 @@
                 <p data-eid="ft-desc" data-elabel="Rodapé — Descrição">Consultoria especializada em viagens premium e roteiros personalizados para quem não aceita o comum.</p>
                 <div class="ft-social">
                     <a href="https://www.instagram.com/lovisadestinos" target="_blank" aria-label="Instagram" data-eid="ft-social-instagram" data-elabel="Rodapé — Link Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" aria-label="WhatsApp" data-eid="ft-social-whatsapp" data-elabel="Rodapé — Link WhatsApp Social"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" data-eid="ft-social-whatsapp" data-elabel="Rodapé — Link WhatsApp Social"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
             <div>
@@ -1121,7 +1290,7 @@
             <div>
                 <h5 data-eid="ft-col3-title" data-elabel="Rodapé — Título Coluna Contato">Contato</h5>
                 <div class="ft-links">
-                    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" data-eid="ft-phone" data-elabel="Rodapé — Telefone WhatsApp"><i class="fab fa-whatsapp" style="color:var(--wa);margin-right:7px"></i>(19) 99539-6281</a>
+                    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" target="_blank" rel="noopener noreferrer" data-eid="ft-phone" data-elabel="Rodapé — Telefone WhatsApp"><i class="fab fa-whatsapp" style="color:var(--wa);margin-right:7px"></i>(19) 99539-6281</a>
                     <a href="mailto:vendas@lovisadestinos.com.br" data-eid="ft-email" data-elabel="Rodapé — E-mail"><i class="fa-solid fa-envelope" style="color:var(--accent);margin-right:7px"></i>vendas@lovisadestinos.com.br</a>
                     <span data-eid="ft-location" data-elabel="Rodapé — Localização"><i class="fa-solid fa-location-dot" style="color:var(--accent);margin-right:7px"></i>Brasil</span>
                     <span data-eid="ft-hours" data-elabel="Rodapé — Horário de Atendimento"><i class="fa-solid fa-clock" style="color:var(--accent);margin-right:7px"></i>Atendimento das 09h00 às 17h00 seg a sex</span>
@@ -1303,18 +1472,15 @@
             status: 'novo'
         };
 
+        leadData.website = (document.getElementById('f-website') || {}).value || '';
+        leadData.origem = 'Formulário da home';
         try {
-            const stored = JSON.parse(localStorage.getItem('lovisa_leads') || '[]');
-            stored.unshift(leadData);
-            localStorage.setItem('lovisa_leads', JSON.stringify(stored));
-        } catch (_) {}
-
-        try {
-            fetch('/api/lead', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lead: leadData })
-            }).catch(() => {});
+            const payload = JSON.stringify({ lead: leadData });
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon('/api/lead', new Blob([payload], { type: 'application/json' }));
+            } else {
+                fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload, keepalive: true }).catch(() => {});
+            }
         } catch (_) {}
 
         // Feedback visual e abre SEMPRE em nova guia
@@ -1332,7 +1498,12 @@
         }, 2000);
     }
 </script>
+<div class="m-cta" id="m-cta">
+    <a href="#contato" class="m-cta-main"><i class="fa-solid fa-paper-plane"></i> Pedir cotação grátis</a>
+    <a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%20Destinos%2C%20quero%20solicitar%20informa%C3%A7%C3%B5es%20sobre%20as%20viagens!" target="_blank" rel="noopener noreferrer" class="m-cta-wa" aria-label="Falar no WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+<script src="site-ui.js?v=20261125" defer></script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
-<script src="editor.js?v=20261125-leads-form-fix"></script>
+<script src="editor.js?v=20261125-v2"></script>
 </body>
 </html>

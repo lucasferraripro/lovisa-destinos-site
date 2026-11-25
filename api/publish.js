@@ -103,6 +103,7 @@ export default async function handler(req, res) {
     try {
         const now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
         content = cleanContent(content);
+        delete content._leads; // dados de clientes nunca vao para o content.json publico
 
         await commitFile('content.json', JSON.stringify(content, null, 2), `Editor: atualiza conteudo (${now})`);
 

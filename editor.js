@@ -15,7 +15,7 @@
     const isAdmin  = auth && auth.expires > Date.now();
     const params   = new URLSearchParams(location.search);
     const editMode = isAdmin && (params.get('editor') === '1' || sessionStorage.getItem('editor_active') === '1');
-    const FALLBACK_PACKAGE_IMG = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80';
+    const FALLBACK_PACKAGE_IMG = 'imagens/destinos/hero-palmeiras-sm.webp';
 
     function escapeHTML(value) {
         return String(value || '').replace(/[&<>"']/g, ch => ({
@@ -171,12 +171,15 @@
         const dots  = document.getElementById('promo-dots');
         const prev  = document.getElementById('promo-prev');
         const next  = document.getElementById('promo-next');
+        const wrap  = document.getElementById('promo-wrap');
         if (!sec || !track) return;
-        if (_bannerTimer) { clearInterval(_bannerTimer); _bannerTimer = null; }
+        if (_bannerTimer) { clearTimeout(_bannerTimer); _bannerTimer = null; }
 
         const list = (Array.isArray(cms && cms._banners) ? cms._banners : [])
             .filter(b => b && b.active !== false && isValidImageSrc(b.img));
+        const secs = Math.min(60, Math.max(3, parseInt(cms && cms._bannerInterval, 10) || 7));
 
+        document.body.classList.toggle('has-banners', list.length > 0);
         if (!list.length) {
             sec.style.display = 'none';
             track.innerHTML = '';
@@ -185,52 +188,70 @@
         }
 
         sec.style.display = 'block';
+        sec.style.setProperty('--bn-secs', secs + 's');
         track.innerHTML = list.map((b, i) => {
-            const imgTag = `<img src="${escapeHTML(b.img)}" alt="${escapeHTML(b.title || ('Banner ' + (i + 1)))}" loading="${i === 0 ? 'eager' : 'lazy'}">`;
+            const alt = escapeHTML(b.title || ('Promoção ' + (i + 1)));
+            const lazy = i === 0 ? 'eager' : 'lazy';
+            const mob = isValidImageSrc(b.imgMobile) ? `<source media="(max-width: 768px)" srcset="${escapeHTML(b.imgMobile)}">` : '';
+            const pic = `<picture>${mob}<img src="${escapeHTML(b.img)}" alt="${alt}" loading="${lazy}" decoding="async" draggable="false"></picture>`;
             const link = (b.link || '').trim();
-            if (link && (/^https?:\/\//i.test(link) || link.startsWith('#') || link.endsWith('.html') || link.includes('pacote.html'))) {
+            if (link && (/^https?:\/\//i.test(link) || link.startsWith('#') || /\.html/.test(link))) {
                 const ext = /^https?:\/\//i.test(link) && !link.includes('lovisadestinos.com.br');
-                return `<a class="promo-slide" href="${escapeHTML(link)}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${imgTag}</a>`;
+                return `<a class="promo-slide${mob ? ' has-mobile' : ''}" href="${escapeHTML(link)}" aria-label="${alt}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${pic}</a>`;
             }
-            return `<div class="promo-slide">${imgTag}</div>`;
+            return `<div class="promo-slide${mob ? ' has-mobile' : ''}">${pic}</div>`;
         }).join('');
 
-        let cur = 0;
+        let cur = 0, paused = false;
+        const many = list.length > 1;
+        const schedule = () => {
+            if (_bannerTimer) clearTimeout(_bannerTimer);
+            if (many && !paused && !document.hidden) _bannerTimer = setTimeout(() => go(cur + 1), secs * 1000);
+        };
         const go = (idx) => {
             cur = (idx + list.length) % list.length;
             track.style.transform = `translateX(-${cur * 100}%)`;
+            track.querySelectorAll('.promo-slide').forEach((s, i) => s.setAttribute('aria-hidden', i === cur ? 'false' : 'true'));
             if (dots) {
-                dots.querySelectorAll('.promo-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+                dots.querySelectorAll('.promo-dot').forEach((d, i) => {
+                    d.classList.remove('active');
+                    if (i === cur) { void d.offsetWidth; d.classList.add('active'); }
+                });
             }
+            schedule();
         };
 
         if (dots) {
-            dots.innerHTML = list.length > 1
-                ? list.map((_, i) => `<button type="button" class="promo-dot${i === 0 ? ' active' : ''}" aria-label="Ir para banner ${i + 1}"></button>`).join('')
+            dots.innerHTML = many
+                ? list.map((_, i) => `<button type="button" class="promo-dot" aria-label="Ver promoção ${i + 1}"><span></span></button>`).join('')
                 : '';
             dots.querySelectorAll('.promo-dot').forEach((d, i) => { d.onclick = () => go(i); });
         }
-        if (prev) {
-            prev.style.display = list.length > 1 ? 'flex' : 'none';
-            prev.onclick = () => go(cur - 1);
-        }
-        if (next) {
-            next.style.display = list.length > 1 ? 'flex' : 'none';
-            next.onclick = () => go(cur + 1);
-        }
-        go(0);
+        if (prev) { prev.style.display = many ? 'flex' : 'none'; prev.onclick = () => go(cur - 1); }
+        if (next) { next.style.display = many ? 'flex' : 'none'; next.onclick = () => go(cur + 1); }
 
-        if (list.length > 1) {
-            const wrap = document.getElementById('promo-wrap');
-            const start = () => { _bannerTimer = setInterval(() => go(cur + 1), 6000); };
-            const stop  = () => { if (_bannerTimer) { clearInterval(_bannerTimer); _bannerTimer = null; } };
-            if (wrap && !wrap._ldBannerHover) {
-                wrap._ldBannerHover = true;
-                wrap.addEventListener('mouseenter', stop);
-                wrap.addEventListener('mouseleave', start);
-            }
-            start();
+        if (wrap && !wrap._ldBannerInit) {
+            wrap._ldBannerInit = true;
+            wrap.addEventListener('mouseenter', () => { paused = true; wrap.classList.add('paused'); if (_bannerTimer) clearTimeout(_bannerTimer); });
+            wrap.addEventListener('mouseleave', () => { paused = false; wrap.classList.remove('paused'); go(cur); });
+            document.addEventListener('visibilitychange', () => go(cur));
+            // deslizar com o dedo
+            let x0 = null, moved = false;
+            wrap.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; moved = false; }, { passive: true });
+            wrap.addEventListener('touchmove', e => { if (x0 !== null && Math.abs(e.touches[0].clientX - x0) > 10) moved = true; }, { passive: true });
+            wrap.addEventListener('touchend', e => {
+                if (x0 === null) return;
+                const dx = e.changedTouches[0].clientX - x0; x0 = null;
+                if (Math.abs(dx) > 40 && wrap._ldGo) wrap._ldGo(dx < 0 ? 1 : -1);
+            });
+            wrap.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);
+            wrap.addEventListener('keydown', e => {
+                if (e.key === 'ArrowLeft' && wrap._ldGo) wrap._ldGo(-1);
+                if (e.key === 'ArrowRight' && wrap._ldGo) wrap._ldGo(1);
+            });
         }
+        wrap && (wrap._ldGo = (d) => go(cur + d));
+        go(0);
     }
 
     function fileToDataUrl(file) {
@@ -1042,144 +1063,150 @@
         },
 
         /* ── GERENCIAR SOLICITAÇÕES / LEADS ── */
-        updateLeadsBadge() {
+        /* Solicitações ficam em /api/lead (criptografadas, só com a senha do painel) */
+        async fetchLeads() {
+            const secret = sessionStorage.getItem('lovisa_secret') || '';
+            const r = await fetch('/api/lead?_=' + Date.now(), { headers: { 'x-admin-secret': secret } });
+            if (r.status === 401) throw new Error('Sessão expirada. Saia e entre de novo no painel.');
+            const j = await r.json().catch(() => ({}));
+            if (!r.ok) throw new Error(j.error || 'Não foi possível carregar as solicitações.');
+            this._leads = Array.isArray(j.leads) ? j.leads : [];
+            return this._leads;
+        },
+
+        async updateLeadsBadge() {
             const badge = document.getElementById('ld-leads-badge');
             if (!badge) return;
-            let count = Array.isArray(this.cms._leads) ? this.cms._leads.length : 0;
             try {
-                const local = JSON.parse(localStorage.getItem('lovisa_leads') || '[]');
-                if (Array.isArray(local) && local.length > count) count = local.length;
-            } catch (_) {}
-            if (count > 0) {
-                badge.textContent = count;
-                badge.style.display = 'inline-block';
-            } else {
-                badge.style.display = 'none';
-            }
+                const list = this._leads || await this.fetchLeads();
+                const seen = parseInt(localStorage.getItem('lovisa_leads_seen') || '0', 10);
+                const novos = list.filter(l => (l.timestamp || 0) > seen).length;
+                badge.textContent = novos ? (novos + (novos > 1 ? ' novas' : ' nova')) : String(list.length);
+                badge.style.display = list.length ? 'inline-block' : 'none';
+            } catch (_) { badge.style.display = 'none'; }
         },
 
         pManageLeads() {
             const p = this.panel_('📋 Solicitações de Viagem / Formulário');
-            if (!Array.isArray(this.cms._leads)) this.cms._leads = [];
+            const seenBefore = parseInt(localStorage.getItem('lovisa_leads_seen') || '0', 10);
+            let filtro = '';
 
-            // Mescla com localStorage para garantir exibição instantânea
-            try {
-                const local = JSON.parse(localStorage.getItem('lovisa_leads') || '[]');
-                if (Array.isArray(local) && local.length) {
-                    const ids = new Set(this.cms._leads.map(l => l.id || (l.data + l.nome)));
-                    local.forEach(l => {
-                        const key = l.id || (l.data + l.nome);
-                        if (!ids.has(key)) {
-                            this.cms._leads.push(l);
-                            ids.add(key);
-                        }
-                    });
-                    this.cms._leads.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                }
-            } catch (_) {}
-
-            const render = () => {
-                const list = this.cms._leads || [];
+            const shell = (inner) => {
                 p.querySelector('.ld-pb')?.remove();
                 const pb = document.createElement('div');
                 pb.className = 'ld-pb';
-                pb.innerHTML = `
-                    <div class="ld-info" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-                        <span>Solicitações de contato e cotação enviadas pelos clientes no formulário do site.</span>
-                        ${list.length ? '<button type="button" class="ld-btn" id="ld-export-csv" style="padding:6px 12px;font-size:12px;background:#059669;color:#fff;border-radius:6px;flex-shrink:0;">📥 Baixar Excel / CSV</button>' : ''}
-                    </div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;">
-                        <strong style="font-size:13px;color:#374151;">Total de Solicitações: <span style="color:#059669;">${list.length}</span></strong>
-                    </div>
-                    <div id="ld-leads-container" style="display:flex;flex-direction:column;gap:10px;max-height:450px;overflow-y:auto;padding-right:4px;">
-                        ${list.length ? list.map((lead, i) => {
-                            const cleanPhone = String(lead.whats || '').replace(/\D/g, '');
-                            const waLink = cleanPhone ? `https://wa.me/55${cleanPhone}?text=${encodeURIComponent('Olá ' + (lead.nome || '') + '! Sou da Lovisa Destinos. Recebemos sua solicitação para *' + (lead.destino || 'seu pacote') + '* e já estamos preparando sua cotação personalizada!')}` : null;
-                            return `
-                                <div style="border:1.5px solid #E5E7EB;border-radius:10px;padding:12px 14px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid #F3F4F6;padding-bottom:6px;">
-                                        <div style="font-size:11px;color:#6B7280;display:flex;align-items:center;gap:5px;">
-                                            📅 <strong>${escapeHTML(lead.data || 'Data não registrada')}</strong>
-                                        </div>
-                                        <button type="button" class="ld-ko" data-lead-del="${i}" title="Excluir" style="padding:3px 8px;font-size:11px;color:#DC2626;">✕ Excluir</button>
-                                    </div>
-                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-bottom:8px;">
-                                        <div><span style="color:#6B7280;font-size:11px;">NOME</span><div style="font-weight:700;color:#111827;">${escapeHTML(lead.nome || '—')}</div></div>
-                                        <div><span style="color:#6B7280;font-size:11px;">DESTINO</span><div style="font-weight:700;color:#2563EB;">✈️ ${escapeHTML(lead.destino || '—')}</div></div>
-                                        <div>
-                                            <span style="color:#6B7280;font-size:11px;">WHATSAPP</span>
-                                            <div>
-                                                <strong style="color:#111827;">${escapeHTML(lead.whats || '—')}</strong>
-                                                ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-left:6px;background:#25D366;color:#fff;padding:2px 8px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;"><i class="fab fa-whatsapp"></i> Conversar</a>` : ''}
-                                            </div>
-                                        </div>
-                                        <div><span style="color:#6B7280;font-size:11px;">E-MAIL</span><div style="color:#374151;">${escapeHTML(lead.email || '—')}</div></div>
-                                        <div><span style="color:#6B7280;font-size:11px;">VIAJANTES</span><div style="color:#374151;">👥 ${escapeHTML(lead.viajantes || '—')}</div></div>
-                                        <div><span style="color:#6B7280;font-size:11px;">PERÍODO</span><div style="color:#374151;">🗓️ Ida: ${escapeHTML(lead.ida || '—')} · Volta: ${escapeHTML(lead.volta || '—')}</div></div>
-                                    </div>
-                                    ${lead.obs && lead.obs !== '—' ? `
-                                        <div style="background:#F9FAFB;border-radius:6px;padding:6px 10px;font-size:12px;color:#4B5563;margin-top:6px;">
-                                            <strong style="color:#374151;">Observações:</strong> ${escapeHTML(lead.obs)}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            `;
-                        }).join('') : `
-                            <div style="text-align:center;padding:30px 10px;color:#6B7280;">
-                                <div style="font-size:32px;margin-bottom:8px;">📬</div>
-                                <strong>Nenhuma solicitação recebida ainda.</strong>
-                                <p style="font-size:12px;margin-top:4px;">Quando os clientes preencherem o formulário no site, as solicitações com data e detalhes aparecerão aqui automaticamente.</p>
-                            </div>
-                        `}
-                    </div>
-                `;
+                pb.innerHTML = inner;
                 p.append(pb);
+                return pb;
+            };
 
-                // Exportar CSV
+            const card = (lead) => {
+                const digits = String(lead.whats || '').replace(/\D/g, '');
+                const phone = digits.length >= 12 && digits.startsWith('55') ? digits : (digits ? '55' + digits : '');
+                const primeiro = String(lead.nome || '').split(' ')[0];
+                const msg = 'Olá ' + primeiro + '! Aqui é da Lovisa Destinos. Recebemos sua solicitação para ' + (lead.destino || 'sua viagem') + ' e já estamos preparando sua cotação.';
+                const waLink = phone ? 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg) : '';
+                const isNew = (lead.timestamp || 0) > seenBefore;
+                const field = (label, value, extra) => '<div><span style="color:#6B7280;font-size:11px;">' + label + '</span><div style="' + (extra || '') + '">' + escapeHTML(value || '—') + '</div></div>';
+                return '<div style="border:1.5px solid ' + (isNew ? '#86EFAC' : '#E5E7EB') + ';border-radius:10px;padding:12px 14px;background:#fff;">'
+                    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid #F3F4F6;padding-bottom:6px;gap:8px;">'
+                    + '<div style="font-size:12px;color:#6B7280;">📅 <strong>' + escapeHTML(lead.data || '—') + '</strong>'
+                    + (isNew ? ' <span style="background:#DCFCE7;color:#166534;font-weight:700;padding:1px 8px;border-radius:99px;font-size:11px;margin-left:4px;">NOVA</span>' : '') + '</div>'
+                    + '<button type="button" class="ld-ko" data-lead-del="' + escapeHTML(lead.id || '') + '" style="padding:4px 10px;font-size:12px;color:#DC2626;">✕ Excluir</button></div>'
+                    + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;font-size:13px;">'
+                    + field('NOME', lead.nome, 'font-weight:700;color:#111827;')
+                    + field('DESTINO', lead.destino, 'font-weight:700;color:#2563EB;')
+                    + field('WHATSAPP', lead.whats, 'font-weight:700;')
+                    + field('E-MAIL', lead.email, 'word-break:break-all;')
+                    + field('VIAJANTES', lead.viajantes)
+                    + field('DATAS', (lead.ida || '—') + ' → ' + (lead.volta || '—'))
+                    + '</div>'
+                    + (lead.obs && lead.obs !== '—' ? '<div style="background:#F9FAFB;border-radius:6px;padding:6px 10px;font-size:12px;color:#4B5563;margin-top:8px;"><strong>Observações:</strong> ' + escapeHTML(lead.obs) + '</div>' : '')
+                    + (waLink ? '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:700;"><i class="fab fa-whatsapp"></i> Responder no WhatsApp</a>' : '')
+                    + '</div>';
+            };
+
+            const render = () => {
+                const all = this._leads || [];
+                const q = filtro.trim().toLowerCase();
+                const list = q ? all.filter(l => [l.nome, l.whats, l.email, l.destino, l.obs].join(' ').toLowerCase().includes(q)) : all;
+                const empty = '<div style="text-align:center;padding:30px 10px;color:#6B7280;"><div style="font-size:32px;margin-bottom:8px;">📬</div><strong>'
+                    + (q ? 'Nenhuma solicitação encontrada nessa busca.' : 'Nenhuma solicitação recebida ainda.') + '</strong><p style="font-size:12px;margin-top:4px;">'
+                    + (q ? 'Tente outro nome ou destino.' : 'Quando um cliente enviar o formulário do site, o pedido aparece aqui com data e hora.') + '</p></div>';
+                const pb = shell(
+                    '<div class="ld-info">Pedidos de cotação enviados pelo formulário do site. Ficam guardados com segurança (só você vê) e não precisam de "Publicar".</div>'
+                    + '<div style="display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap;">'
+                    + '<input type="search" id="ld-leads-q" placeholder="Buscar por nome, destino, telefone…" style="flex:1;min-width:180px;padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:14px;">'
+                    + '<button type="button" class="ld-btn" id="ld-leads-reload" title="Atualizar lista" style="padding:8px 12px;background:#F3F4F6;color:#111827;border-radius:8px;">↻ Atualizar</button>'
+                    + (all.length ? '<button type="button" class="ld-btn" id="ld-export-csv" style="padding:8px 12px;font-size:12px;background:#059669;color:#fff;border-radius:8px;">📥 Baixar Excel / CSV</button>' : '')
+                    + '</div>'
+                    + '<div style="font-size:13px;color:#374151;margin-bottom:8px;"><strong>Total: <span style="color:#059669;">' + all.length + '</span></strong>' + (q ? ' · mostrando ' + list.length : '') + '</div>'
+                    + '<div id="ld-leads-container" style="display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto;padding-right:4px;">'
+                    + (list.length ? list.map(card).join('') : empty)
+                    + '</div>');
+
+                const qEl = pb.querySelector('#ld-leads-q');
+                qEl.value = filtro;
+                qEl.oninput = () => {
+                    filtro = qEl.value;
+                    const pos = qEl.selectionStart;
+                    render();
+                    const n = p.querySelector('#ld-leads-q');
+                    n.focus(); n.setSelectionRange(pos, pos);
+                };
+                pb.querySelector('#ld-leads-reload').onclick = () => load();
+
                 const exportBtn = pb.querySelector('#ld-export-csv');
-                if (exportBtn) {
-                    exportBtn.onclick = () => {
-                        let csv = 'Data,Nome,WhatsApp,Email,Destino,Viajantes,Data Ida,Data Volta,Observações\n';
-                        list.forEach(l => {
-                            const row = [
-                                `"${(l.data || '').replace(/"/g, '""')}"`,
-                                `"${(l.nome || '').replace(/"/g, '""')}"`,
-                                `"${(l.whats || '').replace(/"/g, '""')}"`,
-                                `"${(l.email || '').replace(/"/g, '""')}"`,
-                                `"${(l.destino || '').replace(/"/g, '""')}"`,
-                                `"${(l.viajantes || '').replace(/"/g, '""')}"`,
-                                `"${(l.ida || '').replace(/"/g, '""')}"`,
-                                `"${(l.volta || '').replace(/"/g, '""')}"`,
-                                `"${(l.obs || '').replace(/"/g, '""')}"`
-                            ];
-                            csv += row.join(',') + '\n';
-                        });
-                        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `lovisa_solicitacoes_${new Date().toISOString().slice(0,10)}.csv`;
-                        a.click();
-                        URL.revokeObjectURL(url);
-                    };
-                }
+                if (exportBtn) exportBtn.onclick = () => {
+                    const cols = ['data', 'nome', 'whats', 'email', 'destino', 'viajantes', 'ida', 'volta', 'obs'];
+                    const head = 'Data;Nome;WhatsApp;Email;Destino;Viajantes;Data Ida;Data Volta;Observações\n';
+                    const csv = head + all.map(l => cols.map(c => '"' + String(l[c] || '').replace(/"/g, '""') + '"').join(';')).join('\n');
+                    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'lovisa_solicitacoes_' + new Date().toISOString().slice(0, 10) + '.csv';
+                    a.click();
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                };
 
-                // Deletar lead
                 pb.querySelectorAll('[data-lead-del]').forEach(btn => {
-                    btn.onclick = () => {
-                        const idx = parseInt(btn.dataset.leadDel, 10);
-                        if (!confirm(`Deseja remover a solicitação de ${list[idx].nome}?`)) return;
-                        list.splice(idx, 1);
-                        this.cms._leads = list;
-                        this.save();
-                        this.markDirty();
-                        this.updateLeadsBadge();
-                        render();
+                    btn.onclick = async () => {
+                        const lead = all.find(l => l.id === btn.dataset.leadDel);
+                        if (!lead || !confirm('Excluir a solicitação de ' + lead.nome + '? Isso não pode ser desfeito.')) return;
+                        btn.disabled = true; btn.textContent = 'Excluindo…';
+                        try {
+                            const r = await fetch('/api/lead?id=' + encodeURIComponent(lead.id), {
+                                method: 'DELETE',
+                                headers: { 'x-admin-secret': sessionStorage.getItem('lovisa_secret') || '' }
+                            });
+                            const j = await r.json().catch(() => ({}));
+                            if (!r.ok) throw new Error(j.error || 'Erro ao excluir');
+                            this._leads = Array.isArray(j.leads) ? j.leads : all.filter(l => l.id !== lead.id);
+                            this.toast('Solicitação excluída.', 'ok');
+                            render();
+                            this.updateLeadsBadge();
+                        } catch (e) {
+                            this.toast('❌ ' + e.message, 'err');
+                            btn.disabled = false; btn.textContent = '✕ Excluir';
+                        }
                     };
                 });
             };
 
-            render();
+            const load = async () => {
+                shell('<div style="padding:30px;text-align:center;color:#6B7280;">Carregando solicitações…</div>');
+                try {
+                    await this.fetchLeads();
+                    render();
+                    const newest = Math.max(0, ...(this._leads || []).map(l => l.timestamp || 0));
+                    if (newest) localStorage.setItem('lovisa_leads_seen', String(newest));
+                    this.updateLeadsBadge();
+                } catch (e) {
+                    shell('<div style="padding:24px;text-align:center;color:#B91C1C;"><strong>' + escapeHTML(e.message) + '</strong></div>');
+                }
+            };
+            load();
         },
 
         /* ── GERENCIAR BANNERS ── */
@@ -1194,7 +1221,8 @@
                 const pb = document.createElement('div');
                 pb.className = 'ld-pb';
                 pb.innerHTML = `
-                    <div class="ld-info">Adicione banners promocionais (recomendado <strong>.webp</strong>, proporção 16:5 ou 1920x600px). Após salvar, clique em <strong>🚀 Publicar</strong>.</div>
+                    <div class="ld-info">Banners do topo do site (passam sozinhos, com setas e bolinhas). <strong>Computador:</strong> imagem horizontal 1920×960 (2:1). <strong>Celular (opcional):</strong> imagem quadrada 1080×1080. Deixe textos importantes no centro. Depois de salvar, clique em <strong>🚀 Publicar</strong>.</div>
+                    <div class="ld-f" style="display:flex;align-items:center;gap:8px;"><label for="bn-secs" style="margin:0;flex:1;">Tempo de cada banner (segundos)</label><input type="number" id="bn-secs" min="3" max="60" value="${Math.min(60, Math.max(3, parseInt(this.cms._bannerInterval, 10) || 7))}" style="width:80px;"></div>
                     <div id="bn-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
                         ${list.length ? list.map((b, i) => `
                             <div style="display:flex;align-items:center;gap:8px;padding:8px;border:1px solid #e5e7eb;border-radius:8px;background:${b.active === false ? '#f9fafb' : '#fff'};">
@@ -1219,7 +1247,12 @@
                         <div id="bn-file-status" class="ld-hint">Ou cole a URL da imagem abaixo.</div>
                     </div>
                     <div class="ld-f"><label>URL da imagem</label><input type="url" id="bn-img" value="${escapeHTML(editing?.img || '')}" placeholder="https://.../banner.webp"></div>
-                    <div class="ld-f"><label>Link ao clicar (opcional)</label><input type="text" id="bn-link" value="${escapeHTML(editing?.link || '')}" placeholder="https://brt.infotravel.com.br/... ou #destinos"></div>
+                    <div class="ld-f"><label>Imagem para celular (opcional, quadrada)</label>
+                        <button type="button" class="ld-ko" id="bn-mfile-btn" style="width:100%;margin-bottom:6px;">Escolher imagem do celular</button>
+                        <input type="file" id="bn-mfile" accept="image/*" style="display:none">
+                        <input type="url" id="bn-mimg" value="${escapeHTML(editing?.imgMobile || '')}" placeholder="Sem imagem de celular: usa a mesma do computador">
+                    </div>
+                    <div class="ld-f"><label>Link ao clicar (opcional)</label><input type="text" id="bn-link" list="bn-link-opts" value="${escapeHTML(editing?.link || '')}" placeholder="Escolha um pacote ou cole um link"><datalist id="bn-link-opts"><option value="#contato">Formulário de cotação</option><option value="#destinos">Lista de destinos</option>${Array.from(document.querySelectorAll('#destinos .card-link')).map(a => `<option value="${escapeHTML(a.getAttribute('href') || '')}">${escapeHTML((a.querySelector('h3') || {}).textContent || '')}</option>`).join('')}</datalist><div class="ld-hint">Para onde o cliente vai ao clicar no banner.</div></div>
                     <div class="ld-f" style="display:flex;align-items:center;gap:8px;">
                         <input type="checkbox" id="bn-active" ${editing?.active !== false ? 'checked' : ''} style="width:auto;">
                         <label for="bn-active" style="margin:0;">Exibir banner no site</label>
@@ -1234,6 +1267,20 @@
                 pb.querySelector('#ldc')?.addEventListener('click', () => this.closePanel());
                 pb.querySelector('#bn-cancel-ed')?.addEventListener('click', () => renderPanel(-1));
                 pb.querySelector('#bn-file-btn').onclick = () => pb.querySelector('#bn-file').click();
+                pb.querySelector('#bn-mfile-btn').onclick = () => pb.querySelector('#bn-mfile').click();
+                pb.querySelector('#bn-mfile').onchange = () => {
+                    const f = pb.querySelector('#bn-mfile').files[0];
+                    if (f) pb.querySelector('#bn-mfile-btn').textContent = 'Selecionado: ' + f.name;
+                };
+                pb.querySelector('#bn-secs').onchange = () => {
+                    const v = Math.min(60, Math.max(3, parseInt(pb.querySelector('#bn-secs').value, 10) || 7));
+                    pb.querySelector('#bn-secs').value = v;
+                    this.cms._bannerInterval = v;
+                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    this.markDirty();
+                    applyBanners(this.cms);
+                    this.toast('✓ Tempo salvo. Clique em Publicar para ir ao ar.', 'ok');
+                };
                 pb.querySelector('#bn-file').onchange = () => {
                     const f = pb.querySelector('#bn-file').files[0];
                     pb.querySelector('#bn-file-status').textContent = f ? `Selecionado: ${f.name}` : 'Nenhuma imagem selecionada.';
@@ -1272,6 +1319,20 @@
                         this.toast('Envie uma imagem ou cole uma URL válida', 'err');
                         return;
                     }
+                    let imgMobile = pb.querySelector('#bn-mimg').value.trim();
+                    const mfile = pb.querySelector('#bn-mfile').files[0];
+                    if (mfile) {
+                        saveBtn.disabled = true;
+                        saveBtn.textContent = 'Enviando imagem do celular...';
+                        try { imgMobile = await uploadImageFile(mfile); }
+                        catch (err) {
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = editing ? '✓ Atualizar Banner' : '+ Adicionar Banner';
+                            this.toast(err.message || 'Erro no upload', 'err');
+                            return;
+                        }
+                    }
+                    if (imgMobile && !isValidImageSrc(imgMobile)) imgMobile = '';
                     if (file) {
                         saveBtn.disabled = true;
                         saveBtn.textContent = 'Enviando imagem...';
@@ -1283,7 +1344,7 @@
                             return;
                         }
                     }
-                    const item = { id: editing?.id || ('bn-' + Date.now()), title, img, link, active };
+                    const item = { id: editing?.id || ('bn-' + Date.now()), title, img, imgMobile, link, active };
                     if (editing) list[editIndex] = item;
                     else list.push(item);
                     saveAndRefresh(-1);
