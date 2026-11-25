@@ -211,6 +211,7 @@
         const go = (idx) => {
             cur = (idx + list.length) % list.length;
             track.style.transform = `translateX(-${cur * 100}%)`;
+            sec.style.setProperty('--bn-bg', 'url("' + String(list[cur].imgMobile || list[cur].img).replace(/["\\]/g, '') + '")');
             track.querySelectorAll('.promo-slide').forEach((s, i) => s.setAttribute('aria-hidden', i === cur ? 'false' : 'true'));
             if (dots) {
                 dots.querySelectorAll('.promo-dot').forEach((d, i) => {
@@ -263,9 +264,37 @@
         });
     }
 
-    async function uploadImageFile(file) {
+    /* Reduz e converte para WebP no navegador (PNG do ChatGPT de 2-4MB vira ~200KB) */
+    function compressImage(file, maxW, quality, maxH) {
+        return new Promise((resolve) => {
+            if (!file || /gif|svg/i.test(file.type)) return resolve(file);
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                try {
+                    const scale = Math.min(1, maxW / img.naturalWidth, (maxH || maxW) / img.naturalHeight);
+                    const c = document.createElement('canvas');
+                    c.width = Math.round(img.naturalWidth * scale);
+                    c.height = Math.round(img.naturalHeight * scale);
+                    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                    c.toBlob(b => {
+                        URL.revokeObjectURL(url);
+                        if (!b || (b.size >= file.size && scale === 1 && /webp/i.test(file.type))) return resolve(file);
+                        const base = (file.name || 'imagem').replace(/\.[a-z0-9]+$/i, '');
+                        resolve(new File([b], base + (maxW <= 900 ? '-celular' : '') + '.webp', { type: 'image/webp' }));
+                    }, 'image/webp', quality);
+                } catch (_) { URL.revokeObjectURL(url); resolve(file); }
+            };
+            img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+            img.src = url;
+        });
+    }
+
+    async function uploadImageFile(file, opts) {
         if (!file) return null;
         if (!/^image\//i.test(file.type)) throw new Error('Selecione apenas arquivos de imagem.');
+        const o = opts || {};
+        file = await compressImage(file, o.maxW || 1920, o.quality || 0.82, o.maxH);
         if (file.size > 3 * 1024 * 1024) throw new Error('Imagem muito grande. Use ate 3MB.');
         const secret = sessionStorage.getItem('lovisa_secret') || '';
         const dataUrl = await fileToDataUrl(file);
@@ -278,6 +307,18 @@
         const data = await res.json();
         if (!res.ok || !data.url) throw new Error(data.error || 'Erro ao enviar imagem.');
         return data.url;
+    }
+
+    /* Fotos de fundo do topo (até 3, passam sozinhas) */
+    const HERO_DEFAULTS = ['imagens/destinos/hero-maragogi.webp', 'imagens/destinos/lencois-1.webp', 'imagens/destinos/rio-1.webp'];
+    function applyHero(cms) {
+        const slides = document.querySelectorAll('.hero-bg .hero-slide');
+        if (!slides.length) return;
+        const list = (Array.isArray(cms && cms._heroSlides) ? cms._heroSlides : []).filter(isValidImageSrc).slice(0, 3);
+        slides.forEach((el, i) => {
+            if (list.length) el.style.backgroundImage = 'url("' + String(list[i % list.length]).replace(/["\\]/g, '') + '")';
+            else el.style.removeProperty('background-image');
+        });
     }
 
     /* ─── APLICAR CONTEÚDO ──────────────────────────────────── */
@@ -319,6 +360,7 @@
         syncContactFooter(cms);
         applyPackages(cms);
         applyBanners(cms);
+        applyHero(cms);
     }
 
     async function fetchContent() {
@@ -464,6 +506,7 @@
             ${lastPub ? `<span class="ld-last-pub">Publicado: ${lastPub}</span><div class="ld-sep"></div>` : ''}
             <button class="ld-btn blue" id="ld-add-pkg">➕ <span class="ld-btn-label">Novo Pacote</span></button>
             <button class="ld-btn" id="ld-buy-links">🛒 <span class="ld-btn-label">Links Compra</span></button>
+            <button class="ld-btn" id="ld-hero">🏞️ <span class="ld-btn-label">Fotos do Topo</span></button>
             <button class="ld-btn" id="ld-banners">🖼️ <span class="ld-btn-label">Banners</span></button>
             <button class="ld-btn" id="ld-leads" style="background:#059669;color:#fff;font-weight:600;">📋 <span class="ld-btn-label">Solicitações</span> <span class="ld-badge" id="ld-leads-badge" style="background:#fff;color:#059669;padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px;display:none;">0</span></button>
             <div class="ld-sep"></div>
@@ -481,12 +524,17 @@
                 const footerBtn = document.createElement('button');
                 footerBtn.className = 'ld-btn';
                 footerBtn.id = 'ld-footer';
-                footerBtn.textContent = 'Rodape';
+                footerBtn.innerHTML = '📝 <span class="ld-btn-label">Rodapé</span>';
                 pubBtn.before(footerBtn);
             }
             document.getElementById('ld-add-pkg').onclick    = () => this.pAddPacote();
             document.getElementById('ld-buy-links').onclick  = () => this.pManageBuyLinks();
             document.getElementById('ld-banners').onclick    = () => this.pManageBanners();
+            const heroBtn = document.getElementById('ld-hero');
+            if (heroBtn) {
+                if (!document.querySelector('.hero-bg .hero-slide')) heroBtn.style.display = 'none';
+                heroBtn.onclick = () => this.pHero();
+            }
             document.getElementById('ld-leads').onclick      = () => this.pManageLeads();
             this.updateLeadsBadge();
             document.getElementById('ld-dep').onclick       = () => this.pManageDep();
@@ -1210,6 +1258,65 @@
         },
 
         /* ── GERENCIAR BANNERS ── */
+        pHero() {
+            const p = this.panel_('🏞️ Fotos de Fundo do Topo');
+            const render = () => {
+                const cur = (Array.isArray(this.cms._heroSlides) ? this.cms._heroSlides : []).filter(isValidImageSrc).slice(0, 3);
+                const shown = cur.length ? cur : HERO_DEFAULTS;
+                p.querySelector('.ld-pb')?.remove();
+                const pb = document.createElement('div');
+                pb.className = 'ld-pb';
+                pb.innerHTML = `
+                    <div class="ld-info">São as fotos grandes do começo do site, que trocam sozinhas a cada 7 segundos. Use fotos <strong>horizontais</strong> de paisagem, sem texto escrito. Pode usar de 1 a 3 fotos. O site já reduz e converte a imagem sozinho. Depois clique em <strong>🚀 Publicar</strong>.</div>
+                    ${[0, 1, 2].map(i => `
+                        <div style="border:1px solid #E5E7EB;border-radius:10px;padding:8px;margin-bottom:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><strong style="font-size:12px;color:#374151;">Foto ${i + 1}</strong>${cur[i] ? `<button type="button" class="ld-ko" data-hero-del="${i}" style="padding:3px 9px;font-size:11px;color:#DC2626;">✕ Remover</button>` : ''}</div>
+                            ${shown[i] && (cur[i] || !cur.length) ? `<img src="${escapeHTML(shown[i])}" class="ld-prev" style="height:96px;margin-bottom:6px;" alt="">` : '<div class="ld-prev" style="height:60px;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:12px;margin-bottom:6px;">Vazio (repete as outras)</div>'}
+                            <button type="button" class="ld-ko" data-hero-pick="${i}" style="width:100%;">${cur[i] ? 'Trocar esta foto' : 'Escolher foto do computador'}</button>
+                        </div>`).join('')}
+                    <input type="file" id="hero-file" accept="image/*" style="display:none">
+                    ${cur.length ? '<button type="button" class="ld-danger" id="hero-reset">Voltar às fotos originais</button>' : ''}
+                    <div class="ld-acts"><button class="ld-ko" id="ldc" style="flex:1;">Fechar</button></div>`;
+                p.appendChild(pb);
+                pb.querySelector('#ldc').onclick = () => this.closePanel();
+                const save = (list) => {
+                    this.cms._heroSlides = list;
+                    localStorage.setItem(CMS_KEY, JSON.stringify(this.cms));
+                    this.markDirty();
+                    applyHero(this.cms);
+                    render();
+                };
+                let slot = 0;
+                const fileIn = pb.querySelector('#hero-file');
+                pb.querySelectorAll('[data-hero-pick]').forEach(b => b.onclick = () => { slot = +b.dataset.heroPick; fileIn.click(); });
+                fileIn.onchange = async () => {
+                    const f = fileIn.files[0];
+                    if (!f) return;
+                    const btn = pb.querySelector(`[data-hero-pick="${slot}"]`);
+                    btn.disabled = true; btn.textContent = 'Enviando…';
+                    try {
+                        const url = await uploadImageFile(f, { maxW: 1920, maxH: 1280, quality: 0.8 });
+                        const list = (Array.isArray(this.cms._heroSlides) ? this.cms._heroSlides : []).filter(isValidImageSrc).slice(0, 3);
+                        if (slot < list.length) list[slot] = url; else list.push(url);
+                        save(list);
+                        this.toast('✓ Foto do topo trocada! Clique em Publicar para ir ao ar.', 'ok');
+                    } catch (e) {
+                        btn.disabled = false; btn.textContent = 'Tentar de novo';
+                        this.toast('❌ ' + (e.message || 'Erro no envio'), 'err');
+                    }
+                };
+                pb.querySelectorAll('[data-hero-del]').forEach(b => b.onclick = () => {
+                    const list = (this.cms._heroSlides || []).filter(isValidImageSrc);
+                    list.splice(+b.dataset.heroDel, 1);
+                    save(list);
+                });
+                pb.querySelector('#hero-reset')?.addEventListener('click', () => {
+                    if (confirm('Voltar às fotos originais do topo?')) save([]);
+                });
+            };
+            render();
+        },
+
         pManageBanners() {
             const p = this.panel_('🖼️ Gerenciar Banners do Topo');
             if (!Array.isArray(this.cms._banners)) this.cms._banners = [];
@@ -1336,7 +1443,13 @@
                     if (file) {
                         saveBtn.disabled = true;
                         saveBtn.textContent = 'Enviando imagem...';
-                        try { img = await uploadImageFile(file); }
+                        try {
+                            img = await uploadImageFile(file, { maxW: 1600 });
+                            if (!imgMobile) {
+                                saveBtn.textContent = 'Criando versão para celular...';
+                                imgMobile = await uploadImageFile(file, { maxW: 800, quality: 0.8 }).catch(() => '');
+                            }
+                        }
                         catch (err) {
                             saveBtn.disabled = false;
                             saveBtn.textContent = editing ? '✓ Atualizar Banner' : '+ Adicionar Banner';

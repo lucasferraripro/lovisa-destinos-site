@@ -752,6 +752,26 @@
             .promo-slide.has-mobile img { aspect-ratio: 3 / 2; }
             .promo-dots { margin-top: 10px; }
         }
+
+        /* ── Banners V5: faixa escura com a própria arte desfocada ao fundo ── */
+        body.has-banners #home { min-height: min(780px, 94svh); padding-bottom: 96px; }
+        body.has-banners .hero-scroll { display: none; }
+        body.has-banners .promo-banners { margin-top: 0; }
+        .promo-banners { position: relative; overflow: hidden; isolation: isolate; padding: 48px 0 30px; background: #0B1B3F; }
+        .promo-banners::before { content: ''; position: absolute; inset: -80px; z-index: -2; background-image: var(--bn-bg, none); background-size: cover; background-position: center; filter: blur(42px) saturate(1.25) brightness(.6); transform: scale(1.15); }
+        .promo-banners::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(11,27,63,.85) 0%, rgba(11,27,63,.25) 30%, rgba(11,27,63,.25) 70%, rgba(11,27,63,.9) 100%); }
+        .promo-wrap { border-radius: 20px; box-shadow: 0 40px 80px -30px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.08); background: transparent; }
+        .promo-dots { margin-top: 18px; }
+        .promo-dot, .promo-dot.active { background: rgba(255,255,255,.25); }
+        .promo-dot span { background: #fff; }
+        .promo-nav { background: rgba(255,255,255,.95); }
+        @media (max-width: 768px) {
+            body.has-banners #home { min-height: 88svh; padding-bottom: 48px; }
+            .promo-banners { padding: 20px 0 14px; }
+            .promo-banners .container { padding-left: 12px; padding-right: 12px; }
+            .promo-wrap { border-radius: 14px; }
+            .promo-dots { margin-top: 12px; }
+        }
 </style>
 </head>
 <body>
@@ -1538,6 +1558,6 @@
 </div>
 <script src="site-ui.js?v=20261125b" defer></script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
-<script src="editor.js?v=20261125-v3"></script>
+<script src="editor.js?v=20261125-v4"></script>
 </body>
 </html>
