@@ -1056,13 +1056,14 @@
                     </div>
                     <div class="ig">
                         <label>Vai com crianças?</label>
-                        <div style="display:flex;gap:12px;margin-top:4px;">
-                            <label style="display:flex;align-items:center;gap:7px;font-size:14px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text);cursor:pointer;">
-                                <input type="radio" name="criancas" value="sim" onchange="toggleCriancas(this)" style="width:auto;accent-color:var(--accent);"> Sim
-                            </label>
-                            <label style="display:flex;align-items:center;gap:7px;font-size:14px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text);cursor:pointer;">
-                                <input type="radio" name="criancas" value="nao" onchange="toggleCriancas(this)" checked style="width:auto;accent-color:var(--accent);"> Não
-                            </label>
+                        <div style="display:flex;gap:10px;margin-top:6px;" id="criancas-toggle-group">
+                            <button type="button" class="btn-toggle-criancas active" id="btn-crianca-nao" onclick="setTemCriancas(false)" style="flex:1;padding:10px 14px;border:2px solid #2563EB;background:#2563EB;color:#fff;border-radius:10px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;">
+                                <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.25);font-size:12px;">✕</span> Não
+                            </button>
+                            <button type="button" class="btn-toggle-criancas" id="btn-crianca-sim" onclick="setTemCriancas(true)" style="flex:1;padding:10px 14px;border:2px solid #E5E7EB;background:#F9FAFB;color:#4B5563;border-radius:10px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;">
+                                <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#E5E7EB;color:#4B5563;font-size:12px;">✓</span> Sim
+                            </button>
+                            <input type="hidden" name="criancas" id="f-criancas" value="nao">
                         </div>
                     </div>
                     <div class="ig" id="campo-criancas" style="display:none;">
@@ -1071,8 +1072,8 @@
                         <span style="font-size:11px;color:var(--muted);margin-top:5px;display:block;">Separe por vírgula se houver mais de uma criança.</span>
                     </div>
                     <div class="row2">
-                        <div class="ig"><label>Data de Ida</label><input id="f-ida" type="date" required></div>
-                        <div class="ig"><label>Data de Volta</label><input id="f-volta" type="date"></div>
+                        <div class="ig"><label>Data de Ida</label><input id="f-ida" type="date" required style="cursor:pointer;"></div>
+                        <div class="ig"><label>Data de Volta</label><input id="f-volta" type="date" style="cursor:pointer;"></div>
                     </div>
                     <div class="ig"><label>Observações (opcional)</label><textarea id="f-obs" placeholder="Preferências, ocasião especial, orçamento…"></textarea></div>
                     <button type="submit" class="btn btn-accent btn-block" style="height:50px;font-size:15px;">
@@ -1138,7 +1139,7 @@
     </div>
 </footer>
 
-<a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%2C%20via%20Lovisa%20Destinos!" class="wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/5519995396281?text=Ol%C3%A1%20Lovisa%20Destinos%2C%20quero%20solicitar%20informa%C3%A7%C3%B5es%20sobre%20as%20viagens!" target="_blank" rel="noopener noreferrer" class="wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
 <script>
     // ── Header scroll ──
@@ -1168,17 +1169,61 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
     document.querySelectorAll('.rv').forEach(el => obs.observe(el));
 
-    // ── Crianças toggle ──
-    window.toggleCriancas = function(radio) {
+    // ── Crianças toggle com destaque visual (✓ Sim / ✕ Não) ──
+    window.setTemCriancas = function(tem) {
         const campo = document.getElementById('campo-criancas');
         const input = document.getElementById('input-criancas');
-        const show  = radio.value === 'sim';
-        campo.style.display = show ? 'block' : 'none';
-        input.required = show;
-        if (!show) input.value = '';
+        const btnSim = document.getElementById('btn-crianca-sim');
+        const btnNao = document.getElementById('btn-crianca-nao');
+        const hidden = document.getElementById('f-criancas');
+
+        hidden.value = tem ? 'sim' : 'nao';
+        campo.style.display = tem ? 'block' : 'none';
+        input.required = tem;
+
+        if (tem) {
+            btnSim.style.border = '2px solid #16A34A';
+            btnSim.style.background = '#16A34A';
+            btnSim.style.color = '#fff';
+            const s1 = btnSim.querySelector('span');
+            if (s1) { s1.style.background = 'rgba(255,255,255,0.3)'; s1.style.color = '#fff'; }
+
+            btnNao.style.border = '2px solid #E5E7EB';
+            btnNao.style.background = '#F9FAFB';
+            btnNao.style.color = '#4B5563';
+            const s2 = btnNao.querySelector('span');
+            if (s2) { s2.style.background = '#E5E7EB'; s2.style.color = '#4B5563'; }
+
+            setTimeout(() => input.focus(), 60);
+        } else {
+            input.value = '';
+            btnNao.style.border = '2px solid #2563EB';
+            btnNao.style.background = '#2563EB';
+            btnNao.style.color = '#fff';
+            const s2 = btnNao.querySelector('span');
+            if (s2) { s2.style.background = 'rgba(255,255,255,0.25)'; s2.style.color = '#fff'; }
+
+            btnSim.style.border = '2px solid #E5E7EB';
+            btnSim.style.background = '#F9FAFB';
+            btnSim.style.color = '#4B5563';
+            const s1 = btnSim.querySelector('span');
+            if (s1) { s1.style.background = '#E5E7EB'; s1.style.color = '#4B5563'; }
+        }
     };
 
-    // ── Form → WhatsApp ──
+    // ── Abrir calendário ao clicar em qualquer parte do campo de data ──
+    ['f-ida', 'f-volta'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('click', function() {
+                if (typeof this.showPicker === 'function') {
+                    try { this.showPicker(); } catch (_) {}
+                }
+            });
+        }
+    });
+
+    // ── Form → WhatsApp & Salvar Lead ──
     function submitForm(e) {
         e.preventDefault();
 
@@ -1192,7 +1237,7 @@
         const volta   = document.getElementById('f-volta').value;
         const obs     = document.getElementById('f-obs').value.trim();
 
-        const temCrianca = document.querySelector('input[name="criancas"]:checked').value === 'sim';
+        const temCrianca = (document.getElementById('f-criancas').value === 'sim');
         const idadeCriancas = temCrianca ? document.getElementById('input-criancas').value.trim() : '';
 
         // Formata datas
@@ -1211,11 +1256,9 @@
             viajantes += ' + crianças';
         }
 
-        // Monta mensagem formatada para WhatsApp
+        // Monta mensagem formatada para WhatsApp (com 100% acentuação e ortografia perfeita)
         const linhas = [
-            `Olá Lovisa, via *Lovisa Destinos*!`,
-            ``,
-            `Quero solicitar uma cotacao para o pacote abaixo:`,
+            `Olá Lovisa Destinos, quero solicitar o pacote:`,
             ``,
             `*Destino:* ${destino}`,
             ``,
@@ -1233,27 +1276,63 @@
             `• *Viajantes:* ${viajantes}`,
             `• *Data de Ida:* ${fmtData(ida)}`,
             `• *Data de Volta:* ${volta ? fmtData(volta) : '---'}`,
-            obs ? `• *Observacoes:* ${obs}` : null,
+            obs ? `• *Observações:* ${obs}` : null,
             ``,
             `━━━━━━━━━━━━━━━━━`,
             ``,
-            `Gostaria de receber a *cotacao personalizada* com valores, hospedagem e itinerario para essa viagem.`,
+            `Gostaria de receber a *cotação personalizada* com valores, hospedagem e itinerário para essa viagem.`,
             ``,
             `Como posso *prosseguir com a reserva*?`
         ].filter(l => l !== null).join('\n');
 
         const url = `https://wa.me/5519995396281?text=${encodeURIComponent(linhas)}`;
 
-        // Feedback visual e redireciona
+        // Salva lead no sistema
+        const leadData = {
+            id: 'lead_' + Date.now(),
+            data: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+            timestamp: Date.now(),
+            nome,
+            whats,
+            email,
+            destino,
+            viajantes,
+            ida: fmtData(ida),
+            volta: volta ? fmtData(volta) : '---',
+            obs: obs || '—',
+            status: 'novo'
+        };
+
+        try {
+            const stored = JSON.parse(localStorage.getItem('lovisa_leads') || '[]');
+            stored.unshift(leadData);
+            localStorage.setItem('lovisa_leads', JSON.stringify(stored));
+        } catch (_) {}
+
+        try {
+            fetch('/api/lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lead: leadData })
+            }).catch(() => {});
+        } catch (_) {}
+
+        // Feedback visual e abre SEMPRE em nova guia
         const btn = e.target.querySelector('[type=submit]');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Redirecionando para o WhatsApp…';
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Abrindo WhatsApp…';
         btn.style.background = '#22c55e';
         btn.disabled = true;
 
-        setTimeout(() => window.open(url, '_blank'), 600);
+        window.open(url, '_blank', 'noopener,noreferrer');
+
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar pelo WhatsApp';
+            btn.style.background = '';
+            btn.disabled = false;
+        }, 2000);
     }
 </script>
 <!-- ═══ EDITOR VISUAL LOVISA ═══ -->
-<script src="editor.js?v=20261124-checkout-banners"></script>
+<script src="editor.js?v=20261125-leads-form-fix"></script>
 </body>
 </html>

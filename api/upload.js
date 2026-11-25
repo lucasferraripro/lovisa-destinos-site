@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     const token  = process.env.GITHUB_TOKEN;
     const owner  = 'lucasferraripro';
     const repo   = 'lovisa-destinos-site';
-    const adminSecret = process.env.ADMIN_SECRET || 'Lovisa@2025';
+    const adminSecret = (process.env.ADMIN_SECRET || 'Lovisa@2025').trim();
     if (!token) return res.status(500).json({ error: 'GITHUB_TOKEN nao configurado no Vercel' });
 
     let body = '';
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'JSON inválido' });
     }
 
-    if (secret !== adminSecret) return res.status(401).json({ error: 'Não autorizado' });
+    if ((secret || '').trim() !== adminSecret) return res.status(401).json({ error: 'Não autorizado' });
     if (!filename || !base64)   return res.status(400).json({ error: 'filename e base64 obrigatórios' });
 
     // Sanitiza nome do arquivo

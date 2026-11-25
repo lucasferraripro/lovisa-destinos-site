@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     }
 
     const { secret } = body;
-    const adminSecret = process.env.ADMIN_SECRET || 'Lovisa@2025';
-    const ok = secret === adminSecret;
+    const adminSecret = (process.env.ADMIN_SECRET || 'Lovisa@2025').trim();
+    const ok = (secret || '').trim() === adminSecret;
     return res.status(ok ? 200 : 401).json({ ok });
 }

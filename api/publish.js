@@ -23,8 +23,8 @@ export default async function handler(req, res) {
     }
 
     let { content, secret } = body;
-    const adminSecret = process.env.ADMIN_SECRET || 'Lovisa@2025';
-    if (secret !== adminSecret) return res.status(401).json({ error: 'Nao autorizado' });
+    const adminSecret = (process.env.ADMIN_SECRET || 'Lovisa@2025').trim();
+    if ((secret || '').trim() !== adminSecret) return res.status(401).json({ error: 'Nao autorizado' });
 
     const token = process.env.GITHUB_TOKEN;
     if (!token) return res.status(500).json({ error: 'GITHUB_TOKEN nao configurado no Vercel' });

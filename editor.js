@@ -444,6 +444,7 @@
             <button class="ld-btn blue" id="ld-add-pkg">➕ <span class="ld-btn-label">Novo Pacote</span></button>
             <button class="ld-btn" id="ld-buy-links">🛒 <span class="ld-btn-label">Links Compra</span></button>
             <button class="ld-btn" id="ld-banners">🖼️ <span class="ld-btn-label">Banners</span></button>
+            <button class="ld-btn" id="ld-leads" style="background:#059669;color:#fff;font-weight:600;">📋 <span class="ld-btn-label">Solicitações</span> <span class="ld-badge" id="ld-leads-badge" style="background:#fff;color:#059669;padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px;display:none;">0</span></button>
             <div class="ld-sep"></div>
             <button class="ld-btn" id="ld-dep">⭐ <span class="ld-btn-label">Depoimentos</span></button>
             <div class="ld-sep"></div>
@@ -465,6 +466,8 @@
             document.getElementById('ld-add-pkg').onclick    = () => this.pAddPacote();
             document.getElementById('ld-buy-links').onclick  = () => this.pManageBuyLinks();
             document.getElementById('ld-banners').onclick    = () => this.pManageBanners();
+            document.getElementById('ld-leads').onclick      = () => this.pManageLeads();
+            this.updateLeadsBadge();
             document.getElementById('ld-dep').onclick       = () => this.pManageDep();
             document.getElementById('ld-colors').onclick = () => this.pColors();
             document.getElementById('ld-footer').onclick = () => this.pFooter();
@@ -1036,6 +1039,147 @@
             el.style.pointerEvents = 'none';
             el.style.outline = '2px dashed #ef4444';
             this.toast('🗑 Pacote marcado para remover. Publique para confirmar.', 'ok');
+        },
+
+        /* ── GERENCIAR SOLICITAÇÕES / LEADS ── */
+        updateLeadsBadge() {
+            const badge = document.getElementById('ld-leads-badge');
+            if (!badge) return;
+            let count = Array.isArray(this.cms._leads) ? this.cms._leads.length : 0;
+            try {
+                const local = JSON.parse(localStorage.getItem('lovisa_leads') || '[]');
+                if (Array.isArray(local) && local.length > count) count = local.length;
+            } catch (_) {}
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        },
+
+        pManageLeads() {
+            const p = this.panel_('📋 Solicitações de Viagem / Formulário');
+            if (!Array.isArray(this.cms._leads)) this.cms._leads = [];
+
+            // Mescla com localStorage para garantir exibição instantânea
+            try {
+                const local = JSON.parse(localStorage.getItem('lovisa_leads') || '[]');
+                if (Array.isArray(local) && local.length) {
+                    const ids = new Set(this.cms._leads.map(l => l.id || (l.data + l.nome)));
+                    local.forEach(l => {
+                        const key = l.id || (l.data + l.nome);
+                        if (!ids.has(key)) {
+                            this.cms._leads.push(l);
+                            ids.add(key);
+                        }
+                    });
+                    this.cms._leads.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                }
+            } catch (_) {}
+
+            const render = () => {
+                const list = this.cms._leads || [];
+                p.querySelector('.ld-pb')?.remove();
+                const pb = document.createElement('div');
+                pb.className = 'ld-pb';
+                pb.innerHTML = `
+                    <div class="ld-info" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                        <span>Solicitações de contato e cotação enviadas pelos clientes no formulário do site.</span>
+                        ${list.length ? '<button type="button" class="ld-btn" id="ld-export-csv" style="padding:6px 12px;font-size:12px;background:#059669;color:#fff;border-radius:6px;flex-shrink:0;">📥 Baixar Excel / CSV</button>' : ''}
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;">
+                        <strong style="font-size:13px;color:#374151;">Total de Solicitações: <span style="color:#059669;">${list.length}</span></strong>
+                    </div>
+                    <div id="ld-leads-container" style="display:flex;flex-direction:column;gap:10px;max-height:450px;overflow-y:auto;padding-right:4px;">
+                        ${list.length ? list.map((lead, i) => {
+                            const cleanPhone = String(lead.whats || '').replace(/\D/g, '');
+                            const waLink = cleanPhone ? `https://wa.me/55${cleanPhone}?text=${encodeURIComponent('Olá ' + (lead.nome || '') + '! Sou da Lovisa Destinos. Recebemos sua solicitação para *' + (lead.destino || 'seu pacote') + '* e já estamos preparando sua cotação personalizada!')}` : null;
+                            return `
+                                <div style="border:1.5px solid #E5E7EB;border-radius:10px;padding:12px 14px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid #F3F4F6;padding-bottom:6px;">
+                                        <div style="font-size:11px;color:#6B7280;display:flex;align-items:center;gap:5px;">
+                                            📅 <strong>${escapeHTML(lead.data || 'Data não registrada')}</strong>
+                                        </div>
+                                        <button type="button" class="ld-ko" data-lead-del="${i}" title="Excluir" style="padding:3px 8px;font-size:11px;color:#DC2626;">✕ Excluir</button>
+                                    </div>
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-bottom:8px;">
+                                        <div><span style="color:#6B7280;font-size:11px;">NOME</span><div style="font-weight:700;color:#111827;">${escapeHTML(lead.nome || '—')}</div></div>
+                                        <div><span style="color:#6B7280;font-size:11px;">DESTINO</span><div style="font-weight:700;color:#2563EB;">✈️ ${escapeHTML(lead.destino || '—')}</div></div>
+                                        <div>
+                                            <span style="color:#6B7280;font-size:11px;">WHATSAPP</span>
+                                            <div>
+                                                <strong style="color:#111827;">${escapeHTML(lead.whats || '—')}</strong>
+                                                ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-left:6px;background:#25D366;color:#fff;padding:2px 8px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;"><i class="fab fa-whatsapp"></i> Conversar</a>` : ''}
+                                            </div>
+                                        </div>
+                                        <div><span style="color:#6B7280;font-size:11px;">E-MAIL</span><div style="color:#374151;">${escapeHTML(lead.email || '—')}</div></div>
+                                        <div><span style="color:#6B7280;font-size:11px;">VIAJANTES</span><div style="color:#374151;">👥 ${escapeHTML(lead.viajantes || '—')}</div></div>
+                                        <div><span style="color:#6B7280;font-size:11px;">PERÍODO</span><div style="color:#374151;">🗓️ Ida: ${escapeHTML(lead.ida || '—')} · Volta: ${escapeHTML(lead.volta || '—')}</div></div>
+                                    </div>
+                                    ${lead.obs && lead.obs !== '—' ? `
+                                        <div style="background:#F9FAFB;border-radius:6px;padding:6px 10px;font-size:12px;color:#4B5563;margin-top:6px;">
+                                            <strong style="color:#374151;">Observações:</strong> ${escapeHTML(lead.obs)}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('') : `
+                            <div style="text-align:center;padding:30px 10px;color:#6B7280;">
+                                <div style="font-size:32px;margin-bottom:8px;">📬</div>
+                                <strong>Nenhuma solicitação recebida ainda.</strong>
+                                <p style="font-size:12px;margin-top:4px;">Quando os clientes preencherem o formulário no site, as solicitações com data e detalhes aparecerão aqui automaticamente.</p>
+                            </div>
+                        `}
+                    </div>
+                `;
+                p.append(pb);
+
+                // Exportar CSV
+                const exportBtn = pb.querySelector('#ld-export-csv');
+                if (exportBtn) {
+                    exportBtn.onclick = () => {
+                        let csv = 'Data,Nome,WhatsApp,Email,Destino,Viajantes,Data Ida,Data Volta,Observações\n';
+                        list.forEach(l => {
+                            const row = [
+                                `"${(l.data || '').replace(/"/g, '""')}"`,
+                                `"${(l.nome || '').replace(/"/g, '""')}"`,
+                                `"${(l.whats || '').replace(/"/g, '""')}"`,
+                                `"${(l.email || '').replace(/"/g, '""')}"`,
+                                `"${(l.destino || '').replace(/"/g, '""')}"`,
+                                `"${(l.viajantes || '').replace(/"/g, '""')}"`,
+                                `"${(l.ida || '').replace(/"/g, '""')}"`,
+                                `"${(l.volta || '').replace(/"/g, '""')}"`,
+                                `"${(l.obs || '').replace(/"/g, '""')}"`
+                            ];
+                            csv += row.join(',') + '\n';
+                        });
+                        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `lovisa_solicitacoes_${new Date().toISOString().slice(0,10)}.csv`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    };
+                }
+
+                // Deletar lead
+                pb.querySelectorAll('[data-lead-del]').forEach(btn => {
+                    btn.onclick = () => {
+                        const idx = parseInt(btn.dataset.leadDel, 10);
+                        if (!confirm(`Deseja remover a solicitação de ${list[idx].nome}?`)) return;
+                        list.splice(idx, 1);
+                        this.cms._leads = list;
+                        this.save();
+                        this.markDirty();
+                        this.updateLeadsBadge();
+                        render();
+                    };
+                });
+            };
+
+            render();
         },
 
         /* ── GERENCIAR BANNERS ── */
