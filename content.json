@@ -426,7 +426,8 @@
   "_removedPackages": [
     "tsteteste",
     "cancun",
-    "cancunincrivel"
+    "cancunincrivel",
+    "disney"
   ],
   "cancun-pkg-price": {
     "html": "<br>"
@@ -498,12 +499,64 @@
   },
   "_bannerInterval": 8,
   "_packageBuyUrls": {
-    "lencois": "https://brt.infotravel.com.br/b2c/pt/banner/checkout/23168?key=4osz&agencyId=71755"
+    "lencois": "https://brt.infotravel.com.br/b2c/pt/banner/checkout/23168?key=4osz&agencyId=71755",
+    "maceio": "https://brt.infotravel.com.br/b2c/pt/banner/23254?agencyId=71755"
   },
   "lencois-pkg-incluso-7": {
     "html": ""
   },
   "lencois-pkg-incluso-3": {
     "html": "<i class=\"fa-solid fa-circle-check\"></i> Hospedagem café da manhã"
+  },
+  "maceio-pkg-incluso-3": {
+    "html": "<i class=\"fa-solid fa-circle-check\"></i><span style=\"color: rgb(36, 36, 36); font-family: &quot;Titillium Web&quot;; font-weight: 700;\">CITY TOUR PANORÂMICO EM MACEIÓ COM PRAIA DO FRANCÊS</span>"
+  },
+  "maceio-pkg-incluso-4": {
+    "html": "<i class=\"fa-solid fa-circle-check\"></i> Passeio a Maragogi&nbsp;"
+  },
+  "maceio-pkg-incluso-6": {
+    "html": ""
+  },
+  "maceio-pkg-incluso-5": {
+    "html": ""
+  },
+  "maceio-pkg-rot-0-title": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-1-desc": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-0-desc": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-2-desc": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-3-desc": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-4-desc": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-5-desc": {
+    "hidden": true
+  },
+  "maceio-pkg-price": {
+    "html": "R$&nbsp;<span style=\"color: rgb(36, 36, 36); font-family: &quot;Titillium Web&quot;; font-weight: 600; background-color: rgb(245, 245, 245);\">3.981,23</span>"
+  },
+  "maceio-pkg-rot-5-title": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-4-title": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-3-title": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-2-title": {
+    "hidden": true
+  },
+  "maceio-pkg-rot-1-title": {
+    "hidden": true
   }
 }
