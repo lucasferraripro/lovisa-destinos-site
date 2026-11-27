@@ -542,7 +542,7 @@
     "hidden": true
   },
   "maceio-pkg-price": {
-    "html": "R$&nbsp;<span style=\"color: rgb(36, 36, 36); font-family: &quot;Titillium Web&quot;; font-weight: 600; background-color: rgb(245, 245, 245);\">3.981,23</span>"
+    "html": "R$&nbsp;<span style=\"color: lab(14.1981 0.000327826 -0.0114143); font-family: Inter, system-ui, arial; font-size: 20px; font-weight: 700; background-color: lab(100 0 0);\">4.088,93</span>"
   },
   "maceio-pkg-rot-5-title": {
     "hidden": true
